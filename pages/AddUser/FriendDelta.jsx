@@ -118,7 +118,7 @@ export default observer(({ route, navigation })=>{
         setIsShowMessageBOx(false)
 
         addRequest(res.userInfo.id,item.id,value).then(res=>{
-            console.log(res.data)
+            //console.log(res.data)
             showMessage({
                 icon:'info',
                 message:"已提交好友邀請",
@@ -160,7 +160,7 @@ export default observer(({ route, navigation })=>{
                 }
                 temp[index].userInfo = (await searchUser(`id=${temp[index].userId}`)).data
                     
-                console.log('?',temp[index])
+                //console.log('?',temp[index])
             }
 
 
@@ -192,7 +192,7 @@ export default observer(({ route, navigation })=>{
        }else{
           let {data} = await searchUser(`id=${item.id}`)
 
-          console.log(data[0])
+          //console.log(data[0])
           if(data[0].backgroundImage==null){
               
           }else{

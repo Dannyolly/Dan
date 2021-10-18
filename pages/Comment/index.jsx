@@ -21,11 +21,11 @@ import CommentHeader from '../../components/Header/Comment'
 
 import MySwiper from '../../components/MySwiper'
 import NonIdCachedImage from '../../components/NonIdCachedImage'
-const index = ( {route , navigation} ) => {
+const index = ( {route , navigation,delayLoading} ) => {
 
     const a = []
 
-    const { userId ,postId, item } = route.params
+    const { userId ,postId, item  } = route.params
  
     const [value, onChangeText] = React.useState();
 
@@ -99,8 +99,12 @@ const index = ( {route , navigation} ) => {
 
 
     useEffect(() => {
-        getComment()
-        
+        //getComment()
+        if(delayLoading){
+            setTimeout(()=>{
+                getComment()
+            },1000)
+        }
     }, [])
 
     /* console.log(commentContainerOffset) */
@@ -232,7 +236,7 @@ const styles = StyleSheet.create({
         zIndex:4
     },
     container:{
-        width:screenSize.width,
+        /* width:screenSize.width, */
         flex:1,
         backgroundColor:"#FFFFFF",
         padding:10,
