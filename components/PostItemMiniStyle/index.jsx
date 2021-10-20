@@ -25,6 +25,7 @@ const index = ({  item , index, navigation  }) => {
 
     const initPosition = useRef({width:0,height:0,pageX:0,pageY:0 })
 
+    const [showModalBackground, setShowModalBackground] = useState(false)
     const route = {
         params:{
             userId:item.userId,
@@ -64,6 +65,8 @@ const index = ({  item , index, navigation  }) => {
     }
 
     const viewCollapseZooming=()=>{
+       // setShowModalBackground(()=>false)
+
         Animated.timing(scaleX,{
             toValue:initPosition.current.width,
             useNativeDriver:false,
@@ -98,20 +101,22 @@ const index = ({  item , index, navigation  }) => {
     useEffect(() => {
         if(isClick){
             console.log('zooming')
+            setShowModalBackground(()=>true)
             viewZooming()
         }
     }, [isClick])
 
     return (
         <View >
-            {
-                
-                <Modal visible={isClick} style={{width:screenSize.width,height:screenSize.height,zIndex:1,justifyContent:'center',alignItems:'center'}} transparent={true}>
+            { 
+                <Modal   visible={isClick} style={{width:screenSize.width,height:screenSize.height,zIndex:1,justifyContent:'center',alignItems:'center'}} transparent={true}>
                     <Animated.View 
                     style={{
-                        borderRadius:20,
+                        borderRadius:40,
                         width:scaleX,
                         height:scaleY,
+                        /* backgroundColor:"rgba(0,0,0,0.4)" */
+                        overflow:'hidden',
                         transform:[
                         /* {scale:scaleX}, */
                         {translateX:translateX},
@@ -119,13 +124,13 @@ const index = ({  item , index, navigation  }) => {
                         /* {translateY:translateY}, */
                         /* {translateY:200}, */
                         /* {scaleY:scaleY} */],
-                        backgroundColor:"#FFFFFF",
+                        /* backgroundColor:"#FFFFFF", */
                         
                     }} 
                     onTouchStart={()=>{
-                        viewCollapseZooming()
+                        //viewCollapseZooming()
                     }}>
-                        <Comment delayLoading={true} route={route} navigation={navigation} />
+                        <Comment  collapse={viewCollapseZooming} delayLoading={true} route={route} navigation={navigation} />
 
 
                     </Animated.View >

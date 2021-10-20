@@ -36,7 +36,7 @@ import { getAllUserPost ,getAllUserOwnPost } from '../../api/api'
 import PostItem from '../Discover/PostItem'
 import PostItemMiniStyle from '../../components/PostItemMiniStyle'
 import { showMessage } from 'react-native-flash-message'
-
+import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 import DeltaHeader from '../../components/Header/Discover'
 
 import {observer, userStore } from '../../mobx/store'
@@ -270,8 +270,7 @@ export default observer(({ route, navigation })=>{
         
     }, [])
 
-    //console.log(base_url+ item.icon);
-    //console.log(item)
+
     return (
         <View  style={styles.container}>
 
@@ -425,6 +424,11 @@ export default observer(({ route, navigation })=>{
                         keyExtractor={(item,index)=>item.id.toString()}
                         
                         />
+                    }
+                    {
+                        data===undefined
+                        &&
+                        <PostItemSkeletonView/>
                     }
                 </View>
                 <View style={{display:showStyle===false?'none':'flex',paddingTop:10,padding:0,paddingRight:0,flexDirection:'row',flexWrap:'wrap'}}>

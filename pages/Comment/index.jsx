@@ -12,18 +12,17 @@ import MyFlatlist from './MyFlatlist'
 import { addComment, getAllComment } from '../../api/api'
 
 import { showMessage,hideMessage } from 'react-native-flash-message'
-import { calculateDate } from '../../util/function'
+import { calculateDate, defaultShowMessage } from '../../util/function'
 
 import { Feather ,AntDesign,FontAwesome} from '../../util/Icon'
 
 import CommentHeader from '../../components/Header/Comment'
 
-
+import { PanGestureHandler } from 'react-native-gesture-handler'
 import MySwiper from '../../components/MySwiper'
 import NonIdCachedImage from '../../components/NonIdCachedImage'
-const index = ( {route , navigation,delayLoading} ) => {
+const index = ( {route , navigation, delayLoading,collapse } ) => {
 
-    const a = []
 
     const { userId ,postId, item  } = route.params
  
@@ -36,6 +35,14 @@ const index = ( {route , navigation,delayLoading} ) => {
     const scrollRef =useRef(undefined)
 
     const commentContainerOffset= useRef(new Animated.Value(0)).current
+
+    const touchX  =useRef(new Animated.Value(0)).current
+
+    const touchY  =useRef(new Animated.Value(0)).current
+
+    const currentTranslationX = useRef(0)
+
+    const moving = useRef(false)
 
     const clickedKeyBoard= ()=>{
        // console.log('up')
@@ -107,10 +114,64 @@ const index = ( {route , navigation,delayLoading} ) => {
         }
     }, [])
 
-    /* console.log(commentContainerOffset) */
+    
+    
+
+    const onPanGestureEvent = Animated.event([
+        { 
+            nativeEvent: { translationX: touchX ,translationY: touchY}
+        }], 
+        {
+            useNativeDriver: true,
+             listener: e=>{
+                //console.log(e.nativeEvent.translationX,touchX) 
+                currentTranslationX.current=e.nativeEvent.translationX
+             }
+        }
+    );
+    
+
+    const onPanFinished = () =>{
+        console.log('touchX',currentTranslationX)
+        if(currentTranslationX.current>170){
+            Animated.spring(touchX,{
+                toValue:0,
+                bounciness:4,
+                useNativeDriver:true
+            }).start()
+    
+            Animated.spring(touchY,{
+                toValue:0,
+                bounciness:4,
+                useNativeDriver:true
+            }).start()
+            setTimeout(()=>{
+                collapse()
+            },200)
+            
+        }else{
+            Animated.spring(touchX,{
+                toValue:0,
+                bounciness:4,
+                useNativeDriver:true
+            }).start()
+    
+            Animated.spring(touchY,{
+                toValue:0,
+                bounciness:4,
+                useNativeDriver:true
+            }).start()
+        }
+        
+    }
+
+
     return (
 
-            <View  style={styles.container} >
+        <PanGestureHandler 
+        onGestureEvent={onPanGestureEvent} 
+        onEnded={()=>onPanFinished()}>
+            <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
                     <Animated.ScrollView  scrollEventThrottle={16} onScroll={
                             Animated.event(
                                 [
@@ -126,7 +187,9 @@ const index = ( {route , navigation,delayLoading} ) => {
                             
                             
                             <TouchableWithoutFeedback onPress={collapseKeyBoard} >
-                                <View style={{paddingLeft:10,paddingRight:10}}><CommentHeader item={item} /></View>
+                                <View style={{paddingLeft:10,paddingRight:10}}>
+                                    <CommentHeader  collapse={collapse} item={item} />
+                                </View>
                                 {
                                 <View style={styles.itemContent}>
                                                 
@@ -204,7 +267,8 @@ const index = ( {route , navigation,delayLoading} ) => {
 
                             
                     </Animated.ScrollView>
-        </View>
+            </Animated.View>
+        </PanGestureHandler>
     )
 }
 

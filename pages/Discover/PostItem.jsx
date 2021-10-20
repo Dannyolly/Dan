@@ -1,4 +1,4 @@
-import React,{useRef,useState,useEffect,useLayoutEffect} from 'react'
+import React,{useRef,useState,useEffect,useLayoutEffect,Component} from 'react'
 import { StyleSheet, Text, View ,Image,Animated, Vibration} from 'react-native'
 import { screenSize } from '../../util/screenSize'
 
@@ -7,28 +7,23 @@ import { AntDesign, Feather , FontAwesome} from '../../util/Icon'
 import ZoomableImage from '../../components/ZoomableImage'
 import { base_url } from '../../api/config'
 import { userStore } from '../../mobx/store'
-
+import PropTypes from 'prop-types';
 import MySwiper from '../../components/MySwiper'
 import { getAllCommentCount, searchUser } from '../../api/api'
 import { calculateDate, defaultShowMessage, getUserMainInfo } from '../../util/function'
-import {TapGestureHandler, TouchableWithoutFeedback } from 'react-native-gesture-handler'
-
+import {TapGestureHandler  } from 'react-native-gesture-handler'
 import { addLike,cancelLike,likeCheck } from '../../api/api'
 import SkeletonView from '../../components/SkeletonView'
-
-
 import LikeAnimated from '../../components/LikeAnimated'
-
 import { showMessage } from 'react-native-flash-message'
-
 import { tapResponser ,messageResponser, selectionResponser} from '../../util/haptic'
-/**
- * 
- * @param {*} item
- * @returns 
- */
-const PostItem = ({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset }) => {
 
+import PostItemSkeletonView from '../../components/PostItemSkeletonView'
+
+function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset }) {
+
+
+    
 
     const [realItem, setItem] = useState(undefined)
 
@@ -149,41 +144,21 @@ const PostItem = ({ item ,index , navigation,handleToggle ,isShadow, currentTopO
 
 
 
-    /* useEffect(()=>{
-        console.log('hi')
-        if(realItem!==undefined){
-            viewRef.current.measure(
-                (left, top, width, height,pageX,pageY)=>{
-    
-                    if(pageY<screenSize.height){
-                        initPosition.current={width,height,pageX,pageY}
-                    }else{
-                        let gap = Number.parseInt(pageY/screenSize.height)
-                        
-                        let relativeOffset = pageY-screenSize.height*gap
-
-                        initPosition.current={width,height,pageX,pageY:relativeOffset}
-                    }
-                    
-                    // console.log(index,initPosition.current)
-                    setInitLocation(()=>initPosition.current)
-                }
-            )
-        }
-    },[JSON.stringify(realItem)]) */
+  
 
     useEffect(() => {
-        checkLike()
         getData()
+        checkLike()
+        
     }, [])
 
-    /* console.log(realItem.userInfo[0].icon) */
-    //console.log(realItem);
+
     return (
         
             <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{}]}>
                 {
-                realItem!==undefined?
+                realItem!==undefined
+                &&
                 <View style={[styles.itemContent,isShadow===true?{padding:10,borderRadius:20}:{}]}>
                     <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5}}>
                        
@@ -231,37 +206,27 @@ const PostItem = ({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                         {calculateDate(realItem.postDate)}
                     </Text>
                 </View>
-                :
-                <View style={styles.itemContainer}>
-                    <View style={styles.itemContent}>
-                        <View style={{flexDirection:'row',paddingLeft:10,marginBottom:10}}>
-                            <SkeletonView style={styles.iconStyle}  />
-                            <View style={{paddingLeft:10,height:40,alignItems:'center',justifyContent:'center'}}>
-                                <SkeletonView style={styles.textStyle}  />
-                            </View>
-                           
-                        </View>
+                }
 
-                        <SkeletonView style={[styles.postImage,{marginBottom:10}]} />  
-                        <View style={{paddingLeft:20}}>
-                            <SkeletonView style={{width:100,height:20,marginBottom:5,borderRadius:20,marginTop:5}} /> 
-                        </View> 
-                        <View style={{paddingLeft:20}}>
-                            <SkeletonView style={{width:250,height:20,marginBottom:5,borderRadius:20,marginTop:5}} /> 
-                        </View> 
-                        <View style={{paddingLeft:20}}>
-                            <SkeletonView style={{width:150,height:20,marginBottom:5,borderRadius:20,marginTop:5}} /> 
-                        </View> 
-                        
-                    </View> 
-                </View>
+                
+                {
+                    realItem===undefined
+                    &&
+                    <PostItemSkeletonView/>
+                }
                 
                    
             
-            }
+            
             </View>
 
     )
+}
+
+
+PostItem.prototype ={
+    item : PropTypes.object.isRequired,
+    index : PropTypes.number
 }
 
 export default PostItem

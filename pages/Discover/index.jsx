@@ -15,8 +15,8 @@ import DownScrollLoading from '../../components/DownScrollLoading'
 import Loading from '../../components/Loading'
 import { Platform } from 'react-native'
 import { base_url } from '../../api/config'
-
-
+import SkeletonView from '../../components/SkeletonView'
+import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 /**
  * @param {Boolean} onlyFlatList 
  */
@@ -171,34 +171,93 @@ export default observer(({ navigation, onlyFlatList })=> {
     return (  
         <View  style={{width:screenSize.width,height:screenSize.height-150,backgroundColor:"#FFFFFF",paddingBottom:0}}>
              
-            <FlatList
-            ListFooterComponent={()=><BottomHandler/>}
-            onEndReached={onReach}
-            onEndReachedThreshold={0}
-            refreshControl={ Platform.OS==='android'?null:<DownScrollLoading  /> }
-            data={data}
-            renderItem={
-                ({ item,index })=>
-                    <PostItem 
-                        index ={index}
-                        uploading={uploading}
-                        navigation={navigation} 
-                        item={item} 
-                        handleToggle={handleToggle} 
-                    />
+            {
+                data!==undefined
+                &&
+                <FlatList
+                ListFooterComponent={()=><BottomHandler/>}
+                onEndReached={onReach}
+                onEndReachedThreshold={0}
+                refreshControl={ Platform.OS==='android'?null:<DownScrollLoading  /> }
+                data={data}
+                renderItem={
+                    ({ item,index })=>
+                        <PostItem 
+                                
+                            index ={index}
+                            uploading={uploading}
+                            navigation={navigation} 
+                            item={item}
+                            handleToggle={handleToggle} 
+                        />
+                }
+                keyExtractor={(item)=>item.id.toString()}
+                style={{flex:1}} 
+                ref={c=>onScrollRef.current=c} 
+                showsVerticalScrollIndicator={false} 
+                overScrollMode={'always'}
+                
+                />
             }
-            keyExtractor={(item)=>item.id.toString()}
-            style={{flex:1}} 
-            ref={c=>onScrollRef.current=c} 
-            showsVerticalScrollIndicator={false} 
-            overScrollMode={'always'}
-            
-            />      
+
+            {
+                data===undefined
+                &&
+                <PostItemSkeletonView />
+            }     
         </View>
     )
     
 })
 
 const styles = StyleSheet.create({
-    
+    shadowStyle:{
+        /* shadowColor:"#FFFFFF",
+        shadowOpacity:1,
+        shadowOffset:{
+            width:0,
+            height:5
+        },
+        shadowRadius:0, */
+        borderRadius:10,
+        backgroundColor:"#FFFFFF",
+        marginBottom:20
+    },
+    itemContainer:{
+        width:screenSize.width-20,
+        flex:1,
+        marginBottom:5,
+    },
+    itemContent:{
+        width:screenSize.width-20,
+        borderRadius:20,
+        flex:1,
+        paddingTop:20,
+        
+    },
+    iconStyle:{
+        width:35,
+        height:35,
+        borderRadius:30,
+        zIndex:0
+    },
+    postImage:{
+        width:screenSize.width,
+        height:500,
+        zIndex:4
+    },
+    shadowStylePostImage:{
+        width:screenSize.width-40,
+        borderRadius:10,
+        height:350,
+        zIndex:4
+    },
+
+    // skeleton UI
+
+    textStyle:{
+        width:150,
+        height:20,
+        borderRadius:20
+    }
 })

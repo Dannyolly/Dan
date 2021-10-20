@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { base_url } from '../../api/config'
 import { calculateDate } from '../../util/function'
 import { Ionicons,Feather } from '../../util/Icon'
@@ -10,14 +11,16 @@ import CachedImage from '../NonIdCachedImage'
 
 
 
-const Comment = ({ item }) => {
+const Comment = ({ item , collapse }) => {
 
     const navigation =useNavigation()
 
     // console.log(item)
     return (
         <View style={{width:screenSize.width,height:95,paddingTop:50,flexDirection:'row',paddingLeft:0,marginBottom:10}}>    
-         <Ionicons name="ios-chevron-back-outline" style={{fontSize:30,lineHeight:45,marginRight:10}} />
+            <TouchableWithoutFeedback onPress={()=>collapse()}>
+                <Ionicons   name="ios-chevron-back-outline" style={{fontSize:30,lineHeight:45,marginRight:10}} />
+            </TouchableWithoutFeedback>
             <CachedImage uri={base_url+item.userInfo[0].icon} style={styles.picStyle} />
        
         <View style={{height:40,paddingLeft:10,justifyContent:'center',alignItems:'center'}}>
