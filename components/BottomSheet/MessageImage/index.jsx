@@ -9,12 +9,10 @@ import { screenSize } from '../../../util/screenSize';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-
-import { uploadBackgroundImage } from '../../../api/api';
-import { showMessage } from 'react-native-flash-message';
-import { userStore } from '../../../mobx/store';
-import { defaultShowMessage } from '../../../util/function';
-export default function index({ isOpen ,setIsOpen ,setBackgroundImage } ) {
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
+import { defaultShowMessage, uuid } from '../../../util/function';
+export default function index({ isOpen ,setIsOpen ,imageUrl, savedImage } ) {
 
     const refRBSheet = useRef();
 
@@ -27,50 +25,27 @@ export default function index({ isOpen ,setIsOpen ,setBackgroundImage } ) {
     }
 
     const action = async (which)=>{
-        let res;
+
+        let myUuid  = uuid()
+
         switch (which) {
             case 0:
-                const status =await ImagePicker.requestCameraPermissionsAsync()
-                res = await ImagePicker.launchCameraAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                    allowsEditing: true,
-                    aspect: [4, 3],
-                    quality: 1,
-                });
-                console.log(res)
-                return;
-            case 1:
-                res = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.All,
-                    allowsEditing: true,
-                    aspect: [5, 5],
-                    quality: 1,
-                });
                 
-                //  用戶取消
-                if(res.cancelled===true) {
+                let data = (await FileSystem.downloadAsync(imageUrl,`${FileSystem.documentDirectory}${myUuid}.png`,{
+                    cache:true
+                }))
+                console.log(data.uri)
+                MediaLibrary.saveToLibraryAsync(data.uri).then(res=>{
                     refRBSheet.current.close()
-                    return 
-                }
-                setBackgroundImage(res.uri)
+                    savedImage()
+                    //refRBSheet.current.close()
+                    
+                }).catch(err=>{
+                    console.log("can't")
+                })
                 
-                
-                // 先存去本地.. 數據庫的是給其它用戶看
-                await AsyncStorage.setItem("backgroundImage",res.uri)
-                
-                if(res!== undefined){
-                    uploadBackgroundImage(res.uri, userStore.userInfo.userInfo.id)
-                    .then(res=>{
-                        console.log(res.data)
-                        if(res.data.msg==='上傳成功'){
-                            refRBSheet.current.close()
-                            defaultShowMessage(`${res.data.msg}`)
-                        }
-                    }).catch(err=>{
-                        console.log(err)
-                    })
-                }
-                return;
+            return;
+
             default:
                 break;
         }
@@ -101,19 +76,14 @@ export default function index({ isOpen ,setIsOpen ,setBackgroundImage } ) {
             openDuration={200}
             closeDuration={200}
             animationType={'fade'}
-            height={240}
+            height={160}
         >       
                 <View onTouchStart={()=>action(0)}
                  style={{width:screenSize.width,justifyContent:"center",alignContent:'center',
-                 backgroundColor:"#FFFFFF",height:80,position:'absolute',bottom:160}}>
-                    <Text style={{textAlign:"center",fontSize:16}}>相機</Text>
-                </View>
-                <View onTouchStart={()=>action(1)}
-                 style={{width:screenSize.width,justifyContent:"center",alignContent:'center',
                  backgroundColor:"#FFFFFF",height:80,position:'absolute',bottom:80}}>
-                    <Text style={{textAlign:"center",fontSize:16}}>從相冊中選取</Text>
+                    <Text style={{textAlign:"center",fontSize:16}}>保存至手機</Text>
                 </View>
-                
+            
                 <View onTouchStart={()=>refRBSheet.current.close()}
                  style={{width:screenSize.width,justifyContent:"center",alignContent:'center',
                  backgroundColor:"#FFFFFF",height:80,position:'absolute',bottom:0}}>

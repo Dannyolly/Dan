@@ -123,8 +123,8 @@ const sendPic =(files,senderId ,receiverId ,setProgress)=>{
         },
         onUploadProgress: progressEvent =>{
             let present = (progressEvent.loaded / progressEvent.total * 100 | 0)		//上传进度百分比
-            setProgress(()=>present*0.01)
-            
+            setProgress(present*0.01)
+            //console.log(present*0.01);
             /* setTimeout(()=>{r
                 setProgress(0)
             },4000) */

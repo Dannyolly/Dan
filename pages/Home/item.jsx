@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Text ,StyleSheet, Platform} from 'react-native'
 import { screenSize } from '../../util/screenSize'
-import CachedImage from '../../components/CachedImage'
+import CachedImage from '../../components/NonIdCachedImage'
 import { base_url } from '../../api/config'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import { calculateDate, getUserMainInfo } from '../../util/function'
@@ -48,6 +48,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
     ];
 
 
+   // console.log( 'item```', item.objectInfo.avatar)
 
     return (
         <Swipeable  
@@ -79,8 +80,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                     }}>
                         <View style={{width:screenSize.width,height:80,paddingLeft:65}}>
                             <CachedImage
-                            uri={base_url+item.objectInfo.avatar}
-                            id={item.objectInfo.id}
+                            uri={/* base_url+ */item.objectInfo.avatar}
                             style={styles.picStyle}
                             />
                             <View style={{width:screenSize.width,height:70,padding:5,position:'relative'}}>

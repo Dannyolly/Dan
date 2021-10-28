@@ -60,21 +60,21 @@ export default observer(()=>{
     */
     const findOutChatList = async ()=>{
         let userInfo = await getUserMainInfo()  
-        console.log('userinfo',userInfo)
+        //console.log('userinfo',userInfo)
         setUserInfo(()=>userInfo.userInfo)
         let { data } = await getAllFriend(userInfo.userInfo.id)
         let messageArr = [] 
         let remindListTemp =  []
-        console.log(userStore.userInfo.userInfo.id)
+        //console.log(userStore.userInfo.userInfo.id)
         //await AsyncStorage.removeItem(`${item.id}msg${userInfo.userInfo.id}`)
-
+       // console.log(await AsyncStorage.getAllKeys())
         for (const item of data) {
+           // console.log(item)
             let a = await AsyncStorage.getItem(`${item.id}msg${userInfo.userInfo.id}`)
+            //console.log(a);
             let itemDetails = JSON.parse(a)
-
             if(itemDetails===null){
                 // 兩者沒有對話...
-                break;
             }else{
                 // 其中一方對話或兩者都對話...
                 let obj={
@@ -84,6 +84,7 @@ export default observer(()=>{
                 let {data} = await searchUser(`id=${item.id}`)
                 let formatInfo  = getMsgFormat(item.msg,data[0],1)
                 obj.objectInfo=formatInfo.user
+                console.log(obj)
                 messageArr.push(obj)
                 remindListTemp.push(0)
             }
@@ -91,7 +92,7 @@ export default observer(()=>{
         }
         setRemindList(()=>remindListTemp)
         setChatList(()=>messageArr)
-        //console.log('messageArr',messageArr)
+       // console.log('messageArr',messageArr)
         chatListRef.current=messageArr
         remindListRef.current=remindListTemp
     }

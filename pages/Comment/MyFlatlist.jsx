@@ -29,7 +29,7 @@ const MyFlatList = ({ data ,offset,collapseKeyBoard }) => {
     }, [data])
 
     return (
-        <Animated.View style={{paddingBottom:50,paddingLeft:10,paddingRight:10}} onTouchEnd={()=>collapseKeyBoard()} /* style={{height:Platform.OS==='ios'?Animated.subtract(screenSize.height-100,offset):Animated.subtract(screenSize.height-120,offset)  }}*/>
+        <Animated.View style={{paddingBottom:70,paddingLeft:10,paddingRight:10}} onTouchEnd={()=>collapseKeyBoard()} /* style={{height:Platform.OS==='ios'?Animated.subtract(screenSize.height-100,offset):Animated.subtract(screenSize.height-120,offset)  }}*/>
             {
             <View>
                 <View style={{display:data!==undefined && delay===false && firstTime.current===true ?'flex':'none'}}>

@@ -307,7 +307,7 @@ export default observer(({ route, navigation })=>{
                     style={{    
                                 
                                 width:screenSize.width,marginBottom:20,
-                                height:screenSize.height*0.40,alignItems:'center',
+                                height:screenSize.height*0.38,alignItems:'center',
                                 transform:[{
                                     translateY:Animated.divide(zoomOffset,1)
                                 }]
@@ -323,8 +323,8 @@ export default observer(({ route, navigation })=>{
                     </Animated.View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback  style={{padding:20,top:screenSize.height*0.27,height:300,backgroundColor:"#F4F4F4",position:'absolute',width:screenSize.width,borderRadius:20}} >
-                    <Animated.View style={{padding:20,top:Animated.add(screenSize.height*0.27,0),height:300,backgroundColor:"#F4F4F4",position:'absolute',width:screenSize.width,borderRadius:20}}>
+                <TouchableWithoutFeedback  style={{padding:20,top:screenSize.height*0.27,height:300,backgroundColor:"#FFFFFF",position:'absolute',width:screenSize.width,borderRadius:20}} >
+                    <Animated.View style={{padding:20,paddingBottom:0,top:Animated.add(screenSize.height*0.27,0),height:280,backgroundColor:"#F4F4F4",position:'absolute',width:screenSize.width,borderRadius:20}}>
 
                         <View style={{width:screenSize.width,alignItems:"center",position:'absolute',top:-60}}> 
                             {/* <CachedImage
@@ -428,7 +428,7 @@ export default observer(({ route, navigation })=>{
                     {
                         data===undefined
                         &&
-                        <PostItemSkeletonView/>
+                        <PostItemSkeletonView  deltaSize={true} />
                     }
                 </View>
                 <View style={{display:showStyle===false?'none':'flex',paddingTop:10,padding:0,paddingRight:0,flexDirection:'row',flexWrap:'wrap'}}>

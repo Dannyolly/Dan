@@ -88,7 +88,7 @@ const index = ( {uri , style,index } ) => {
             const {currentLeft,currentTop ,x, y } = calculateRelativePosition(width,height,pageX,pageY)
 
             
-            
+            //console.log(currentLeft,currentTop ,x, y )
 
             setTimeout(()=>{
                 

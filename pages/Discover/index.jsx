@@ -66,7 +66,7 @@ export default observer(({ navigation, onlyFlatList })=> {
 
 
     const getData=( isAdd )=>{
-        console.log(userStore.userInfo.userInfo.id);
+       // console.log(userStore.userInfo.userInfo.id);
         getAllUserPost(userStore.userInfo.userInfo.id,currentPage.current*pageSize,pageSize).then(async res=>{
          
             // 沒有更多了...
@@ -88,7 +88,7 @@ export default observer(({ navigation, onlyFlatList })=> {
 
                 
                 temp[index].userInfo = (await searchUser(`id=${temp[index].userId}`)).data
-                console.log(temp[index])
+                //console.log(temp[index])
             }
 
             if(isAdd===true){
@@ -178,6 +178,7 @@ export default observer(({ navigation, onlyFlatList })=> {
                 ListFooterComponent={()=><BottomHandler/>}
                 onEndReached={onReach}
                 onEndReachedThreshold={0}
+                
                 refreshControl={ Platform.OS==='android'?null:<DownScrollLoading  /> }
                 data={data}
                 renderItem={

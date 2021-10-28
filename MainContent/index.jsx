@@ -238,16 +238,28 @@ const BottomTab = observer((props)=>{
             /* headerShown:route.name==='發現'?false:true, */
             /* headerLeft:props=>whichHeader(route.name), */
             headerStyle:{
-                shadowColor: 'transparent',
+                /* shadowColor: 'transparent', */
+                shadowRadius:2
             },
             /* headerRight:props=><ScannerHead />, */
-            headerShadowVisible:false,
+            //headerShadowVisible:false,
             headerTitle:'',
+            
             tabBarStyle:{
-                shadowColor: 'transparent',
+                //shadowColor: 'transparent',
                 borderTopColor:'#FFFFFF',
-                height:80,
-                paddingTop:10,
+                /* borderTopWidth:1.5, */
+                shadowRadius:2,
+                shadowOffset:{
+                    width:0,
+                    height:10
+                },
+                elevation:5,
+                /* borderTopWidth: 2, */
+                top: 1,
+                shadowColor:"#CDCDCD",
+                height:88,
+                /* paddingTop:10, */
                 /* borderTopLeftRadius:20,
                 borderTopRightRadius:20, */
                 /* borderRadius:20,
@@ -260,12 +272,13 @@ const BottomTab = observer((props)=>{
                     height:10
                 } */
             },
-            tabBarShowLabel:false,
+            /* tabBarShowLabel:false, */
             tabBarItemStyle:{
-                height:55,
+                paddingTop:5,
+                height:45,
             },
             tabBarInactiveTintColor:'#999',
-            tabBarActiveTintColor:'#4399FE',
+            tabBarActiveTintColor:'#22CAFE',
             
             
          })}
@@ -277,11 +290,12 @@ const BottomTab = observer((props)=>{
                 listeners={{
                     tabPress:e=>{
                         selectionResponser()
-                    }
+                    },
+                    
                 }}
                 options={{
                     headerLeft:props=><DiscoverHeader {...props} navigation={navigation}   />,
-                    
+                    title:"發現"
                     
                 }}
             />
@@ -311,12 +325,14 @@ const BottomTab = observer((props)=>{
                     /* headerTitle:'聊天室' */
                     tabBarButton:()=>{
                         return(
-                            <View onTouchEnd={()=>{
+                            <View style={{paddingTop:5}}>
+                                <View onTouchEnd={()=>{
                                 navigation.navigate('Post')
                                 messageResponser()
-                            }} style={{marginLeft:15,marginRight:15,width:50,height:50,borderRadius:20,justifyContent:"center",alignItems:"center",backgroundColor:"#22CAFE"}}>
-            
-                                <Text style={{fontSize:40,fontWeight:'500',color:'#FFFFFF'}} >+</Text>
+                                }} style={{shadowColor:"#22CAFE",shadowRadius:40,shadowOffset:{width:20,height:20},marginLeft:15,marginRight:15,width:40,height:40,borderRadius:20,justifyContent:"center",alignItems:"center",backgroundColor:"#22CAFE"}}>
+                
+                                    <Text style={{fontSize:30,fontWeight:'500',color:'#FFFFFF',lineHeight:30}} >+</Text>
+                                </View>
                             </View>
                         )
                     },
@@ -347,6 +363,7 @@ const BottomTab = observer((props)=>{
                 }}
                 options={{
                     headerShown:false,
+                    title:"個人頁"
                     /* headerLeft:props=><HomeHeader {...props} navigation={navigation} />, */
                     /* headerTitle:'聊天室' */
                 }}
@@ -414,7 +431,7 @@ export default observer((props)=>{
         
         // 初始化數組....
         await userStore.resetUnReadMessage()
-        console.log('getNotification~~~~')
+        //console.log('getNotification~~~~')
     }
 
 
@@ -447,10 +464,10 @@ export default observer((props)=>{
             screenOptions={{
                 headerStyle:{
                     /* backgroundColor:'#29C0FD', */
-                    shadowColor: 'transparent',
+                    /* shadowColor: 'transparent', */
                     /* height:200 */
                 },          
-                headerShadowVisible:false,
+                //headerShadowVisible:false,
                 headerBackTitleStyle:{
                     color:"black"
                 },

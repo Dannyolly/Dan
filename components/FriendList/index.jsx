@@ -17,6 +17,7 @@ export default observer(({ navigation })=>{
         let jsonUserInfo  = await AsyncStorage.getItem('userInfo');
         let userInfo = JSON.parse(jsonUserInfo)
         getAllFriend(userInfo.userInfo.id).then(res=>{
+            //console.log(res.data)
             setList(()=>res.data)
         })
         
@@ -28,7 +29,7 @@ export default observer(({ navigation })=>{
 
     }, [])
 
-    
+    //console.log('???')
     return (
         list!==undefined
         &&

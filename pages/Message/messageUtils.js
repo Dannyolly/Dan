@@ -65,6 +65,22 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
      */
  const getMsgFormat=( text ,info ,image ,isFinish)=>{
     
+    let avatar = ''
+    if(info.icon){
+        if(info.icon.substring(0,1)==='h'){
+            avatar = info.icon
+        }else{
+            avatar = base_url + info.icon
+        }
+    }else if(info.avatar){
+        if(info.avatar.substring(0,1)==='h'){
+            avatar = info.avatar
+        }else{
+            avatar = base_url + info.avatar
+        }
+    }
+
+
     return {
             _id:uuid(),
             text: text,
@@ -75,7 +91,7 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
                 _id: info.sendUserId || info.id,
                 id: info.sendUserId || info.id,
                 name: info.username,
-                avatar: base_url+info.icon,
+                avatar:avatar
             }
     
     }

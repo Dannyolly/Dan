@@ -42,25 +42,29 @@ const index = ({  item , index, navigation  }) => {
         Animated.timing(scaleX,{
             toValue:screenSize.width,
             useNativeDriver:false,
-            duration:250,
+            easing:Easing.linear,
+            duration:300,
         }).start()
 
         Animated.timing(scaleY,{
             toValue:screenSize.height,
             useNativeDriver:false,
-            duration:250,
+            easing:Easing.linear,
+            duration:300,
         }).start()
 
         Animated.timing(translateX,{
             toValue:0,
-            useNativeDriver:false,                 
-            duration:250,
+            useNativeDriver:false,    
+            easing:Easing.linear,             
+            duration:300,
         }).start()
 
         Animated.timing(translateY,{
             toValue:0,
             useNativeDriver:false,
-            duration:250,
+            easing:Easing.linear,
+            duration:300,
         }).start()
     }
 
@@ -112,7 +116,7 @@ const index = ({  item , index, navigation  }) => {
                 <Modal   visible={isClick} style={{width:screenSize.width,height:screenSize.height,zIndex:1,justifyContent:'center',alignItems:'center'}} transparent={true}>
                     <Animated.View 
                     style={{
-                        borderRadius:40,
+                        borderRadius:0,
                         width:scaleX,
                         height:scaleY,
                         /* backgroundColor:"rgba(0,0,0,0.4)" */
@@ -130,7 +134,7 @@ const index = ({  item , index, navigation  }) => {
                     onTouchStart={()=>{
                         //viewCollapseZooming()
                     }}>
-                        <Comment  collapse={viewCollapseZooming} delayLoading={true} route={route} navigation={navigation} />
+                        <Comment moveable={true} collapse={viewCollapseZooming} delayLoading={true} route={route} navigation={navigation} />
 
 
                     </Animated.View >

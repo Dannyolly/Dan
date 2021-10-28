@@ -4,9 +4,9 @@ import SkeletonView from '../SkeletonView'
 
 import { screenSize } from '../../util/screenSize'
 
-const index = () => {
+const index = ( {deltaSize } ) => {
     return (
-        <View style={styles.itemContainer}>
+        <View style={[styles.itemContainer, deltaSize?styles.shadowStyle:{} ]}>
             <View style={styles.itemContent}>
                 <View style={{flexDirection:'row',paddingLeft:10,marginBottom:10}}>
                     <SkeletonView style={styles.iconStyle}  />
@@ -16,7 +16,7 @@ const index = () => {
                 
                 </View>
 
-                <SkeletonView style={[styles.postImage,{marginBottom:10}]} />  
+                <SkeletonView style={[styles.postImage,{marginBottom:10}, deltaSize?styles.shadowStylePostImage:{}]} />  
                 <View style={{paddingLeft:20}}>
                     <SkeletonView style={{width:100,height:20,marginBottom:5,borderRadius:20,marginTop:5}} /> 
                 </View> 
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
         zIndex:4
     },
     shadowStylePostImage:{
-        width:screenSize.width-40,
-        borderRadius:10,
+        width:screenSize.width-20,
+        //borderRadius:10,
         height:350,
         zIndex:4
     },

@@ -129,15 +129,12 @@ class UserInfo {
      */
     async resetUnReadMessage(){
         let userInfo = await getUserMainInfo()
-        console.log('??????',userInfo);
-        defaultShowMessage(JSON.stringify(userInfo))
         this.unreadMessage = []
         getAllFriend(userInfo.userInfo.id).then(res=>{
             for(let i = 0 ;i<res.data.length;i++){
                 this.unreadMessage.push([])
             }
         })
-        console.log(this.unreadMessage);
         
     }
 

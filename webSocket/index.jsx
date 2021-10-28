@@ -28,7 +28,7 @@ const onopen=(e)=>{
     getUserMainInfo().then(res=>{
         //console.log('open!!!!',res)
         ws.send(JSON.stringify(chatMsg(CONNECT,res.userInfo.id,0,'','')))
-        console.log('send Connect MSG')
+        //console.log('send Connect MSG')
 
 
         online(res.userInfo.id,1).then(res=>{

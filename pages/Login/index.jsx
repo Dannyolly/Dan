@@ -92,6 +92,7 @@ export default observer( (props)=>{
         userLogin(username,password).then(async res=>{
 
             defaultShowMessage(res.data.msg==='error'? '帳號或者密碼錯誤':'登入成功')
+            
 
             if(res.data.msg!=='error'){
                 //存入userStore..
@@ -100,8 +101,10 @@ export default observer( (props)=>{
                     userInfo: */
                     ...res.data.userInfo
                 })
-
-                await AsyncStorage.setItem('userInfo',JSON.stringify(res.data.userInfo));
+                //console.log(await AsyncStorage.getAllKeys())
+                let data = await AsyncStorage.setItem('userInfo',JSON.stringify(res.data.userInfo),err=>{
+                    console.log(err)
+                });
                 
                 // 通知信息刷新...  -- >MainContent.Notification()
                 //DeviceEventEmitter.emit('refreshNotification')
@@ -123,9 +126,11 @@ export default observer( (props)=>{
      * @description 檢查是否以前登錄過...
      */
     const checkUserLogIn=async ()=>{
+        //await AsyncStorage.clear()
         let userInfo = await AsyncStorage.getItem('userInfo')
 
-        //console.log(JSON.parse(userInfo))
+       // console.log(await AsyncStorage.getAllKeys())
+       // console.log(JSON.parse(userInfo))
 
         if(userInfo!==undefined && userInfo!==null){
 

@@ -21,7 +21,7 @@ import CommentHeader from '../../components/Header/Comment'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import MySwiper from '../../components/MySwiper'
 import NonIdCachedImage from '../../components/NonIdCachedImage'
-const index = ( {route , navigation, delayLoading,collapse } ) => {
+const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
 
     const { userId ,postId, item  } = route.params
@@ -48,8 +48,8 @@ const index = ( {route , navigation, delayLoading,collapse } ) => {
        // console.log('up')
         Animated.timing(offset,{
             toValue:340,
-            duration:340,
-            easing:Easing.ease,
+            duration:325,
+            easing:Easing.linear,
             useNativeDriver:false
         }).start()
 
@@ -111,6 +111,8 @@ const index = ( {route , navigation, delayLoading,collapse } ) => {
             setTimeout(()=>{
                 getComment()
             },1000)
+        }else{
+            getComment()
         }
     }, [])
 
@@ -167,108 +169,210 @@ const index = ( {route , navigation, delayLoading,collapse } ) => {
 
 
     return (
-
-        <PanGestureHandler 
-        onGestureEvent={onPanGestureEvent} 
-        onEnded={()=>onPanFinished()}>
-            <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
-                    <Animated.ScrollView  scrollEventThrottle={16} onScroll={
-                            Animated.event(
-                                [
-                                {
-                                    nativeEvent: {contentOffset: {y: commentContainerOffset}},
-                                },
-                                ],
-                                {useNativeDriver: false},
-                            )}  
-                            style={{flex:1}} 
-                            showsVerticalScrollIndicator={false} 
-                            >
-                            
-                            
-                            <TouchableWithoutFeedback onPress={collapseKeyBoard} >
-                                <View style={{paddingLeft:10,paddingRight:10}}>
-                                    <CommentHeader  collapse={collapse} item={item} />
-                                </View>
-                                {
-                                <View style={styles.itemContent}>
-                                                
-                                        <MySwiper /* isJustify={true} */ data={item.postImage} style={styles.postImage} />
+        <>
+            {
+                moveable?
+                <PanGestureHandler 
+                onGestureEvent={onPanGestureEvent} 
+                onEnded={()=>onPanFinished()}>
+                    <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
+                            <Animated.ScrollView  scrollEventThrottle={16} onScroll={
+                                    Animated.event(
+                                        [
+                                        {
+                                            nativeEvent: {contentOffset: {y: commentContainerOffset}},
+                                        },
+                                        ],
+                                        {useNativeDriver: false},
+                                    )}  
+                                    style={{flex:1}} 
+                                    showsVerticalScrollIndicator={false} 
+                                    >
                                     
-                                    <View style={{paddingLeft:5,paddingRight:5}} >
-                                        <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
-                                            <AntDesign  name="like2" style={{fontSize:20,marginRight:20}} />
-                                            <FontAwesome name="comment-o" style={{fontSize:20}} />
-                                            
+                                    
+                                    <TouchableWithoutFeedback onPress={collapseKeyBoard} >
+                                        <View style={{position:'absolute',top:0,paddingLeft:10,paddingRight:10}}>
+                                            <CommentHeader  collapse={collapse} item={item} />
                                         </View>
-                                        <Text style={{padding:10,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
-                                            {item.likeCount} 讚好
-                                        </Text>
-                                        <Text style={{padding:10,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
-                                            {item.userInfo[0].username}: {item.introduction}
-                                        </Text>
+                                        {
+                                        <View style={styles.itemContent}>
+                                                        
+                                                <MySwiper /* isJustify={true} */ data={item.postImage} style={styles.postImage} />
+                                            
+                                            <View style={{paddingLeft:5,paddingRight:5}} >
+                                                <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
+                                                    <AntDesign  name="like2" style={{fontSize:20,marginRight:20}} />
+                                                    <FontAwesome name="comment-o" style={{fontSize:20}} />
+                                                    
+                                                </View>
+                                                <Text style={{padding:10,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
+                                                    {item.likeCount} 讚好
+                                                </Text>
+                                                <Text style={{padding:10,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
+                                                    {item.userInfo[0].username}: {item.introduction}
+                                                </Text>
+                                                
+                                                <Text style={{paddingTop:10,paddingLeft:10,color:"#CDCDCD",fontSize:12,zIndex:0}}>
+                                                    {calculateDate(item.postDate)}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        }
+                                        <View style={{width:screenSize.width,paddingLeft:10,paddingRight:20,height:1,marginBottom:20}}>
+                                            <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <Animated.View 
+                                            style={{
+                                            width:screenSize.width,
+                                            height:100,
+                                            paddingTop:0,
+                                            paddingBottom:10,
+                                            
+                                            justifyContent:'center',paddingLeft:70,
+                                            backgroundColor:"#FFFFFF",
+                                            position:'absolute',
+                                            top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
+                                            zIndex:1
+                                            }}>
                                         
-                                        <Text style={{paddingTop:10,paddingLeft:10,color:"#CDCDCD",fontSize:12,zIndex:0}}>
-                                            {calculateDate(item.postDate)}
-                                        </Text>
-                                    </View>
-                                </View>
-                                }
-                                <View style={{width:screenSize.width,paddingLeft:10,paddingRight:20,height:1,marginBottom:20}}>
-                                    <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <Animated.View 
-                                    style={{
-                                    width:screenSize.width,
-                                    height:80,
-                                    paddingTop:0,
-                                    paddingBottom:10,
-                                    
-                                    justifyContent:'center',paddingLeft:70,
-                                    backgroundColor:"#FFFFFF",
-                                    position:'absolute',
-                                    top:Animated.add(Animated.add((screenSize.height-80),commentContainerOffset),Animated.multiply(offset,-1)) ,
-                                    zIndex:1
-                                    }}>
-                                
-                                        {/* <Image 
-                                        source={require('../../assets/icon.png')} 
-                                        style={styles.userIcon}   /> */}
-                                        <NonIdCachedImage
-                                        uri={base_url+item.userInfo[0].icon}
-                                        style={styles.userIcon}   />
-                                        
+                                                {/* <Image 
+                                                source={require('../../assets/icon.png')} 
+                                                style={styles.userIcon}   /> */}
+                                                <NonIdCachedImage
+                                                uri={base_url+item.userInfo[0].icon}
+                                                style={styles.userIcon}   />
+                                                
 
-                                        <TextInput 
-                                        keyboardType={'twitter'}
-                                        returnKeyType='send'
-                                        onBlur={()=>collapseKeyBoard()}
-                                        onTouchStart={()=>clickedKeyBoard()}
-                                        onSubmitEditing={()=>submitMessage()}
-                                        /* onKeyPress={()=>clickedKeyBoard()} */
-                                        placeholder={"新增回應......"} 
-                                        style={styles.input} 
-                                        onChangeText={text => onChangeText(text)} value={value} 
+                                                <TextInput 
+                                                keyboardType={'twitter'}
+                                                returnKeyType='send'
+                                                onBlur={()=>collapseKeyBoard()}
+                                                onTouchStart={()=>clickedKeyBoard()}
+                                                onSubmitEditing={()=>submitMessage()}
+                                                /* onKeyPress={()=>clickedKeyBoard()} */
+                                                placeholder={"新增回應......"} 
+                                                style={styles.input} 
+                                                onChangeText={text => onChangeText(text)} value={value} 
+                                                />
+                                            
+                                            
+                                    </Animated.View>
+                                    {
+                                        /* data!==undefined
+                                        && */
+                                        <MyFlatlist 
+                                        data={data} 
+                                        offset={offset}
+                                        collapseKeyBoard={collapseKeyBoard} 
                                         />
-                                    
-                                    
-                            </Animated.View>
-                            {
-                                /* data!==undefined
-                                && */
-                                <MyFlatlist 
-                                data={data} 
-                                offset={offset}
-                                collapseKeyBoard={collapseKeyBoard} 
-                                />
-                                
-                            }
+                                        
+                                    }
 
-                            
-                    </Animated.ScrollView>
-            </Animated.View>
-        </PanGestureHandler>
+                                    
+                            </Animated.ScrollView>
+                    </Animated.View>
+                </PanGestureHandler>
+                :
+                <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
+                            <Animated.ScrollView  scrollEventThrottle={16} onScroll={
+                                    Animated.event(
+                                        [
+                                        {
+                                            nativeEvent: {contentOffset: {y: commentContainerOffset}},
+                                        },
+                                        ],
+                                        {useNativeDriver: false},
+                                    )}  
+                                    style={{flex:1}} 
+                                    showsVerticalScrollIndicator={false} 
+                                    >
+                                    
+                                    
+                                    <TouchableWithoutFeedback onPress={collapseKeyBoard} >
+                                        <View style={{paddingLeft:10,paddingRight:10}}>
+                                            <CommentHeader  collapse={collapse} item={item} />
+                                        </View>
+                                        {
+                                        <View style={styles.itemContent}>
+                                                        
+                                                <MySwiper /* isJustify={true} */ data={item.postImage} style={styles.postImage} />
+                                            
+                                            <View style={{paddingLeft:5,paddingRight:5}} >
+                                                <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
+                                                    <AntDesign  name="like2" style={{fontSize:20,marginRight:20}} />
+                                                    <FontAwesome name="comment-o" style={{fontSize:20}} />
+                                                    
+                                                </View>
+                                                <Text style={{padding:10,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
+                                                    {item.likeCount} 讚好
+                                                </Text>
+                                                <Text style={{padding:10,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
+                                                    {item.userInfo[0].username}: {item.introduction}
+                                                </Text>
+                                                
+                                                <Text style={{paddingTop:10,paddingLeft:10,color:"#CDCDCD",fontSize:12,zIndex:0}}>
+                                                    {calculateDate(item.postDate)}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        }
+                                        <View style={{width:screenSize.width,paddingLeft:10,paddingRight:20,height:1,marginBottom:20}}>
+                                            <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <Animated.View 
+                                            style={{
+                                            width:screenSize.width,
+                                            height:100,
+                                            paddingTop:0,
+                                            paddingBottom:10,
+                                            
+                                            justifyContent:'center',paddingLeft:70,
+                                            backgroundColor:"#FFFFFF",
+                                            position:'absolute',
+                                            top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
+                                            zIndex:1
+                                            }}>
+                                        
+                                                {/* <Image 
+                                                source={require('../../assets/icon.png')} 
+                                                style={styles.userIcon}   /> */}
+                                                <NonIdCachedImage
+                                                uri={base_url+item.userInfo[0].icon}
+                                                style={styles.userIcon}   />
+                                                
+
+                                                <TextInput 
+                                                keyboardType={'twitter'}
+                                                returnKeyType='send'
+                                                onBlur={()=>collapseKeyBoard()}
+                                                onTouchStart={()=>clickedKeyBoard()}
+                                                onSubmitEditing={()=>submitMessage()}
+                                                /* onKeyPress={()=>clickedKeyBoard()} */
+                                                placeholder={"新增回應......"} 
+                                                style={styles.input} 
+                                                onChangeText={text => onChangeText(text)} value={value} 
+                                                />
+                                            
+                                            
+                                    </Animated.View>
+                                    {
+                                        /* data!==undefined
+                                        && */
+                                        <MyFlatlist 
+                                        data={data} 
+                                        offset={offset}
+                                        collapseKeyBoard={collapseKeyBoard} 
+                                        />
+                                        
+                                    }
+
+                                    
+                            </Animated.ScrollView>
+                    </Animated.View>
+            }
+        </>
     )
 }
 
@@ -321,7 +425,7 @@ const styles = StyleSheet.create({
         borderRadius:30,
         position:'absolute',
         left:10,
-        bottom:20
+        bottom:30
     },
     input:{
         width:screenSize.width*0.73,

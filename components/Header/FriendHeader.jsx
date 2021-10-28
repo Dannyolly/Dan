@@ -47,10 +47,10 @@ export default observer( ({ navigation })=>{
         <View style={{width:screenSize.width,height:95,position:'absolute',top:-50}}>    
 
             <View style={{width:screenSize.width,justifyContent:"center"}}>
-                <Text style={[styles.headerTitle,{paddingLeft:30}]}>Friends</Text>
+                <Text style={[styles.headerTitle,{paddingLeft:20}]}>Friends</Text>
             </View>
             
-            <View style={{position:'absolute',right:30,bottom:10,flexDirection:'row'}}>
+            <View style={{position:'absolute',right:20,bottom:10,flexDirection:'row'}}>
                 <View style={{width:35,height:35,borderRadius:20,backgroundColor:"#28C1FD",justifyContent:'center',alignItems:"center"}}>
                     <SimpleLineIcons
                         onPress={()=>navigation.navigate('checkFriendRequest') }

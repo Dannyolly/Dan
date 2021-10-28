@@ -5,8 +5,9 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
 import { base_url } from '../../api/config'
 import { screenSize } from '../../util/screenSize'
 
-import CachedImage from 'expo-cached-image'
+import CachedImage from '../NonIdCachedImage'
 import { searchUser } from '../../api/api'
+import { defaultShowMessage } from '../../util/function'
 
 
 export default function item({ item }) {
@@ -43,7 +44,9 @@ export default function item({ item }) {
        
     }, [])
 
+    //defaultShowMessage(JSON.stringify(item))
 
+    //console.log('friend list',item)
     return (
         <TouchableHighlight 
         activeOpacity={0.6} 
@@ -62,13 +65,10 @@ export default function item({ item }) {
                 <View style={{flexDirection:'row'}}>
                   
                     <CachedImage
-                    source={{ 
-                        uri: base_url+item.icon
-                    }}
-                    cacheKey={`${item.id}-thumb`}
-                    resizeMode="contain"
+                    uri={base_url + item.icon}
                     style={{width:40,height:40,borderRadius:30,marginRight:10}}
                     />
+
                     {
                         online===true?
                         <View style={{width:10,height:10,borderRadius:20,backgroundColor:"#28EF93",position:'absolute',left:30,bottom:0}}/>

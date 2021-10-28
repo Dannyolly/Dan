@@ -159,7 +159,7 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                 {
                 realItem!==undefined
                 &&
-                <View style={[styles.itemContent,isShadow===true?{padding:10,borderRadius:20}:{}]}>
+                <View style={[styles.itemContent,isShadow===true?{padding:10,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>
                     <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5}}>
                        
                         <CachedImage style={styles.iconStyle}  uri={base_url+realItem.userInfo[0].icon} />
@@ -198,7 +198,7 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                     <Text onPress={()=>navigation.navigate('comment',{
                         userId:userStore.userInfo.userInfo.id,
                         postId:realItem.id,
-                        item:realItem
+                        item:realItem,
                     })} selectionColor="#FFFFFF" style={{padding:15,paddingTop:5,paddingBottom:5,color:"#CDCDCD",zIndex:0,fontWeight:'500'}}>
                         查看{commentCount}則留言
                     </Text>

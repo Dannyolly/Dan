@@ -10,8 +10,7 @@ const index = ({ previewUri  , uri , style  } ) => {
         tint={'dark'} 
         transitionDuration={300} 
         {...{ uri:uri}} 
-        {...(previewUri!==undefined?previewUri:{})}
-        style={style}   
+        style={[style,{zIndex:100}]}   
         />
     )
 }

@@ -4,10 +4,11 @@ import MessageHeader from '../../components/Header/Message'
 import { GiftedChat } from 'react-native-gifted-chat'
 import { screenSize } from '../../util/screenSize'
 import { base_url } from '../../api/config'
-import CachedImage from '../../components/CachedImage'
+import CachedImage from '../../components/NonIdCachedImage'
 
 
 import { 
+    defaultShowMessage,
     getUserMainInfo, 
     uuid 
 } from '../../util/function'
@@ -36,18 +37,20 @@ import {
     getTheMessageFromLocal,
     getTheMessageFromLocalByCurrentPage,
 } from './messageUtils'
-import UploadImage from '../../components/UploadImage'
+
+
+import ChatImage from '../../components/ChatImage'
 import { getAllNotReceiveMsg, sendPic } from '../../api/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ChatMessageContainer from '../../components/ChatMessageContainer'
 import { userStore } from '../../mobx/store'
-import { messageResponser} from '../../util/haptic'
-import Messages from './messages'
-import Loading from './Loading'
-import { showMessage } from 'react-native-flash-message'
+import { messageStore ,observer} from '../../mobx/chat'
 
+
+import { messageResponser} from '../../util/haptic'
+import { showMessage } from 'react-native-flash-message'
+import Loading from './Loading'
 import BottomSheet from '../../components/BottomSheet/Message'
-import MessageBox from './MessageBox'
 
 export default function index( { route, navigation } ) {
 
@@ -73,19 +76,37 @@ export default function index( { route, navigation } ) {
 
     const [progress, setProgress] = useState(0)
 
+    // 父ref
+    const containerRef = useRef()
+
+    const scrollRef = useRef()
+
+
     webSocket.onmessage=(e)=>{
         let msg =JSON.parse(e.data)
         let formatMsg  
+        let index  =0 
         if(msg.msg.substring(0,1) === '/'){
+            
+            //index = 0 
             formatMsg = getMsgFormat(undefined,friendInfo,base_url+msg.msg,true)
         }else{
+            
+           // index = 1 
             formatMsg = getMsgFormat(msg.msg,friendInfo)
         }
 
 
-        console.log(msg.id,msg)
+       // console.log(msg.id,msg)
         signTheMsg([msg.id])
         saveTheMessageToLocal(formatMsg,msg.sendUserId,msg.receiveUserId) 
+
+        /* showMessage({
+            message:JSON.stringify(formatMsg.text),
+            style:{paddingTop:100,width:screenSize.width,height:400},
+            duration:6000
+        }) */
+
         setMessages(previousMessages => GiftedChat.append(previousMessages, [formatMsg]))
 
         DeviceEventEmitter.emit('refresh')
@@ -94,21 +115,19 @@ export default function index( { route, navigation } ) {
 
     const onSend = useCallback((messages = []) => {
         
-        //messageResponser()
+
         let msg=JSON.stringify(chatMsg(CHAT,userInfo.id,friendInfo.id,userStore.text))    
-        /* let obj = {
-             _id:messages[0]._id,
-             createdAt:messages[0].createdAt,
-             text:userStore.text,
-             user:messages[0].user,
-        }
-        let a = [obj] */
 
         /* 保存到本地... */
         let res = getMsgFormat(userStore.text,userInfo)
         //console.log(obj,res)
         saveTheMessageToLocal(res,friendInfo.id,userInfo.id) 
         webSocket.send(msg)
+        /* showMessage({
+            message:JSON.stringify(msg),
+            style:{paddingTop:100,width:screenSize.width,height:300},
+            duration:6000
+        }) */
         setMessages(previousMessages => GiftedChat.append(previousMessages, [res]))
 
         userStore.setText('')
@@ -125,27 +144,27 @@ export default function index( { route, navigation } ) {
         
         let res =getMsgFormat(undefined,userInfo,pic)
         setMessages(previousMessages=>GiftedChat.append(previousMessages, [res]))
-        let { data } = await sendPic([pic],userInfo.id,item.id,num=>{
+        let { data } = await sendPic([pic],userInfo.id,item.id, num =>{
             setTimeout(()=>{
                 setProgress(()=>num)
             },10)
-            console.log(num)
+            //console.log('progress',num)
         })
-        res =getMsgFormat(undefined,userInfo,pic,true)
+
+
+        res = getMsgFormat(undefined,userInfo,pic,true)
         saveTheMessageToLocal(res,friendInfo.id,userInfo.id) 
         
         let msg=JSON.stringify(chatMsg(CHAT,userInfo.id,friendInfo.id,data.imagePath,data.msgId))    
-
+        ///defaultShowMessage()
         //console.log('send')
+        console.log(msg)
         webSocket.send(msg)
         setTimeout(()=>{
             setProgress(0)
         },4000)
         DeviceEventEmitter.emit('refresh')
     }
-
-
-    
 
 
 
@@ -166,6 +185,7 @@ export default function index( { route, navigation } ) {
          */
         if(res.userInfo.id!==undefined ){
            let messages  = await getTheMessageFromLocalByCurrentPage(item.id,res.userInfo.id,currentPage.current)
+           console.log('message',messages)
            if(messages!==undefined && messages !==null){
                 //console.log('message',messages)
                 setMessages(previousMessages => {
@@ -249,24 +269,40 @@ export default function index( { route, navigation } ) {
         
     },[])
 
+    
 
     return (
         userInfo!==undefined
         &&
-        <View /* style={{paddingTop:89}} */>
+        <View  /* style={{paddingTop:89}} */>
             {/* header */}
             <MessageHeader   item={item} navigation={navigation}   />
             <View style={{width:screenSize.width,height:screenSize.height,backgroundColor:"#EBEDF5"}}>
                 <GiftedChat
+                    ref={c=>containerRef.current=c}
                     listViewProps={{
                         scrollEventThrottle: 1,
+                        onContentSizeChange:(width, height) => {
+                            messageStore.setContainerSize({width,height})
+                        },
+                        onScrollEndDrag:()=>{
+                            if(messageStore.scrolling){
+                                messageStore.setScrolling(false)
+                               // console.log('End');
+                            }
+
+                            
+                        },
+                        onScrollBeginDrag:()=>{
+                            messageStore.setScrolling(true)
+                            //console.log('begin')
+                        },
                         onScroll: ({ nativeEvent }) => {
                             const { contentOffset , contentSize,layoutMeasurement} = nativeEvent
                             const loaderHeight =  0
-                            //console.log(contentSize.height,layoutMeasurement.height);
+                            messageStore.setCurrentOffset(contentOffset.y)
                             if(contentSize.height-(layoutMeasurement.height)-loaderHeight<=contentOffset.y && setting.current===false && loading===false){
                                 setting.current=true
-                                /* console.log('setting'); */
                                 setLoading(()=>true)
                             }
                         }
@@ -285,12 +321,15 @@ export default function index( { route, navigation } ) {
                     maxComposerHeight={35}
                     minInputToolbarHeight={60}
                     renderMessageImage={props=>{
+                        console.log('currentMessage' ,props.currentMessage.image)
                         return(
-                            <UploadImage {...props.currentMessage} progress={progress}   />
+                            <ChatImage  
+                            parentRef={containerRef.current}  
+                            {...props.currentMessage} 
+                            progress={progress}   
+                            />
                         )
                     }}
-                    rendermes
-                    /* renderMessage={message=><Messages message={message} />} */
                     messages={messages}
                     onSend={messages => onSend(messages)}
                     alwaysShowSend={true}
@@ -301,24 +340,19 @@ export default function index( { route, navigation } ) {
                         id:userInfo.id           
                     }}
                     showUserAvatar={true}
-                    /* renderAvatarOnTop={true} */
                     renderAvatar={(props)=>{
                         const {currentMessage} =props
+                        //console.log('avatar',currentMessage.user)
                         return(
                             <CachedImage 
                             uri={currentMessage.user.avatar} 
-                            id={currentMessage.user.id} 
                             style={{width:40,height:40,borderRadius:20}} 
                              />
                         )
                     }}
-                    renderTime={()=><Text></Text>}
-                    /* renderMessage={props=>{
-                        return(
-                            <MessageBox  {...props.currentMessage}  />
-                        )
-                    }} */
                     
+                    renderTime={()=><Text></Text>}
+
                     
                 />
             </View>
