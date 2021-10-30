@@ -1,5 +1,5 @@
 import React, { useEffect, useState ,useCallback, useRef} from 'react'
-import { View, Text ,DeviceEventEmitter, Platform,} from 'react-native'
+import { View, Text ,DeviceEventEmitter, Platform,Animated} from 'react-native'
 import { screenSize } from '../../util/screenSize'
 import HomeHeader from '../../components/Header/HomeHeader'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
@@ -21,6 +21,7 @@ import { getMsgFormat } from '../Message/messageUtils'
 import { base_url } from '../../api/config'
 import { getMostUnReadMessageArr } from './homeUtils'
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default observer(()=>{
 
@@ -52,7 +53,7 @@ export default observer(()=>{
     //這個是用來控制當移動時,限制scrollRef變化
     const setting = useRef(false)
     
-    
+    const currentTopOffset = useRef(new Animated.Value(0)).current
     
     /**
     * @description 這里只是為了找出各聊天的最後一句和跟多少聊天過,并列出所有列表
@@ -271,22 +272,52 @@ export default observer(()=>{
 
    
 
-   
+    const ListHeader = ()=>{
+        return (
+            <Animated.View 
+            style={{backgroundColor:"transparent",
+            zIndex:0,height:50,
+            /* transform:[{translateY:Animated.multiply(-1,currentTopOffset)}] */
+            }}
+            >
+                <HomeHeader navigation={navigation} />
+            </Animated.View>
+        )
+    }
 
 
     return (
-        <View style={{width:screenSize.width,height:screenSize.height,backgroundColor:"#FfFfFf"}}>
+        <SafeAreaView style={{flex:1,backgroundColor:"#FFFFFF"}}>
+            <View style={{width:screenSize.width,height:screenSize.height,backgroundColor:"#FfFfFf"}}>
+            {/* header */}
             
             {
                 chatList!==undefined
                 && 
-                <FlatList
+                <Animated.FlatList 
+                style={{zIndex:1}}
                 ref={c=>onScrollRef.current=c}
                 data={chatList}
+                onScroll={
+                    Animated.event(
+                    [
+                    {
+                        nativeEvent: {contentOffset: {y: currentTopOffset}},
+                    },
+                    ],
+                    {useNativeDriver: true}
+                
+                    )
+                } 
+                ListHeaderComponent={ListHeader}
                 /* scrollEnabled={false} */
                 renderItem={({ item,index })=><Item 
-                isSwipe={scrollRef.current}  setOnScroll={handleToggle}
-                 item={item} index={index} userInfo={userInfo}  navigation={navigation} /> }
+                isSwipe={scrollRef.current} 
+                setOnScroll={handleToggle}
+                item={item} 
+                index={index} 
+                userInfo={userInfo}  
+                navigation={navigation} /> }
                 keyExtractor={item=>{
                     if(item.objectInfo!==undefined){
                         return item.objectInfo.id.toString()
@@ -294,9 +325,10 @@ export default observer(()=>{
                 }}
                 /> 
             }
-                    
+                        
 
 
-        </View>
+            </View>
+        </SafeAreaView>
     )
 })

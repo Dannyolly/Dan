@@ -6,7 +6,7 @@ import { getAllFriend } from '../../api/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Item from './item'
 import { base_url } from '../../api/config'
-
+import FriendHeader from '../Header/FriendHeader'
 export default observer(({ navigation })=>{
 
     
@@ -35,6 +35,7 @@ export default observer(({ navigation })=>{
         &&
         <FlatList
         data={list}
+        
         renderItem={({ item })=><Item  item={item} />}
         keyExtractor={item=>item.id.toString()}
         />

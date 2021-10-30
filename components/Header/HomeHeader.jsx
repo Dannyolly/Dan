@@ -8,28 +8,19 @@ import { userStore,observer } from '../../mobx/store';
 
 import CachedImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default observer(({ navigation })=>{
 
     //console.log(userStore.userInfo);
     return(
-        <View style={{width:screenSize.width,height:95,position:'absolute',top:-50}}>    
-
-            {/* <View onTouchEnd={()=>navigation.navigate('userInfo')} style={{position:'absolute',bottom:10,left:15}}>
-                {
-                    userStore.userInfo!==undefined
-                    &&
-                    <CachedImage  
-                    uri={base_url+userStore.userInfo.userInfo.avatar}
-                    style={styles.picStyle}
-                    />
-                }
-            </View> */}
-            <View style={{width:screenSize.width,justifyContent:"center"}}>
-                <Text style={[styles.headerTitle,{/* paddingLeft:20 */textAlign:'center'}]}>Messages</Text>
+        <View style={{flex:1,zIndex:0,height:0}}>  
+            <View style={{width:screenSize.width,position:'absolute',left:20,bottom:0}}>
+                <Text style={[styles.headerTitle]}>Messages</Text>
             </View>
-                  
-            <View onTouchEnd={()=>navigation.navigate('individual')} style={{position:'absolute',bottom:5,right:20}}>
+                
+            <View onTouchEnd={()=>navigation.navigate('individual')} 
+            style={{position:'absolute',right:20,bottom:3}}>
                 {
                     userStore.userInfo!==undefined
                     &&
@@ -39,24 +30,19 @@ export default observer(({ navigation })=>{
                     />
                 }
             </View>
-            
-            
         </View>
     )
 })
 
 const styles = StyleSheet.create({
     headerTitle:{
-        left:20,
-        position:'absolute',
-        top:50,
         color:"#3672CF",
-        fontSize:30,
+        fontSize:35,
         fontWeight:'bold'
     },
     picStyle:{
-        width:36.5,
-        height:36.5,
+        width:35,
+        height:35,
         borderRadius:18.25
     }
 })

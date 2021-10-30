@@ -1,3 +1,4 @@
+import { chatMsg , PULL_FRIEND } from '../pages/Message/messageUtils'
 import { transformToFormDataByMessage,transformToFormDataByPost, transformToFormDataByRegisterInfo } from '../util/function'
 import {
     get,
@@ -5,6 +6,7 @@ import {
     axios
 } from './config'
 
+import { ws } from '../webSocket'
 //const userLogin=(username,password)=>get(`/login?username=${username}&password=${password}`)
 /* login?username=danny&password=28300136 */
 const userLogin=(username,password)=>get(`/login?username=${username}&password=${password}`)
@@ -64,8 +66,16 @@ const searchUser = (info)=>get(`/searchUser?${info}`)
 
 const updateUserInfo = (info)=>get(`/updateUserSetting?${info}`)
 
-const addRequest = (userId , otherId ,message )=>get(`/addRequest?senderId=${userId}&receiverId=${otherId}&message=${message}`)
+const addRequest = (userId , otherId ,message )=>{
 
+    
+    let chatFormatMsg =  chatMsg(PULL_FRIEND,userId,otherId,"","")
+
+    ws.send(JSON.stringify(chatFormatMsg))
+
+    // get(`/addRequest?senderId=${userId}&receiverId=${otherId}&message=${message}`)
+
+}
 const getAllFriendRequest = (userId) =>get(`/getAddRequest?userId=${userId}`)
 
 const confirmRequest =(requestId,receiverId,senderId)=>get(`/confirmRelationship?requestId=${requestId}&senderId=${senderId}&receiverId=${receiverId}`)

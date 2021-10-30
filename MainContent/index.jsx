@@ -73,6 +73,7 @@ import Step2 from '../pages/Register/Step2'
 import Step3 from '../pages/Register/Step3'
 import Last from '../pages/Register/last'
 
+import VideoPlayer from '../components/VIdeoplayer'
 import CachedImage from '../components/NonIdCachedImage'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CheckFriend from '../components/Header/CheckFriend';
@@ -167,7 +168,7 @@ const UserTabIcon = observer(()=>{
     
 
     return(
-        <View  style={{}} >
+        <View  style={{paddingTop:5}} >
             {
                 userStore.userInfo.userInfo!==undefined
                 &&
@@ -238,8 +239,9 @@ const BottomTab = observer((props)=>{
             /* headerShown:route.name==='發現'?false:true, */
             /* headerLeft:props=>whichHeader(route.name), */
             headerStyle:{
-                /* shadowColor: 'transparent', */
-                shadowRadius:2
+                shadowColor: 'transparent',
+                /* shadowRadius:2 */
+                /* height:100 */
             },
             /* headerRight:props=><ScannerHead />, */
             //headerShadowVisible:false,
@@ -284,7 +286,7 @@ const BottomTab = observer((props)=>{
          })}
             
         >
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="發現"
                 component={ Discover}
                 listeners={{
@@ -298,7 +300,7 @@ const BottomTab = observer((props)=>{
                     title:"發現"
                     
                 }}
-            />
+            /> */}
 
             <Tab.Screen
                 name="Dan"
@@ -306,12 +308,13 @@ const BottomTab = observer((props)=>{
                 listeners={{
                     tabPress:e=>{
                         selectionResponser()
-                    }
+                    },
                 }}
                 options={{
                     /* headerShown:false, */
-                    headerLeft:props=><HomeHeader {...props} navigation={navigation} />,
+                    //headerLeft:props=><HomeHeader {...props} navigation={navigation} />,
                     /* headerTitle:'聊天室' */
+                    headerShown:false,
                 }}
             />
             
@@ -326,10 +329,12 @@ const BottomTab = observer((props)=>{
                     tabBarButton:()=>{
                         return(
                             <View style={{paddingTop:5}}>
-                                <View onTouchEnd={()=>{
+                                <View 
+                                onTouchEnd={()=>{
                                 navigation.navigate('Post')
                                 messageResponser()
-                                }} style={{shadowColor:"#22CAFE",shadowRadius:40,shadowOffset:{width:20,height:20},marginLeft:15,marginRight:15,width:40,height:40,borderRadius:20,justifyContent:"center",alignItems:"center",backgroundColor:"#22CAFE"}}>
+                                }} 
+                                style={{shadowColor:"#22CAFE",shadowRadius:40,shadowOffset:{width:20,height:20},marginLeft:15,marginRight:15,width:40,height:40,borderRadius:20,justifyContent:"center",alignItems:"center",backgroundColor:"#22CAFE"}}>
                 
                                     <Text style={{fontSize:30,fontWeight:'500',color:'#FFFFFF',lineHeight:30}} >+</Text>
                                 </View>
@@ -348,8 +353,9 @@ const BottomTab = observer((props)=>{
                     /* headerTitleStyle:{
                         color:"#FFFFFF"
                     }, */
-                    headerLeft:props=><FriendHeader {...props} navigation={navigation} />,
-                    
+                    headerShown:false,
+                    /* headerLeft:props=><FriendHeader {...props} navigation={navigation} />,
+                     */
                 }}
             />
 
@@ -370,17 +376,18 @@ const BottomTab = observer((props)=>{
             />
             
 
-            {/* <Tab.Screen
-                name="個人頁"
-                component={ Individual }
+            <Tab.Screen
+                name="video"
+                component={ VideoPlayer }
                 options={{
-                    headerTitle:"個人頁",
+                    headerTitle:"video",
                     headerTitleStyle:{
                         color:"#FFFFFF"
                     },
-                    headerLeft:props=><HomeHeader {...props} navigation={navigation} />
+                    headerShown:false
+                    /* headerLeft:props=><HomeHeader {...props} navigation={navigation} /> */
                 }}
-            /> */}
+            />
 
             
 
@@ -464,10 +471,10 @@ export default observer((props)=>{
             screenOptions={{
                 headerStyle:{
                     /* backgroundColor:'#29C0FD', */
-                    /* shadowColor: 'transparent', */
+                    shadowColor: 'transparent',
                     /* height:200 */
                 },          
-                //headerShadowVisible:false,
+                headerShadowVisible:false,
                 headerBackTitleStyle:{
                     color:"black"
                 },
@@ -481,6 +488,7 @@ export default observer((props)=>{
                     name="login" 
                     component={Login}
                     options={{
+                        
                     // headerLeft:props=>which(whichHeader)
                     /* headerLeft:props=> which() */
                     /*   
@@ -752,8 +760,10 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     picStyle:{
+        paddingTop:5,
         width:32,
         height:32,
+        marginBottom:8,
         borderRadius:22.5
     }
 })

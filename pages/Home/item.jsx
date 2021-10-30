@@ -51,7 +51,9 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
    // console.log( 'item```', item.objectInfo.avatar)
 
     return (
-        <Swipeable  
+        <View style={{zIndex:1}}>
+            <Swipeable  
+        
         rightButtons={rightButtons} 
         rightActionActivationDistance={0}
         onSwipeStart={()=>{
@@ -60,7 +62,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
             setOnScroll()
         }} 
         >
-            <View style={{width:screenSize.width,height:90}}>
+            <View style={{width:screenSize.width,height:80,zIndex:1}}>
                 
                     <TouchableHighlight 
                     style={{width:screenSize.width,height:90,padding:10,paddingLeft:20,paddingRight:20,paddingTop:20,marginBottom:10}}
@@ -156,6 +158,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                 
             </View>
         </Swipeable>
+        </View>
     )
 })
 

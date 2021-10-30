@@ -3,7 +3,7 @@ import React,{useEffect} from 'react'
 import { View, Text } from 'react-native'
 import { getUserMainInfo, objTOParams } from '../util/function';
 
-import { chatMsg } from '../pages/Message/messageUtils';
+import { chatMsg, PULL_FRIEND } from '../pages/Message/messageUtils';
 import { CONNECT ,KEEPALIVE} from '../pages/Message/messageUtils';
 
 
@@ -16,6 +16,7 @@ import { showMessage } from 'react-native-flash-message';
 import { base_url } from '../api/config';
 
 import MessageIcon from '../components/MessageIcon'
+import { userStore } from '../mobx/store';
 
 
 
@@ -55,8 +56,8 @@ const onopen=(e)=>{
     
 }
 
-const initOnMessage = async (e)=>{
-    let msg =JSON.parse(e.data)
+
+const receiveChatMessage = async () =>{
     let params = objTOParams({
         id:msg.sendUserId
     })
@@ -83,6 +84,22 @@ const initOnMessage = async (e)=>{
         /* titleStyle:{lineHeight:30,fontSize:18,fontWeight:'400'} */
         
     })
+}
+
+const initOnMessage = async (e)=>{
+    let msg =JSON.parse(e.data)
+
+    if(msg.action!==undefined  && msg.action === PULL_FRIEND ){
+        // 好友請求...
+        userStore.setFriendRequestDidNotRead(userStore.friendRequestDidNotReadNumber+1)  
+
+    }else{
+
+        // 聊天信息..
+        receiveChatMessage()
+    }
+
+    
 }
 
 const onerror = (e) => {

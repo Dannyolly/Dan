@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { base_url } from '../../api/config'
 import { userStore,observer } from '../../mobx/store'
 
-import CachedImage from '../../components/CachedImage'
+import CachedImage from '../../components/NonIdCachedImage'
 
 export default observer(()=> {
     
@@ -73,7 +73,6 @@ export default observer(()=> {
                         <CachedImage
                         style={{width:70,height:70,borderRadius:35,position:'absolute',left:0}}
                         uri={base_url+item.icon}
-                        id={item.senderId}
                         />
                         <View style={{height:80,width:screenSize.width-40-80,padding:10}}>
                             <Text style={{marginBottom:10}}>{item.username}</Text>

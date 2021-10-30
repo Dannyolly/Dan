@@ -44,6 +44,7 @@ import {observer, userStore } from '../../mobx/store'
 import BottomSheet from '../../components/BottomSheet/BackgroundImage'
 
 import { messageResponser, selectionResponser, tapResponser } from '../../util/haptic'
+import { defaultShowMessage } from '../../util/function'
 export default observer(({ route, navigation })=>{
 
     const [requestMessage, setRequestMessage] = useState(undefined)
@@ -115,25 +116,9 @@ export default observer(({ route, navigation })=>{
     const addFdRequest = async ()=>{
         let jsonRes = await AsyncStorage.getItem('userInfo')
         let res =JSON.parse(jsonRes)
-        setIsShowMessageBOx(false)
+        addRequest(res.userInfo.id,item.id,value)  
+        defaultShowMessage('已提交好友請求')
 
-        addRequest(res.userInfo.id,item.id,value).then(res=>{
-            //console.log(res.data)
-            showMessage({
-                icon:'info',
-                message:"已提交好友邀請",
-                titleStyle:{position:"relative",fontSize:14},
-                style:{
-                    height:40,
-                    backgroundColor:"#8C8E8F",
-                    width:screenSize.width-20,
-                    borderRadius:10,
-                    paddingLeft:20,
-                    left:10,
-                    top:40,
-                }
-            })
-        })     
     }
 
     const getData=( isAdd )=>{

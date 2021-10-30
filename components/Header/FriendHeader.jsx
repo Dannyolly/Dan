@@ -44,9 +44,9 @@ export default observer( ({ navigation })=>{
         </View>
     ) */
     return(
-        <View style={{width:screenSize.width,height:95,position:'absolute',top:-50}}>    
+        <View style={{width:screenSize.width,height:95}}>    
 
-            <View style={{width:screenSize.width,justifyContent:"center"}}>
+            <View style={{width:screenSize.width,justifyContent:"center",position:'absolute',bottom:0}}>
                 <Text style={[styles.headerTitle,{paddingLeft:20}]}>Friends</Text>
             </View>
             
@@ -62,7 +62,7 @@ export default observer( ({ navigation })=>{
                     {
                         userStore.friendRequestDidNotReadNumber!==0
                         &&
-                        <View style={{justifyContent:"center",alignItems:'center',position:"absolute",right:60,zIndex:1,top:40,width:15,height:15,borderRadius:7.5,backgroundColor:"#3DA3FF"}}>
+                        <View style={{justifyContent:"center",alignItems:'center',position:"absolute",right:60,zIndex:1,top:0,left:30,width:15,height:15,borderRadius:7.5,backgroundColor:"#3DA3FF"}}>
                         <Text style={{color:"#FFFFFF",fontSize:10}}>{userStore.friendRequestDidNotReadNumber}</Text>
                     </View>
                     }
@@ -87,11 +87,8 @@ export default observer( ({ navigation })=>{
 
 const styles = StyleSheet.create({
     headerTitle:{
-        position:'absolute',
-        top:50,
-        /* left:70, */
         color:"#3672CF",
-        fontSize:30,
+        fontSize:35,
         fontWeight:'bold'
     },
     picStyle:{

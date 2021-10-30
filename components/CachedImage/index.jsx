@@ -4,6 +4,7 @@ import CachedImage from 'expo-cached-image'
 
 /**
  * @Dannyolly
+ * @description this methods need a unique Id , so we suggest you to use NonIdCachedImage
  * @deprecated
  * @param {} param0 
  * @returns 
