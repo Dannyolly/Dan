@@ -1,5 +1,5 @@
-import React,{useRef,useState,useCallback, useMemo,memo, useEffect} from 'react'
-import { StyleSheet, Text, View ,Image, Platform, Animated, Keyboard, Easing} from 'react-native'
+import React,{useRef,useState,useCallback, useMemo,memo, useEffect,Component} from 'react'
+import { StyleSheet, Text, View ,Image, Platform, Animated, Keyboard, Easing, KeyboardAvoidingView,} from 'react-native'
 import { FlatList, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { screenSize } from '../../util/screenSize'
 
@@ -21,12 +21,12 @@ import CommentHeader from '../../components/Header/Comment'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import MySwiper from '../../components/MySwiper'
 import NonIdCachedImage from '../../components/NonIdCachedImage'
+import MyTextInput from './textInput'
 const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
-
+    
     const { userId ,postId, item  } = route.params
  
-    const [value, onChangeText] = React.useState();
 
     const [data, setData] = useState(undefined)
 
@@ -44,28 +44,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
     const moving = useRef(false)
 
-    const clickedKeyBoard= ()=>{
-       // console.log('up')
-        Animated.timing(offset,{
-            toValue:340,
-            duration:325,
-            easing:Easing.linear,
-            useNativeDriver:false
-        }).start()
-
-    }
-
-    const collapseKeyBoard=()=>{
-       // console.log('down')
-        Animated.spring(offset,{
-            toValue:0,
-            speed:4.8,
-            bounciness:1,
-            useNativeDriver:false
-        }).start()
-
-        Keyboard.dismiss()
-    }
+   
 
     const getComment =()=>{
         getAllComment(postId,0,10).then(res=>{
@@ -74,7 +53,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
         })
     }
 
-    const submitMessage = () =>{
+    const submitMessage = (value) =>{
         
         collapseKeyBoard()
         setTimeout(()=>{
@@ -91,7 +70,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
     
             setData(()=>[obj,...data])
             
-            onChangeText(()=>'')
+            //onChangeText(()=>'')
     
             addComment(userId,postId,value).then(res=>{
                 /* showMessage({
@@ -116,7 +95,63 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
         }
     }, [])
 
+   
     
+    const Element = class Target extends Component {
+        render(){
+
+            const { top } =this.props
+
+            if(top!==undefined && top!==null ){
+                console.log(top-(screenSize.height-90))
+            }
+            return(
+                <KeyboardAvoidingView 
+                keyboardVerticalOffset={-(top-(screenSize.height-80))}
+                style={{
+                    width:screenSize.width,
+                    height:70,
+                    paddingTop:0,
+                    paddingBottom:10,
+                    justifyContent:'center',
+                    backgroundColor:"#FFFFFF", 
+                    position:'absolute',
+                    top:top,
+                    zIndex:1
+                }}
+                behavior={Platform.OS == "ios" ? 'position': "height"}
+                >
+                    <Animated.View 
+                            style={{
+                            width:screenSize.width,
+                            height:70,
+                            paddingTop:0,
+                            paddingBottom:10,
+                            justifyContent:'center',paddingLeft:70,
+                            backgroundColor:"#FFFFFF",
+                            
+                            }}>
+                        
+                                {/* <Image 
+                                source={require('../../assets/icon.png')} 
+                                style={styles.userIcon}   /> */}
+                                <NonIdCachedImage
+                                uri={base_url+item.userInfo[0].icon}
+                                style={styles.userIcon}   />
+                          
+                                <MyTextInput 
+                                    style={styles.input} 
+                                    onSubmitEditing={(value)=>submitMessage(value)} 
+                                />
+                            
+                    </Animated.View>
+                </KeyboardAvoidingView>
+            )
+        }
+    }
+    
+
+    const AnimatedView = Animated.createAnimatedComponent(Element)
     
 
     const onPanGestureEvent = Animated.event([
@@ -132,6 +167,9 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
         }
     );
     
+    const collapseKeyBoard = ()=>{
+        Keyboard.dismiss()
+    }
 
     const onPanFinished = () =>{
         console.log('touchX',currentTranslationX)
@@ -222,42 +260,44 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                             <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
                                         </View>
                                     </TouchableWithoutFeedback>
-                                    <Animated.View 
-                                            style={{
-                                            width:screenSize.width,
-                                            height:100,
-                                            paddingTop:0,
-                                            paddingBottom:10,
+                                    <KeyboardAvoidingView behavior={Platform.OS == "ios" ? 'position' : "height"}>
+                                        <Animated.View 
+                                                style={{
+                                                width:screenSize.width,
+                                                height:100,
+                                                paddingTop:0,
+                                                paddingBottom:10,
+                                                justifyContent:'center',
+                                                paddingLeft:70,
+                                                backgroundColor:"#FFFFFF",
+                                                position:'absolute',
+                                                top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
+                                                zIndex:1
+                                                }}>
                                             
-                                            justifyContent:'center',paddingLeft:70,
-                                            backgroundColor:"#FFFFFF",
-                                            position:'absolute',
-                                            top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
-                                            zIndex:1
-                                            }}>
-                                        
-                                                {/* <Image 
-                                                source={require('../../assets/icon.png')} 
-                                                style={styles.userIcon}   /> */}
-                                                <NonIdCachedImage
-                                                uri={base_url+item.userInfo[0].icon}
-                                                style={styles.userIcon}   />
-                                                
+                                                    {/* <Image 
+                                                    source={require('../../assets/icon.png')} 
+                                                    style={styles.userIcon}   /> */}
+                                                    <NonIdCachedImage
+                                                    uri={base_url+item.userInfo[0].icon}
+                                                    style={styles.userIcon}   />
+                                                    
 
-                                                <TextInput 
-                                                keyboardType={'twitter'}
-                                                returnKeyType='send'
-                                                onBlur={()=>collapseKeyBoard()}
-                                                onTouchStart={()=>clickedKeyBoard()}
-                                                onSubmitEditing={()=>submitMessage()}
-                                                /* onKeyPress={()=>clickedKeyBoard()} */
-                                                placeholder={"新增回應......"} 
-                                                style={styles.input} 
-                                                onChangeText={text => onChangeText(text)} value={value} 
-                                                />
-                                            
-                                            
-                                    </Animated.View>
+                                                    <TextInput 
+                                                    keyboardType={'twitter'}
+                                                    returnKeyType='send'
+                                                    onBlur={()=>collapseKeyBoard()}
+                                                    onTouchStart={()=>clickedKeyBoard()}
+                                                    onSubmitEditing={()=>submitMessage()}
+                                                    /* onKeyPress={()=>clickedKeyBoard()} */
+                                                    placeholder={"新增回應......"} 
+                                                    style={styles.input} 
+                                                    onChangeText={text => onChangeText(text)} value={value} 
+                                                    />
+                                                
+                                                
+                                        </Animated.View>
+                                    </KeyboardAvoidingView>
                                     {
                                         /* data!==undefined
                                         && */
@@ -286,6 +326,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                     )}  
                                     style={{flex:1}} 
                                     showsVerticalScrollIndicator={false} 
+                                    
                                     >
                                     
                                     
@@ -321,42 +362,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                             <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
                                         </View>
                                     </TouchableWithoutFeedback>
-                                    <Animated.View 
-                                            style={{
-                                            width:screenSize.width,
-                                            height:100,
-                                            paddingTop:0,
-                                            paddingBottom:10,
-                                            
-                                            justifyContent:'center',paddingLeft:70,
-                                            backgroundColor:"#FFFFFF",
-                                            position:'absolute',
-                                            top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
-                                            zIndex:1
-                                            }}>
-                                        
-                                                {/* <Image 
-                                                source={require('../../assets/icon.png')} 
-                                                style={styles.userIcon}   /> */}
-                                                <NonIdCachedImage
-                                                uri={base_url+item.userInfo[0].icon}
-                                                style={styles.userIcon}   />
-                                                
-
-                                                <TextInput 
-                                                keyboardType={'twitter'}
-                                                returnKeyType='send'
-                                                onBlur={()=>collapseKeyBoard()}
-                                                onTouchStart={()=>clickedKeyBoard()}
-                                                onSubmitEditing={()=>submitMessage()}
-                                                /* onKeyPress={()=>clickedKeyBoard()} */
-                                                placeholder={"新增回應......"} 
-                                                style={styles.input} 
-                                                onChangeText={text => onChangeText(text)} value={value} 
-                                                />
-                                            
-                                            
-                                    </Animated.View>
+                                    <AnimatedView top={Animated.add(Animated.add((screenSize.height-70),commentContainerOffset),Animated.multiply(offset,-1))} />
                                     {
                                         /* data!==undefined
                                         && */
@@ -425,7 +431,7 @@ const styles = StyleSheet.create({
         borderRadius:30,
         position:'absolute',
         left:10,
-        bottom:30
+        bottom:10
     },
     input:{
         width:screenSize.width*0.73,
