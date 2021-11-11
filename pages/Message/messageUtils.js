@@ -55,15 +55,16 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
     return obj
 }
 
-
-
 /**
      * @description     信息格式...
      * @param {String}  text 
      * @param {Object}  info 這個先你想轉的info
+     * @param {String}  image
+     * @param {Object}  user
+     *      @param {Number}  user.id
      * @returns 
      */
- const getMsgFormat=( text ,info ,image ,isFinish)=>{
+ const getMsgFormat=( text ,info ,image ,isFinish )=>{
     
     let avatar = ''
     if(info.icon){

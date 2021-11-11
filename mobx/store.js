@@ -174,6 +174,55 @@ var userStore = new UserInfo()
 
 /* userStore.resetUnReadMessage() */
 
+
+/**
+ * 关于自定义类型的描述
+ * @typedef {String} myType
+ */
+
+/**
+ * 关于自定义类型的描述
+ * @param {myType} val - 使用自定义的类型
+ */
+ function myFn(val) {
+    console.log(val);
+ }
+
+
+
+ /**
+ * 指定一个对象对命名空间
+ * @namespace
+ */
+var MyNamespace = {
+    /**
+     * 表示为 MyNamespace.fn
+     * @returns {*}
+     */
+    fn: function() {},
+    /**
+     * 表示为 MyNamespace.a
+     * @type {number}
+     * @typedef number 
+     */
+    a: 1
+}
+
+/**
+ * 手动指定命名空间
+ * @namespace MyNamespace
+ */
+/**
+ * 一个成员函数，MyNamespace.myFn
+ * @function
+ * @returns {*}
+ * @memberof MyNamespace
+ */
+function myFn1() {
+
+}
+
+
 export {
     userStore,
     observer

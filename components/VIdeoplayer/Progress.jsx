@@ -30,7 +30,7 @@ const index = ({ progress ,stop , play , setVideoPositionMillis , duration }) =>
     }, [progress])
     
     return (
-        <View style={{paddingLeft:10,paddingRight:10,position:'absolute',bottom:1}}>
+        <View style={{paddingLeft:10,paddingRight:10,position:'absolute',bottom:-10}}>
             {
                 <PanGestureHandler 
                 onEnded={()=>play()}
@@ -39,7 +39,7 @@ const index = ({ progress ,stop , play , setVideoPositionMillis , duration }) =>
                     stop()
                 }} 
                 onGestureEvent={handlePan} >
-                    <View style={{height:30,paddingTop:10}}>
+                    <View style={{height:30,paddingTop:20}}>
                         {
                             !Number.isNaN(progress) 
                             &&

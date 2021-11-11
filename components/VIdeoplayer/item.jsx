@@ -2,20 +2,30 @@
 import React,{useRef,useState,useCallback, useEffect} from 'react'
 import { View, StyleSheet, Button, Modal ,TouchableWithoutFeedback,Text,
     KeyboardAvoidingView,
-    Keyboard} from 'react-native';
+    Keyboard,
+    Image
+} from 'react-native';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import { screenSize } from '../../util/screenSize';
 import PagerView from 'react-native-pager-view';
 import Progress from './Progress';
 import MyTextInput from './textinput';
-import { FontAwesome } from '../../util/Icon';
-/**
- * 
- * @param  index Number
- * @returns 
- */
-export default function App({ index ,currentPage }) {
+import { AntDesign, Entypo, FontAwesome } from '../../util/Icon';
+import CachedImage from '../NonIdCachedImage'
+import Animated from 'react-native-reanimated';
 
+import VideoComment from '../BottomSheet/VideoComment'
+
+
+/**
+ * @param    {Object}  props
+ * @param    {number} props.index
+ * @param    {number} props.currentPage
+ */
+export default function App( {currentPage , index }) {
+
+    
+    
 
     const video = React.useRef(null);
 
@@ -30,6 +40,8 @@ export default function App({ index ,currentPage }) {
     const isShowKeyboard = useRef(false)
 
     const [changeTextBoxStyle, setChangeTextBoxStyle] = useState(false)
+
+    const [openComment, setOpenComment] = useState(false)
 
 
     const play = async ()=>{
@@ -47,6 +59,12 @@ export default function App({ index ,currentPage }) {
         })
     }
 
+    const setCommentState = () =>{
+        
+        setOpenComment(()=>!openComment)
+    }
+
+
     useEffect(()=>{
         if(video.current!==undefined && video.current !==null){
             currentPage ===index?  video.current.playAsync() :video.current.pauseAsync()
@@ -58,7 +76,7 @@ export default function App({ index ,currentPage }) {
 
 
     return (
-            <View key={index.toString()}>
+            <View style={{width:screenSize.width,height:screenSize.height}} key={index.toString()}>
                 <TouchableWithoutFeedback onPress={async ()=>{
                         
                         if(isShowKeyboard.current){
@@ -71,39 +89,54 @@ export default function App({ index ,currentPage }) {
                         
                     }}>
                     <View>
-                        {/* <View  style={[styles.video,{backgroundColor:"#FFFFFF"}]} ></View> */}
-                        <Video
-                            shouldPlay={isPlay}
-                            progressUpdateIntervalMillis={1}
-                            ref={video}
-                            style={styles.video}
-                            source={{
-                            uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-                            }}
-                            collapsable={true}
-                            resizeMode='cover'
-                            isLooping
-                            
-                            onPlaybackStatusUpdate={status => {
-                                
-                                setStatus(() => status)
-                                
-                                
-                            }}
-                        />
-                        {/* playIcon */}
-                        <View style={{position:'absolute',width:screenSize.width,height:screenSize.height,justifyContent:'center',alignItems:'center'}}>
-                            <View style={{width:50,height:50,borderRadius:25}}>
-
+                        <Animated.View style={{transform:[{translateY:0}]}} >
+                            <View style={{position:'absolute',left:10,top:40,width:100,height:40,zIndex:1,flexDirection:'row'}}>
+                                <Entypo  name="chevron-small-left" style={{color:"#FFFFFF",fontSize:30,lineHeight:35}}  />
+                                <Image  source={require('../../assets/icon.png')} style={{width:35,height:35,borderRadius:20,paddingLeft:10}} />
+                                <Text style={{fontSize:16,color:"#FFFFFF",lineHeight:35,paddingLeft:10}} >danny</Text>
                             </View>
-                        </View>
-                        <Progress  
-                        setVideoPositionMillis={setVideoPositionMillis} 
-                        play={play} 
-                        stop={stop} 
-                        progress={status.positionMillis/status.durationMillis}  
-                        duration = {status.durationMillis}
-                        />
+                            <View  style={{position:'absolute',right:30,top:40,width:100,height:40,zIndex:1,flexDirection:'row'}}>
+                                <AntDesign  name="hearto" style={{color:"#FFFFFF",fontSize:20,lineHeight:35}}  />
+                                <Text style={{fontSize:14,color:"#FFFFFF",lineHeight:35,paddingLeft:3}} >142</Text>
+                                <View style={{flexDirection:'row'}} onTouchStart={setCommentState} >
+                                    <FontAwesome name="comment-o" style={{color:"#FFFFFF",fontSize:20,lineHeight:30,paddingLeft:10}} />
+                                    <Text style={{fontSize:14,color:"#FFFFFF",lineHeight:35,paddingLeft:3}}>1420</Text>
+                                </View>
+                            </View>
+                            <Video
+                                shouldPlay={isPlay}
+                                progressUpdateIntervalMillis={1}
+                                ref={video}
+                                style={styles.video}
+                                /* source={{
+                                uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                                }} */
+                                collapsable={true}
+                                resizeMode='cover'
+                                isLooping
+                                
+                                onPlaybackStatusUpdate={status => {
+                                    
+                                    setStatus(() => status)
+                                          
+                                }}
+                            />
+                            {/* playIcon */}
+                            <View style={{position:'absolute',width:screenSize.width,height:screenSize.height,justifyContent:'center',alignItems:'center'}}>
+                                <View style={{width:50,height:50,borderRadius:25}}>
+
+                                </View>
+                            </View>
+                            <Progress  
+                            setVideoPositionMillis={setVideoPositionMillis} 
+                            play={play} 
+                            stop={stop} 
+                            progress={status.positionMillis/status.durationMillis}  
+                            duration = {status.durationMillis}
+                            />
+                        </Animated.View>
+
+
                         <KeyboardAvoidingView 
                         keyboardVerticalOffset={50}
                         behavior={Platform.OS == "ios" ? 'position' : "height"} 
@@ -138,6 +171,16 @@ export default function App({ index ,currentPage }) {
                                 </View>
                             </TouchableWithoutFeedback>
                         </KeyboardAvoidingView>
+
+                    {/* CommentSheet */}
+                    <VideoComment  
+                        isOpen={openComment}
+                        setIsOpen={setCommentState}
+                        
+                    />
+
+
+
                     </View>
                 </TouchableWithoutFeedback>      
             </View>

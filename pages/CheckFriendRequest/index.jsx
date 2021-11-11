@@ -58,7 +58,13 @@ export default observer(()=> {
     }, [])
 
 
-    const FriendItem=( { item } )=>{
+    /**
+     * 传入的参数是个对象
+     * @param {object} props - 传入的对象参数
+     * @param {string} props.item - 对象的 name 属性
+     * @param {number} props.index - 对象的 age 属性
+     */
+    const FriendItem=( { item,index } )=>{
         return(
             <TouchableHighlight 
             style={{paddingLeft:20,marginBottom:10}}

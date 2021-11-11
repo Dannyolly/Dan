@@ -6891,6 +6891,11 @@ react-native-linear-gradient@^2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
+react-native-modalize@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.11.tgz#a9b3c3d04a57b7413332dc659115021b7b7ececa"
+  integrity sha512-foRnZBvg0IOXi1TopNsci+60vnlvrGoPYVNVVlJC2jEASka2Juua3HQ43g8E4uxlu14xrSx8C+c5ra5GXmPQGA==
+
 react-native-pager-view@^5.0.12:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.1.tgz#88641ff083ca4379497dc03891fdc2d5b6f82263"
