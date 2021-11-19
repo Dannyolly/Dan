@@ -62,8 +62,9 @@ const index = ({ move }  ) => {
     }
     
     
-    animate()
-    
+    useEffect(() => {
+        animate()
+    }, [])
    
 
 

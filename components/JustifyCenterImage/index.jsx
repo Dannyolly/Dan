@@ -37,7 +37,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
         ref.measureLayout( findNodeHandle(parentRef),(left, top, width, height) => {
             //console.log(left,top,width,height)
             leftOffset = left
-            topOffset  = screenSize.height - (top-31.5+220-messageStore.currentOffset) - 105
+            topOffset  = screenSize.height - (top-31.5+220-messageStore.currentOffset) - 105 
             initPosition.current.x=leftOffset
             initPosition.current.y=topOffset
             Animated.timing(xyOffset,{
@@ -78,7 +78,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                     useNativeDriver:false,
                     duration:300,
                 }).start()
-            },50)
+            },10)
         }
 
     }
@@ -108,7 +108,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
 
             setTimeout(()=>{
                 setShowModal(()=>false)
-            },350)
+            },400)
         }
     }
 

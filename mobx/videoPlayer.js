@@ -9,17 +9,21 @@ import { defaultShowMessage, getUserMainInfo } from "../util/function"
 class VideoPlayerStore {
 
     constructor() {
-       // makeAutoObservable(this)
-       makeObservable(this,{
+        makeAutoObservable(this)
+       /* makeObservable(this,{
             isCall:observable,
             callTheKeyBoard:action
-       })
+       }) */
     }
 
     isCall = false
 
     callTheKeyBoard(){
         this.isCall= !this.isCall
+    }
+
+    setIsCall( state ){
+        this.isCall = state
     }
 
    

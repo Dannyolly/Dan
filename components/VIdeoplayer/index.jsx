@@ -4,9 +4,15 @@ import { View, StyleSheet, Button, Modal ,TouchableWithoutFeedback,Text} from 'r
 import { Video, AVPlaybackStatus } from 'expo-av';
 import { screenSize } from '../../util/screenSize';
 import PagerView from 'react-native-pager-view';
-import Item from './item'
-export default function App() {
+import Item from './item';
+
+export default function App(props) {
+
+  /** @type {String} */
+  const params = props.route.params.videoUrl
+
   const video = React.useRef(null);
+
   const [status, setStatus] = React.useState({});
 
   const [currentPage, setCurrentPage] = useState()
@@ -17,8 +23,10 @@ export default function App() {
 
   const a =  ['1' , '2']
 
+
+
   return (
-    <Modal>
+    
         <View style={styles.container}>
             <PagerView 
             ref={c=>ref.current=c}
@@ -42,7 +50,7 @@ export default function App() {
                 
             </PagerView>
         </View>
-    </Modal>
+    
   );
 }
 

@@ -55,14 +55,16 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
     return obj
 }
 
+
+
 /**
      * @description     信息格式...
      * @param {String}  text 
      * @param {Object}  info 這個先你想轉的info
      * @param {String}  image
      * @param {Object}  user
-     *      @param {Number}  user.id
-     * @returns 
+     * @param {Number}  user.id
+     * @returns {ChatMsg}
      */
  const getMsgFormat=( text ,info ,image ,isFinish )=>{
     
@@ -81,7 +83,7 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
         }
     }
 
-
+    
     return {
             _id:uuid(),
             text: text,
@@ -97,6 +99,19 @@ const chatMsg=(action , senderId ,receiverId , message, extraField )=>{
     
     }
 }
+
+
+
+/**
+ * @typedef ChatMsg
+ * @property {number}   _id
+ * @property {string}   text
+ * @property {image}    image 
+ * @property {boolean}  isFinish
+ * @property {Date}     createdAt
+ * @property {{ _id:number , id :number , name :string , avatar :String  }}      user
+ * @returns 
+ */
 
 
 
@@ -211,6 +226,6 @@ export{
     getTheMessageFromLocal,
     saveTheMessageToLocal,
     getTheMessageFromLocalByCurrentPage,
-    getFinalMessage
-
+    getFinalMessage,
+    
 }

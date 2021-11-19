@@ -12,7 +12,7 @@ import SwiperItem from './SwiperItem';
  * @param Object            initLocation
  * @returns 
  */
-export default function index({ data,navigation ,style ,isJustify,doubleTapEvent, index  }) {
+export default function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zooming , onZooming  }) {
 
     
 
@@ -28,7 +28,8 @@ export default function index({ data,navigation ,style ,isJustify,doubleTapEvent
                         data.map((item,i)=>{
                             return(
                                 <SwiperItem
-
+                                zooming={zooming}
+                                onZooming={onZooming}
                                 isJustify={isJustify}
                                 style={style}
                                 index={index}

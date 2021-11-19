@@ -1,5 +1,6 @@
+   
 import React,{useState,useRef,useEffect} from 'react'
-import { View, Text ,PanResponder,Animated,Image,StyleSheet} from 'react-native'
+import { View, Text ,PanResponder,Animated,Image,StyleSheet, Dimensions} from 'react-native'
 
 import { screenSize } from '../../util/screenSize';
 
@@ -12,12 +13,12 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import CashedImage from '../NonIdCachedImage'
 import { userStore } from '../../mobx/store';
 
+import ImageZoom from 'react-native-image-pan-zoom'
+
+export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache , doubleTapEvent , zooming , onZooming} ) {
 
 
-export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache , doubleTapEvent} ) {
-
-
-    const isPinch = useRef(false)
+   /*  const isPinch = useRef(false)
 
     const pan = useRef(new Animated.ValueXY()).current;
 
@@ -27,9 +28,9 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
 
     const panResponder = useRef(
             PanResponder.create({
-              onMoveShouldSetPanResponder: () => {
+              onMoveShouldSetPanResponder: (e, ges) => {
                 //console.log(`pinch=${isPinch.current}`)
-                return isPinch.current
+                return ges.numberActiveTouches===1
               },
               onPanResponderGrant: () => {
                 
@@ -72,12 +73,7 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
     
     const handlePinch= Animated.event([{ nativeEvent: { scale } }]);
     
-    /* const gestureHandler = onGestureEvent({
-      state,
-      scale,
-      focalX:focal.x,
-      focalY:focal.y
-    }) */
+    
     const handlePan = Animated.event([
       {
         nativeEvent :{ 
@@ -94,49 +90,24 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
   })
 
   const zoom = useRef(0).current
-
+ */
   
-
-
+   
   
   
     return (
-        <View style={{zIndex:999,width:screenSize.width,height:400,alignItems:'center',justifyContent:"center"}}>
-            {/* <View style={{width:screenSize.width,height:screenSize.height,backgroundColor:"rgba(0,0,0,0.2)",position:'absolute',zIndex:1}}  />
-             */}
-            <View style={{flex:1,zIndex:2}}>
-                <TapGestureHandler numberOfTaps={2} onActivated={()=>doubleTapEvent()}>
-                  <Animated.View style={{width:screenSize.width,height:400}}    >
-                    <PinchGestureHandler onGestureEvent={handlePinch} onBegan={
-                      ()=>{
-                        //console.log('began');
-                        isPinch.current=!isPinch.current
-                      }
-                    } 
-                    onEnded={()=>{
-                        //console.log('ended');
-                        isPinch.current=!isPinch.current
-                    }}
-                    
-                    > 
-                      
-                      <Animated.View
-                      
-                      {...panResponder.panHandlers}  
-                      style={[styles.zoomedImg,{transform:[
-                          {scale:scale},
-                          {translateX:pan.x},
-                          {translateY:pan.y}
-                        ]}
-                        ]
-                      } >
-                          {/* <Image  
-                        
-                        source={{
-                          uri:uri
-                        }} 
-                        style={style}                        
-                        /> */}
+      <Animated.View style={{width:screenSize.width,height:screenSize.height}} >
+        <Animated.View style={StyleSheet.absoluteFill}>
+            <ImageZoom 
+            cropWidth={style.width} 
+            cropHeight={style.height} 
+            imageWidth={style.width} 
+            imageHeight={style.height} 
+            useNativeDriver
+            onDoubleClick={doubleTapEvent}
+            onMove={(e)=>onZooming(e.scale)}
+            responderRelease={()=>console.log('release')}
+            >
                         {
                           isCache!==undefined?
                           <CashedImage  
@@ -153,20 +124,15 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
 
                           />
                         }
-                        
+              </ImageZoom>   
 
-                      </Animated.View>
-
-                    </PinchGestureHandler>
-                  </Animated.View>
-                </TapGestureHandler>
+                      
               {/* <ReactNativeZoomableView
                   maxZoom={1.5}
                   minZoom={1}
                   zoomStep={0.5}
                   initialZoom={1}
                   bindToBorders={true}
-
                   captureEvent={true}
                   >
                     <Image   
@@ -174,17 +140,16 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
                       style={styles.zoomedImg}                        
                       />
                   </ReactNativeZoomableView> */}
-            </View>
-
-        </View>
+         
+        </Animated.View>
+    </Animated.View>
     )
     
 }
 
 const styles = StyleSheet.create({
   zoomedImg:{
-    width:screenSize.width-40,
-      height:400,
+    
       borderRadius:10,
       //transform: [/* {scale} *//* { translateX: pan.x }, { translateY: pan.y }, */]
 

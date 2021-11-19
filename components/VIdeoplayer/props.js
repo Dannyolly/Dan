@@ -9,8 +9,10 @@
 /**
  * @typedef MyAppProps
  * @property {String} name
- * @extends AppProp
+ * @property {AppProps} appProps
  */
+
+
 
 export{
     AppProps,

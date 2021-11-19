@@ -23,6 +23,8 @@ import { getMostUnReadMessageArr } from './homeUtils'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { ChatMsg } from '../Message/messageUtils'
+
 export default observer(()=>{
 
     const [chatList, setChatList] = useState(undefined)
@@ -136,10 +138,13 @@ export default observer(()=>{
                 // 在chatList找不到 ,則往chatList推一個...
                 if(listTemp[index].length===0){
                     listTemp[index].push(getMsgFormat(item.msg,item))
+                    
+                    
                     let obj={
                         lastMsgDetail:listTemp[index][0],
                         objectInfo:undefined
                     }
+
                     let {data} = await searchUser(`id=${item.sendUserId}`)
                     let formatInfo  = getMsgFormat(item.msg,data[0])
                     obj.objectInfo=formatInfo.user
@@ -153,7 +158,7 @@ export default observer(()=>{
             }
             
         }
-        
+        /* console.log('hi??'); */
         userStore.setUnReadMessage(listTemp,undefined,undefined,true)
         
 

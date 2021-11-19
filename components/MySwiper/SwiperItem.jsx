@@ -6,7 +6,7 @@ import AniImage from '../AniImage' */
 import { useNavigation } from '@react-navigation/native';
 import ZoomableImage from '../ZoomableImage'
 import JustifyContentImage from '../JustifyContentImage'
-export default function SwiperItem({data,index,style, isJustify,doubleTapEvent,initLocation,currentTopOffset }) {
+export default function SwiperItem({data,index,style, isJustify,doubleTapEvent,initLocation,currentTopOffset ,zooming , onZooming }) {
 
     
     const navigation = useNavigation()
@@ -19,7 +19,7 @@ export default function SwiperItem({data,index,style, isJustify,doubleTapEvent,i
                     isJustify===true?
                     <JustifyContentImage currentTopOffset={currentTopOffset} index={index} uri={data} style={style} doubleTapEvent={doubleTapEvent} />
                     :
-                    <ZoomableImage uri={data} doubleTapEvent={doubleTapEvent} style={style} isCache={true} />
+                    <ZoomableImage zooming={zooming} onZooming={onZooming} uri={data} doubleTapEvent={doubleTapEvent} style={style} isCache={true} />
                 }
 
                 

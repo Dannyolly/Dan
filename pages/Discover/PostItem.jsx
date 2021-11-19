@@ -20,7 +20,7 @@ import { tapResponser ,messageResponser, selectionResponser} from '../../util/ha
 
 import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 
-function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset }) {
+function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset , zooming ,onZooming  }) {
 
 
     
@@ -135,10 +135,9 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
 
     useEffect(() => {
         if(item!==undefined && correctFirstTime.current===false){
-            /* correctItem() */
-            setTimeout(()=>{
+
                 setItem(()=>item)
-            },2000)
+            
         }
     }, [item])
 
@@ -171,7 +170,7 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                         <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
                     </View>                 
                         <View ref={c=>viewRef.current=c}  >
-                            <MySwiper index={index} currentTopOffset={currentTopOffset}  isJustify={isShadow}  data={realItem.postImage} style={isShadow===true?styles.shadowStylePostImage:styles.postImage} doubleTapEvent={doubleTapEvent} />
+                            <MySwiper zooming={zooming} onZooming={onZooming} index={index} currentTopOffset={currentTopOffset}  isJustify={isShadow}  data={realItem.postImage} style={isShadow===true?styles.shadowStylePostImage:styles.postImage} doubleTapEvent={doubleTapEvent} />
                         </View>
                         
                         {/* LIke VIew */}

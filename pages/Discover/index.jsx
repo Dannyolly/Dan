@@ -17,11 +17,15 @@ import { Platform } from 'react-native'
 import { base_url } from '../../api/config'
 import SkeletonView from '../../components/SkeletonView'
 import PostItemSkeletonView from '../../components/PostItemSkeletonView'
+import ShortVideo from './ShortVideo'
+import { useNavigation } from '@react-navigation/native'
 /**
- * @param {Boolean} onlyFlatList 
+ * 
+ * @param {Boolean} props.onlyFlatList 
  */
 export default observer(({ navigation, onlyFlatList })=> {
 
+    
 
     // scrollRef
     const onScrollRef = useRef()
@@ -48,6 +52,9 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     const [isShowEndHandler, setIsShowEndHandler] = useState(false)
 
+    const [zooming, setZooming] = useState(false)
+
+    const isSetTimeout = useRef(false)
 
     const handleToggle = ()=>{
         if(!setting.current){
@@ -131,10 +138,6 @@ export default observer(({ navigation, onlyFlatList })=> {
     }
 
     const onReach=()=>{
-        /* showMessage({
-            message:'reach bottom',
-            description:String(currentPage.current+1)
-        }) */
         setIsShowLoader(()=>true)
         currentPage.current+=1
         getData(true)
@@ -168,23 +171,46 @@ export default observer(({ navigation, onlyFlatList })=> {
     },[])
 
 
+    const onZooming =(scale) =>{
+        //console.log('move ', scale)
+        if(zooming===false && isSetTimeout.current === false && scale !==1 ){
+            //console.log('set')
+            isSetTimeout.current = true
+            onScrollRef.current.setNativeProps({
+                scrollEnabled:!isSetTimeout.current
+            }) 
+            setTimeout(()=>{
+                isSetTimeout.current = false
+                onScrollRef.current.setNativeProps({
+                    scrollEnabled:!isSetTimeout.current
+                }) 
+               // console.log('can move !')
+            },100)
+        }
+    }
+
     return (  
         <View  style={{width:screenSize.width,height:screenSize.height-150,backgroundColor:"#FFFFFF",paddingBottom:0}}>
-             
+            
             {
                 data!==undefined
                 &&
                 <FlatList
+                onScrollBeginDrag={()=>isSetTimeout.current = true }
+                onScrollEndDrag={()=>isSetTimeout.current = false }
+                scrollEnabled={!zooming}
+                ListHeaderComponent={()=><ShortVideo  navigation={navigation}  />}
                 ListFooterComponent={()=><BottomHandler/>}
                 onEndReached={onReach}
                 onEndReachedThreshold={0}
-                
-                refreshControl={ Platform.OS==='android'?null:<DownScrollLoading  /> }
+                canCancelContentTouches={false}
+                refreshControl={ Platform.OS==='android'? null:<DownScrollLoading   /> }
                 data={data}
                 renderItem={
                     ({ item,index })=>
                         <PostItem 
-                                
+                            onZooming =  {onZooming}
+                            zooming = {zooming}
                             index ={index}
                             uploading={uploading}
                             navigation={navigation} 

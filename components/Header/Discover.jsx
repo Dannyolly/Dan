@@ -30,13 +30,13 @@ export default observer(({ navigation })=>{
             </View> */}
             <View style={{width:screenSize.width,justifyContent:"center"}}>
               
-                <Text style={[styles.headerTitle,{paddingLeft:20}]}>DanDan</Text>
+                <Text style={[styles.headerTitle,{paddingLeft:10}]}>DanDan</Text>
             </View>
-            <View  onTouchStart={()=>navigation.navigate('qrcode')} style={{paddingLeft:1,backgroundColor:"#21CFFF",borderRadius:25,width:35,height:35,justifyContent:"center",alignItems:'center',position:'absolute',right:20,bottom:8}}>
+            <View  onTouchStart={()=>navigation.navigate('qrcode')} style={{paddingLeft:1,backgroundColor:"#21CFFF",borderRadius:25,width:35,height:35,justifyContent:"center",alignItems:'center',position:'absolute',right:10,bottom:8}}>
                 <Ionicons   name="scan" style={{fontSize:20,color:"#FFFFFF"}} />
             </View>
            
-            <View  style={{paddingLeft:1,backgroundColor:"#21CFFF",borderRadius:25,width:35,height:35,justifyContent:"center",alignItems:'center',position:'absolute',right:65,bottom:8}}>
+            <View  style={{paddingLeft:1,backgroundColor:"#21CFFF",borderRadius:25,width:35,height:35,justifyContent:"center",alignItems:'center',position:'absolute',right:55,bottom:8}}>
                 <FontAwesome5  name="plus" style={{fontSize:18,color:"#FFFFFF",fontWeight:'100'}} />
             </View>
 

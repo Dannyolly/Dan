@@ -90,6 +90,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateRequestNotification } from '../util/function';
 import { messageResponser, selectionResponser } from '../util/haptic';
 import { EventEmitter } from 'react-native';
+import test from './test';
 
 
 /**
@@ -210,7 +211,7 @@ const BottomTab = observer((props)=>{
                         return (
                             <TabNumber {...{color,size,iconName} }  index={2} />
                         )
-                    case '發現':
+                    case 'discover':
                         iconName = 'find'
                         return(
                             focused?
@@ -286,8 +287,8 @@ const BottomTab = observer((props)=>{
          })}
             
         >
-            {/* <Tab.Screen
-                name="發現"
+            <Tab.Screen
+                name="discover"
                 component={ Discover}
                 listeners={{
                     tabPress:e=>{
@@ -300,7 +301,7 @@ const BottomTab = observer((props)=>{
                     title:"發現"
                     
                 }}
-            /> */}
+            />
 
             <Tab.Screen
                 name="Dan"
@@ -376,18 +377,17 @@ const BottomTab = observer((props)=>{
             />
             
 
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="video"
-                component={ VideoPlayer }
+                component={ test }
                 options={{
                     headerTitle:"video",
                     headerTitleStyle:{
                         color:"#FFFFFF"
                     },
                     headerShown:false
-                    /* headerLeft:props=><HomeHeader {...props} navigation={navigation} /> */
                 }}
-            />
+            /> */}
 
             
 
@@ -601,6 +601,17 @@ export default observer((props)=>{
                         headerShown:false
                         /* headerLeft: props=><CommentHeader {...props}  /> */
                         
+                        }}
+                        />
+
+                        <Stack.Screen 
+                        name="videoPlayer" 
+                        component={ VideoPlayer }
+                        options={{
+                       
+                    
+                        headerShown:false
+                       
                         }}
                         />
 

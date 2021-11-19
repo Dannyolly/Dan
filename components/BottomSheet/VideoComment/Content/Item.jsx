@@ -7,7 +7,6 @@ const Item = ({ item ,index }) => {
     
 
     const comment = () =>{
-        console.log('press')
         videoPlayerStore.callTheKeyBoard()
     }
 

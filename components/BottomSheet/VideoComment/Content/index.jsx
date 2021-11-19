@@ -26,7 +26,7 @@ const item = () => {
                     index={index} 
                     />
                  }
-                
+                keyExtractor={(item,index)=>index}
                 />
             </View>
         

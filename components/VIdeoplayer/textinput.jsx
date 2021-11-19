@@ -12,7 +12,6 @@ const MyTextInput = ({ style , onFocus ,onBlur, autoFocus ,isCall }) => {
     
     if(isCall){
       ref.current.focus()
-      console.log('?')
     }
 
   }, [isCall])
@@ -20,6 +19,7 @@ const MyTextInput = ({ style , onFocus ,onBlur, autoFocus ,isCall }) => {
   return (
     <TextInput
       ref={input => ref.current= input}
+      
       autoFocus={autoFocus}
       placeholder="寫點甚麼"
       onFocus={onFocus}
@@ -27,6 +27,7 @@ const MyTextInput = ({ style , onFocus ,onBlur, autoFocus ,isCall }) => {
       style={style}
       onChangeText={text => onChangeText(text)}
       value={value}
+      returnKeyType='send'
     />
   );
 }

@@ -13,7 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Content from './Content';
 import Header from './Content/Header';
 
-
+import { TapGestureHandler } from 'react-native-gesture-handler'
 
 
 
@@ -21,14 +21,14 @@ import Header from './Content/Header';
  * 
  * @param {Object} props
  * @param {boolean} props.isOpen
- * @param {()=>void} props.setIsOpen
+ * @param {( style : StyleProp<ViewStyle> , number: number )=> number } props.setIsOpen
  * @param {()=>void} props.addPic 
  * @param {StyleProp<ViewStyle>} [props.style] 
- * @returns 
+ * @returns {JSX.Element}
  */
 export default function index({ isOpen ,setIsOpen ,addPic , style  } ) {
 
-    const refRBSheet = useRef();
+    const refRBSheet = useRef(undefined);
     
     const navigation = useNavigation()
     
@@ -68,19 +68,19 @@ export default function index({ isOpen ,setIsOpen ,addPic , style  } ) {
         }
     }
 
-    
 
     return (
         
-        <TouchableWithoutFeedback style={{width:screenSize.width,height:540}} onPress={()=>console.log('close')}>
-            
+        <TapGestureHandler  onActivated={()=>console.log('close')} >
             <RBSheet
+            
             ref={refRBSheet}
             closeOnDragDown={true}
             dragFromTopOnly={true}
-            closeOnPressMask={false}
+            closeOnPressMask={true}
             keyboardAvoidingViewEnabled={true}
             onClose={()=>setIsOpen()}
+            
             customStyles={{
                 wrapper: {
                     backgroundColor: "transparent"
@@ -102,9 +102,11 @@ export default function index({ isOpen ,setIsOpen ,addPic , style  } ) {
             animationType={'slide'}
             height={540}
             
-        >       
-            <Content  />
-        </RBSheet>
-        </TouchableWithoutFeedback>
+            >       
+                <View onPress={()=>console.log('close')} >
+                    <Content  />
+                </View>
+            </RBSheet>
+        </TapGestureHandler>
     )
 }
