@@ -158,7 +158,7 @@ export default function index( { route, navigation } ) {
         let msg=JSON.stringify(chatMsg(CHAT,userInfo.id,friendInfo.id,data.imagePath,data.msgId))    
         ///defaultShowMessage()
         //console.log('send')
-        console.log(msg)
+        //console.log(msg)
         webSocket.send(msg)
         setTimeout(()=>{
             setProgress(0)
@@ -185,7 +185,7 @@ export default function index( { route, navigation } ) {
          */
         if(res.userInfo.id!==undefined ){
            let messages  = await getTheMessageFromLocalByCurrentPage(item.id,res.userInfo.id,currentPage.current)
-           console.log('message',messages)
+           //console.log('message',messages)
            if(messages!==undefined && messages !==null){
                 //console.log('message',messages)
                 setMessages(previousMessages => {
@@ -321,6 +321,7 @@ export default function index( { route, navigation } ) {
                     maxComposerHeight={35}
                     minInputToolbarHeight={60}
                     renderMessageImage={props=>{
+                        /* console.log('currentMessage' ,props.currentMessage.image) */
                         console.log('currentMessage' ,props.currentMessage.image)
                         return(
                             <ChatImage  

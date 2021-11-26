@@ -158,7 +158,7 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                 {
                 realItem!==undefined
                 &&
-                <View style={[styles.itemContent,isShadow===true?{padding:10,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>
+                <View style={[styles.itemContent,isShadow===true?{padding:10,paddingTop:0,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>
                     <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5}}>
                        
                         <CachedImage style={styles.iconStyle}  uri={base_url+realItem.userInfo[0].icon} />
@@ -170,7 +170,15 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                         <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
                     </View>                 
                         <View ref={c=>viewRef.current=c}  >
-                            <MySwiper zooming={zooming} onZooming={onZooming} index={index} currentTopOffset={currentTopOffset}  isJustify={isShadow}  data={realItem.postImage} style={isShadow===true?styles.shadowStylePostImage:styles.postImage} doubleTapEvent={doubleTapEvent} />
+                            <MySwiper 
+                            zooming={zooming} 
+                            onZooming={onZooming} 
+                            index={index} 
+                            currentTopOffset={currentTopOffset}  
+                            isJustify={isShadow}  
+                            data={realItem.postImage} 
+                            style={isShadow===true?styles.shadowStylePostImage:styles.postImage} 
+                            doubleTapEvent={doubleTapEvent} />
                         </View>
                         
                         {/* LIke VIew */}

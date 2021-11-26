@@ -25,9 +25,32 @@ const selectionResponser = async ()=>{
   await Haptics.selectionAsync()
 }
 
+class TouchResponser{
+    
+  tapResponser = async () =>{
+    ///ReactNativeHapticFeedback.trigger('selection', options);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+  }
+
+   messageResponser = async ()=>{
+
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+  
+  }
+  
+  selectionResponser = async ()=>{
+  
+    await Haptics.selectionAsync()
+  }
+
+}
+
+let  touchResponser  = new TouchResponser()
+
 
 export{
     tapResponser,
     messageResponser,
-    selectionResponser
+    selectionResponser,
+    touchResponser
 }

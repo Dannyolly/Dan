@@ -197,11 +197,13 @@ export default observer(()=>{
         let listIndex = 0;
         //下列這種情況是當在兩方發過信息時的情況...
         let userInfo = await getUserMainInfo()
-        console.log(msgInfo.user.id)
+        
         let a = await AsyncStorage.getItem(`${msgInfo.user.id}msg${userInfo.userInfo.id}`)
         let chatHistory = JSON.parse(a)
 
         
+        
+
         if(chatHistory===null || chatHistory===undefined){
             // 沒有記錄的情況,則往chatList插入一個...
 
@@ -222,6 +224,7 @@ export default observer(()=>{
             remindListTemp[newChatListArr.length-1]+=1
             listIndex=newChatListArr.length-1
             
+
         }else{
             // 這個是有記錄的,那則可以在chatList對應找出對話,從而插入對話....
 
@@ -232,8 +235,15 @@ export default observer(()=>{
                 }
                 listIndex++
             }
+
+            chatListRef.current = sortMessage( list ,listIndex)
+            setChatList(()=>chatListRef.current)
         }
         
+        // 排序一下....
+        
+
+
         setRemindList(()=>remindListTemp)
         remindListRef.current=remindListTemp
 
@@ -241,9 +251,26 @@ export default observer(()=>{
         userStore.setUnReadMessage({...msgInfo},listIndex)
         userStore.calculateUnreadMsgCount()
 
+
+        
         
     }
     
+    /**
+     * 
+     * @param {Array}   arr     排序數組
+     * @param {Number}  index   需要放到第一位的index
+     */
+    const sortMessage =  ( arr , index ) =>{
+        
+        arr.unshift(arr[index])
+
+        return  arr.filter((item,i)=>i!==index+1)
+
+        
+    }
+
+
     const handleToggle = ()=>{
         if(!setting.current){
             setting.current=true

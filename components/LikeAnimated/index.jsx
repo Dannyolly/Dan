@@ -6,7 +6,6 @@ import Font from './Font'
 
 const index = ({ move }  ) => {
    
-    
 
     const FontAnimated = Animated.createAnimatedComponent(Font);
     
@@ -16,7 +15,7 @@ const index = ({ move }  ) => {
 
     const animate =()=>{
 
-        console.log('action!!!')
+       // console.log('action!!!')
 
         /* Animated.timing(opacity,{
             toValue:1,

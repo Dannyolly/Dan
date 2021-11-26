@@ -57,7 +57,7 @@ const onopen=(e)=>{
 }
 
 
-const receiveChatMessage = async () =>{
+const receiveChatMessage = async (msg) =>{
     let params = objTOParams({
         id:msg.sendUserId
     })
@@ -74,13 +74,18 @@ const receiveChatMessage = async () =>{
     
 
     // receiveMsg --> Home.jsx
+    /**
+     * @link {./home.jsx}
+     */
     DeviceEventEmitter.emit('receiveMsg',formatMsg)
 
     showMessage({
         icon:'info',
         message:formatMsg.user.name,
         description:flag?formatMsg.text:"[ 圖片 ]",
-        renderFlashMessageIcon:(icon,style,image)=><MessageIcon icon={icon} style={style} image={formatMsg.user.avatar}  />,
+        renderFlashMessageIcon:(icon,style,image)=>
+        <MessageIcon icon={icon} style={style} image={formatMsg.user.avatar}  
+        />,
         /* titleStyle:{lineHeight:30,fontSize:18,fontWeight:'400'} */
         
     })
@@ -96,7 +101,7 @@ const initOnMessage = async (e)=>{
     }else{
 
         // 聊天信息..
-        receiveChatMessage()
+        receiveChatMessage(msg)
     }
 
     

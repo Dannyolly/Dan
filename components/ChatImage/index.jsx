@@ -1,24 +1,40 @@
-import React from 'react'
-import { StyleSheet, Text, View ,Image, Pressable} from 'react-native'
+import React, { useRef ,MutableRefObject,memo} from 'react'
+import { StyleSheet, Text, View ,Image, Pressable } from 'react-native'
 import UploadImage from '../UploadImage'
 import JustifyCenterImage from '../JustifyCenterImage'
 import CacheImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config'
 
+/**
+ * @typedef MyImageProps
+ * @property {String} image
+ * @property {MutableRefObject} parentRef 
+ * @returns 
+ */
 
+
+/**
+ * 
+ * @param {MyImageProps} props 
+ * @returns 
+ */
 const index = (props) => {
 
-    const {image, parentRef } = props
+    
+    const { image, parentRef } = props
+    
 
-
-    const RenderImage = ( {borderRadius} )=>{
+    const RenderImage = memo(( {borderRadius} )=>{
+        console.log('re-render')
         return (
             image.substring(0,1)!=='h'?
             <Image source={{uri:image}} style={[{width:220,height:220,borderRadius:borderRadius,position:'absolute',right:0,top:10}]}  />
             :
             <CacheImage  uri={image} style={[{width:220,height:220,borderRadius:borderRadius,position:'absolute',right:0,top:10}]}  />
         )
-    }
+    },(pre,next)=>{
+        return true
+    })
 
     
 

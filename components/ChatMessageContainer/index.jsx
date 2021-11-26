@@ -135,7 +135,7 @@ export default class index extends Component {
                         this.setState({
                             texting:false
                         })
-                        console.log(this.ref);
+                        //console.log(this.ref);
                         this.ref.clear()
                     }} style={{position:'absolute',right:25,zIndex:1,lineHeight:60,fontSize:18,color:"#21CFFF"}}>Send</Text>
                 }

@@ -7,8 +7,7 @@ import {Image,CacheManager} from "react-native-expo-image-cache";
 const index = ({ previewUri  , uri , style  } ) => {
     return (
         <Image  
-        tint={'dark'} 
-        transitionDuration={300} 
+        /* tint={'dark'} */
         {...{ uri:uri}} 
         style={[style,{zIndex:100}]}   
         />
