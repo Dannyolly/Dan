@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 /** @param {{ref : MutableRefObject , tapPic: ()=>void ,ChildrenComponent:JSX.Element }} */
 const OriginImage = forwardRef((props , ref) => {
 
+    /** @type {()=>void} */
     const {tapPic ,ChildrenComponent  } = props
 
 

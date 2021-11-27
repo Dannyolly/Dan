@@ -1,6 +1,10 @@
    
 import React,{useState,useRef,useEffect} from 'react'
-import { View, Text ,PanResponder,Animated,Image,StyleSheet, Dimensions} from 'react-native'
+import { View, Text ,PanResponder,Animated,Image,StyleSheet, Dimensions
+  ,StyleProp,
+  ViewStyle
+
+} from 'react-native'
 
 import { screenSize } from '../../util/screenSize';
 
@@ -13,9 +17,31 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import CashedImage from '../NonIdCachedImage'
 import { userStore } from '../../mobx/store';
 
-import ImageZoom from 'react-native-image-pan-zoom'
+import ImageZoom,{IOnMove} from 'react-native-image-pan-zoom'
 
-export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache , doubleTapEvent , zooming , onZooming} ) {
+import { imageStore ,observer  } from '../JustifyCenterImage/lock';
+/**
+ * 
+ * @param {{
+ *  uri : string,
+ *  style : StyleProp<ViewStyle>
+ *  isSwipe : boolean,
+ *  setOnScroll : ()=>void,
+ *  isCache : boolean , 
+ *  doubleTapEvent : ()=>void
+ *  onZooming : (e : IOnMove )=>void
+ * }}
+ */
+ function index( { 
+                            uri,  
+                            style, 
+                            isSwipe, 
+                            setOnScroll,
+                            isCache,
+                            doubleTapEvent,
+                            zooming,
+                            onZooming
+                                  } ) {
 
 
    /*  const isPinch = useRef(false)
@@ -96,17 +122,24 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
   
   
     return (
-      <Animated.View style={{width:screenSize.width,height:screenSize.height}} >
+      <Animated.View /* style={{width:screenSize.width,height:screenSize.height}} */ >
         <Animated.View style={StyleSheet.absoluteFill}>
             <ImageZoom 
+            /* style={{...StyleSheet.absoluteFill}} */
             cropWidth={style.width} 
-            cropHeight={style.height} 
+            cropHeight={style.height+10} 
             imageWidth={style.width} 
-            imageHeight={style.height} 
-            useNativeDriver
+            imageHeight={style.height+10} 
+            /* useNativeDriver */
             onDoubleClick={doubleTapEvent}
-            onMove={(e)=>onZooming(e.scale)}
-            responderRelease={()=>console.log('release')}
+            onMove={(e)=>{
+              imageStore.setIsZooming(true)
+              return onZooming!==undefined?onZooming(e.scale):undefined
+            }}
+            responderRelease={()=>{
+              imageStore.setIsZooming(false)
+              console.log('release',imageStore.isZooming)
+            }}
             >
                         {
                           isCache!==undefined?
@@ -146,6 +179,8 @@ export default function index( { uri ,  style   , isSwipe , setOnScroll,isCache 
     )
     
 }
+export default observer(index)
+
 
 const styles = StyleSheet.create({
   zoomedImg:{

@@ -10,8 +10,10 @@ import MaskView from '../MaskView'
 
 import BottomSheep from '../BottomSheet/MessageImage'
 import OriginImage from './OriginImage';
+import {imageStore } from './lock'
 
-/** @param {{imageUrl :string}} */
+
+/** @param {{imageUrl :String}} */
 const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl } ) => {
 
     const ref = useRef()
@@ -87,9 +89,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
     }
 
     const collapseImage = () =>{
-        if(showModal){       
-
-
+        if(showModal){ 
             Animated.parallel([
                     Animated.timing(scale,{
                     toValue:1,
@@ -166,12 +166,20 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                             }
 
                             <Pressable onLongPress={()=>{
-                                setImage(()=>imageUrl)
-                                setIsOpen(()=>true)
+                                /* setImage(()=>imageUrl)
+                                setIsOpen(()=>true) */
                             }} > 
                                 <Animated.View   
+                                /* onTouchStart */
                                 
-                                onTouchEnd={()=>tapPic()}
+                                onTouchEnd={(event)=>{
+                                    console.log('>>><<<',imageStore.isZooming);
+                                    if(imageStore.isZooming){
+                                        
+                                    }else{
+                                        tapPic()
+                                    }
+                                }}
                                 style={{width:220,height:220,borderRadius:0,
                                 transform:[
 
@@ -194,6 +202,6 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
     )
 }
 
-export default index
+export default observer(index)
 
 const styles = StyleSheet.create({})

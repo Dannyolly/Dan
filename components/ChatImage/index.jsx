@@ -1,10 +1,10 @@
-import React, { useRef ,MutableRefObject,memo} from 'react'
+import React, { useRef , MutableRefObject, memo} from 'react'
 import { StyleSheet, Text, View ,Image, Pressable } from 'react-native'
 import UploadImage from '../UploadImage'
 import JustifyCenterImage from '../JustifyCenterImage'
 import CacheImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config'
-
+import ZoomableImage from '../ZoomableImage'
 /**
  * @typedef MyImageProps
  * @property {String} image
@@ -25,13 +25,28 @@ const index = (props) => {
     
 
     const RenderImage = memo(( {borderRadius} )=>{
-        console.log('re-render')
+        // console.log('re-render')
         return (
             image.substring(0,1)!=='h'?
-            <Image source={{uri:image}} style={[{width:220,height:220,borderRadius:borderRadius,position:'absolute',right:0,top:10}]}  />
+           
+            <ZoomableImage 
+                 
+                uri={image} 
+                style={{
+                    width:220,height:220,borderRadius:
+                    borderRadius,position:'absolute',right:0,top:10
+                }}  
+            />
             :
-            <CacheImage  uri={image} style={[{width:220,height:220,borderRadius:borderRadius,position:'absolute',right:0,top:10}]}  />
-        )
+            <ZoomableImage 
+                isCache={true}   
+                uri={image} 
+                style={{
+                    width:220,height:220,borderRadius:
+                    borderRadius,position:'absolute',right:0,top:10
+                }}    
+            />
+            )
     },(pre,next)=>{
         return true
     })
@@ -41,10 +56,15 @@ const index = (props) => {
     return (
         <Pressable >
             <JustifyCenterImage 
-            parentRef={parentRef} 
-            ChildrenComponent={()=><UploadImage {...props} RenderImage={()=><RenderImage borderRadius={10} />}  />}  
-            BaseImage ={()=><RenderImage  borderRadius={0} /> }
-            imageUrl = {image}
+                parentRef={parentRef} 
+                ChildrenComponent={
+                    ()=>
+                        <UploadImage {...props}
+                            RenderImage={()=><RenderImage borderRadius={10}/>}  
+                        />
+                }  
+                BaseImage ={({ ref })=><RenderImage ref={ref}  borderRadius={0} /> }
+                imageUrl = {image}
             />
         </Pressable>
     )
@@ -52,4 +72,7 @@ const index = (props) => {
 
 export default index
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+  
+})
