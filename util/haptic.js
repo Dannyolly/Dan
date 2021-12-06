@@ -9,46 +9,50 @@ import * as Haptics from 'expo-haptics';
  */
 
 
-const tapResponser = async () =>{
+const tapResponser = async() => {
     ///ReactNativeHapticFeedback.trigger('selection', options);
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
 }
 
-const messageResponser = async ()=>{
-
-  await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-
-}
-
-const selectionResponser = async ()=>{
-
-  await Haptics.selectionAsync()
-}
-
-class TouchResponser{
-    
-  tapResponser = async () =>{
-    ///ReactNativeHapticFeedback.trigger('selection', options);
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-  }
-
-   messageResponser = async ()=>{
+const messageResponser = async() => {
 
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-  
-  }
-  
-  selectionResponser = async ()=>{
-  
-    await Haptics.selectionAsync()
-  }
 
 }
 
-let  touchResponser  = new TouchResponser()
+const selectionResponser = async() => {
+
+    await Haptics.selectionAsync()
+}
 
 
-export{
+
+
+
+class TouchResponser {
+
+    tapResponser = async() => {
+        ///ReactNativeHapticFeedback.trigger('selection', options);
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+    }
+
+    messageResponser = async() => {
+
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+
+    }
+
+    selectionResponser = async() => {
+
+        await Haptics.selectionAsync()
+    }
+
+}
+
+let touchResponser = new TouchResponser()
+
+
+export {
     tapResponser,
     messageResponser,
     selectionResponser,

@@ -4,7 +4,15 @@ import { screenSize } from '../../util/screenSize'
 
 import { } from 'react-navigation'
 
-/** @param {{navigateToVideoPage: ()=>void , item : Object , index: number , isScroll :boolean }}  */
+/**
+ * 
+ * @param {{
+        * navigateToVideoPage: ()=>void , 
+        * item : Object , 
+        * index: number , 
+        * isScroll :boolean 
+ *  }}  
+ */
 const ShortVideoItem = ( { navigateToVideoPage ,item ,index , isScroll} ) => {
 
     

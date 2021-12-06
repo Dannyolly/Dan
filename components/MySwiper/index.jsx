@@ -1,24 +1,29 @@
+import { useNavigation ,NavigationProp} from '@react-navigation/native';
 import React,{useRef} from 'react'
-import { View, Text ,StyleSheet,TouchableWithoutFeedback} from 'react-native'
+import { View, Text ,StyleSheet,TouchableWithoutFeedback ,ViewProps} from 'react-native'
 import Swiper from 'react-native-swiper';
 import { screenSize } from '../../util/screenSize';
 
 
+import { imageStore ,observer } from '../JustifyCenterImage/lock';
 import SwiperItem from './SwiperItem';
 /**
- * @param Boolean           isJustify
- * @param callback          doubleTapEvent
- * @param Array             data 
- * @param Object            initLocation
- * @returns 
+ * 
+ * @param {{
+ *      data : Object , 
+ *      navigation : any ,
+ *      style : import('react-native').StyleProp<import('react-native').ViewStyle>
+ * 
+ * 
+ * }}
  */
-export default function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zooming , onZooming  }) {
+function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zooming , onZooming  }) {
 
     
 
     return (
         
-        <View style={ style!==undefined?{...style}:styles.container}>
+        <View style={ style!==undefined?{...style,transform:[{scale:index===imageStore.index?imageStore.scale+1:1}]}:styles.container}>
             <View style={style!==undefined?{...style}:styles.realContainer}>
                 <Swiper
                 key={data.length}
@@ -47,6 +52,9 @@ export default function index({ data,navigation ,style ,isJustify,doubleTapEvent
     
     )
 }
+
+export default observer(index)
+
 
 const styles = StyleSheet.create({
     container:{

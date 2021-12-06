@@ -29,7 +29,8 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
  *  setOnScroll : ()=>void,
  *  isCache : boolean , 
  *  doubleTapEvent : ()=>void
- *  onZooming : (e : IOnMove )=>void
+ *  onZooming : (e : IOnMove , index )=>void
+ *  index : number
  * }}
  */
  function index( { 
@@ -40,7 +41,8 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
                             isCache,
                             doubleTapEvent,
                             zooming,
-                            onZooming
+                            onZooming,
+                            index
                                   } ) {
 
 
@@ -127,23 +129,33 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
             <ImageZoom 
             /* style={{...StyleSheet.absoluteFill}} */
             cropWidth={style.width} 
-            cropHeight={style.height+10} 
+            cropHeight={style.height} 
             imageWidth={style.width} 
-            imageHeight={style.height+10} 
-            /* useNativeDriver */
+            imageHeight={style.height} 
+            enableDoubleClickZoom={false}
+            useNativeDriver
             onDoubleClick={doubleTapEvent}
+            
+            
             onMove={(e)=>{
-              imageStore.setIsZooming(true)
-              return onZooming!==undefined?onZooming(e.scale):undefined
+              if((e.scale-1)===imageStore.scale){
+
+              }else{
+                imageStore.setScale((e.scale-1))
+              }
+              
+              //console.log((e.scale-1),e.zoomCurrentDistance)
+              return onZooming!==undefined?onZooming(e.scale,index):undefined
             }}
             responderRelease={()=>{
-              imageStore.setIsZooming(false)
+         
               console.log('release',imageStore.isZooming)
             }}
             >
                         {
                           isCache!==undefined?
-                          <CashedImage  
+                          <CashedImage 
+                           
                           uri={uri} 
                           style={style}  
                           />

@@ -1,4 +1,4 @@
-import React, { Component,useEffect,useState } from 'react'
+import React, { Component,useEffect,useRef,useState } from 'react'
 import { 
     Button,
     Text, 
@@ -7,7 +7,8 @@ import {
     TextInput,
     Platform,
     StyleSheet,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Animated
 } from 'react-native'
 /* import EventBus from 'react-native-event-bus' */
 
@@ -91,6 +92,7 @@ import { calculateRequestNotification } from '../util/function';
 import { messageResponser, selectionResponser } from '../util/haptic';
 import { EventEmitter } from 'react-native';
 import test from './test';
+import { Easing } from 'react-native';
 
 
 /**
@@ -165,9 +167,6 @@ const TabNumber = observer(({ iconName,color,size,index })=>{
 
 const UserTabIcon = observer(()=>{
     
-
-    
-
     return(
         <View  style={{paddingTop:5}} >
             {
@@ -189,11 +188,50 @@ const BottomTab = observer((props)=>{
 
     const navigation = useNavigation()
     
-    //console.disableYellowBox = true;
+    const [isCollapse, setIsCollapse] = useState(false)
 
 
+    const translateY = useRef(new Animated.Value(0)).current
+
+    const collapseBottomTabBar = () =>{
+    
+        Animated.timing(translateY,{
+            toValue:88,
+            easing:Easing.linear,
+            duration:250,
+            useNativeDriver:true
+        }).start()
+    }
+
+    const showBottomTabBar = () =>{
+     
+        Animated.timing(translateY,{
+            toValue:0,
+            easing:Easing.linear,
+            duration:250,
+            useNativeDriver:true
+        }).start()
+    }
+
+    useEffect(() => {
+        DeviceEventEmitter.addListener('collapseBottomTabBar',( data )=>{
+            collapseBottomTabBar()
+        })
+
+        DeviceEventEmitter.addListener('showBottomTabBar',( data )=>{
+            showBottomTabBar()
+        })
+
+        return ()=>{
+            DeviceEventEmitter.removeAllListeners()
+        }
+    }, [])
+
+
+    
     return (
         <Tab.Navigator
+    
          screenOptions={ ({route}) => ({
             
             tabBarIcon:( {focused,color,size} ) =>{
@@ -237,52 +275,34 @@ const BottomTab = observer((props)=>{
                 }
                 
             },
-            /* headerShown:route.name==='發現'?false:true, */
-            /* headerLeft:props=>whichHeader(route.name), */
             headerStyle:{
                 shadowColor: 'transparent',
-                /* shadowRadius:2 */
-                /* height:100 */
+                zIndex:0,
             },
-            /* headerRight:props=><ScannerHead />, */
-            //headerShadowVisible:false,
+            headerShadowVisible:false,
             headerTitle:'',
-            
             tabBarStyle:{
-                //shadowColor: 'transparent',
+                /* display:'none', */
+                position:'absolute',
+                transform:[{translateY:translateY}],
                 borderTopColor:'#FFFFFF',
-                /* borderTopWidth:1.5, */
                 shadowRadius:2,
                 shadowOffset:{
                     width:0,
                     height:10
                 },
                 elevation:5,
-                /* borderTopWidth: 2, */
-                top: 1,
                 shadowColor:"#CDCDCD",
-                height:88,
-                /* paddingTop:10, */
-                /* borderTopLeftRadius:20,
-                borderTopRightRadius:20, */
-                /* borderRadius:20,
-                transform:[{translateY:-15 },{translateX:10}],
-                width:screenSize.width-20,
-                shadowOpacity:0.8,
-                shadowRadius:20,
-                shadowOffset:{
-                    width:10,
-                    height:10
-                } */
+                height:88
             },
-            /* tabBarShowLabel:false, */
+
             tabBarItemStyle:{
                 paddingTop:5,
                 height:45,
             },
             tabBarInactiveTintColor:'#999',
             tabBarActiveTintColor:'#22CAFE',
-            
+            headerShown:false,
             
          })}
             
@@ -297,8 +317,9 @@ const BottomTab = observer((props)=>{
                     
                 }}
                 options={{
-                    headerLeft:props=><DiscoverHeader {...props} navigation={navigation}   />,
-                    title:"發現"
+                    /* headerLeft:props=><DiscoverHeader {...props} navigation={navigation}   />, */
+                    title:"發現",
+                    headerShown:false
                     
                 }}
             />
@@ -478,7 +499,7 @@ export default observer((props)=>{
                 headerBackTitleStyle:{
                     color:"black"
                 },
-            
+                headerShown:false
                 }}>
                 
                 {

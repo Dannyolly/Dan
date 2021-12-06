@@ -4,9 +4,9 @@ import SkeletonView from '../SkeletonView'
 
 import { screenSize } from '../../util/screenSize'
 
-const index = ( {deltaSize } ) => {
+const index = ( {deltaSize ,paddingTop} ) => {
     return (
-        <View style={[styles.itemContainer, deltaSize?styles.shadowStyle:{} ]}>
+        <View style={[styles.itemContainer, deltaSize?styles.shadowStyle:{} ,{paddingTop:paddingTop} ]}>
             <View style={styles.itemContent}>
                 <View style={{flexDirection:'row',paddingLeft:10,marginBottom:10}}>
                     <SkeletonView style={styles.iconStyle}  />

@@ -27,9 +27,9 @@ const webSocketPath= 'ws://3kq8557234.zicp.vip:13044/ws'
 
 const onopen=(e)=>{
     getUserMainInfo().then(res=>{
-        //console.log('open!!!!',res)
+        console.log('open!!!!',res)
         ws.send(JSON.stringify(chatMsg(CONNECT,res.userInfo.id,0,'','')))
-        //console.log('send Connect MSG')
+        console.log('send Connect MSG')
 
 
         online(res.userInfo.id,1).then(res=>{

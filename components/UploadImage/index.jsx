@@ -40,8 +40,8 @@ const index = (props ) => {
 
     return (
         <View ref={c=>ref.current=c} style={{position:'relative',width:220,height:220,backgroundColor:"#EBEDF5"}} >
-            <View style={{position:'absolute',top:0,width:220,height:240,backgroundColor:"#EBEDF5",right:0}} />
-            <View style={{padding:10}}>
+            <View style={{position:'absolute',top:0,width:220,height:240,backgroundColor:"#EBEDF5",right:0,}} />
+            <View style={{paddingTop:10}} >
                 {
                     <RenderImage />
                 }

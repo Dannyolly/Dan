@@ -17,9 +17,23 @@ export default function SwiperItem({data,index,style, isJustify,doubleTapEvent,i
                 
                 {
                     isJustify===true?
-                    <JustifyContentImage currentTopOffset={currentTopOffset} index={index} uri={data} style={style} doubleTapEvent={doubleTapEvent} />
+                    <JustifyContentImage 
+                        currentTopOffset={currentTopOffset} 
+                        index={index} 
+                        uri={data} 
+                        style={style} 
+                        doubleTapEvent={doubleTapEvent} 
+                    />
                     :
-                    <ZoomableImage zooming={zooming} onZooming={onZooming} uri={data} doubleTapEvent={doubleTapEvent} style={style} isCache={true} />
+                    <ZoomableImage 
+                        zooming={zooming} 
+                        onZooming={onZooming} 
+                        uri={data} 
+                        doubleTapEvent={doubleTapEvent} 
+                        style={style} 
+                        isCache={true} 
+                        index={index}
+                    />
                 }
 
                 

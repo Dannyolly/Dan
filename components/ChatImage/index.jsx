@@ -1,10 +1,12 @@
-import React, { useRef , MutableRefObject, memo} from 'react'
+import React, { useRef , MutableRefObject, memo, useState} from 'react'
 import { StyleSheet, Text, View ,Image, Pressable } from 'react-native'
 import UploadImage from '../UploadImage'
 import JustifyCenterImage from '../JustifyCenterImage'
 import CacheImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config'
 import ZoomableImage from '../ZoomableImage'
+
+import { imageStore } from '../JustifyCenterImage/lock'
 /**
  * @typedef MyImageProps
  * @property {String} image
@@ -23,27 +25,51 @@ const index = (props) => {
     
     const { image, parentRef } = props
     
+    // console.log('re-render')
+    const [isMoving, setIsMoving] = useState(false)
+    
+    const isMovingRef = useRef(false)
+
+    const onZooming = () =>{
+        if(!isMovingRef.current){
+            isMovingRef.current = true
+            // @link {'../JustifyCenterImage/lock'}
+            imageStore.setIsZooming()
+            console.log('setting',imageStore.isZooming)
+            setTimeout(()=>{
+                isMovingRef.current = false
+                imageStore.setIsZooming()
+            },500)
+        }
+        
+        /* console.log('zooming?',isMovingRef.current) */
+    }
 
     const RenderImage = memo(( {borderRadius} )=>{
-        // console.log('re-render')
+        
+
         return (
             image.substring(0,1)!=='h'?
            
             <ZoomableImage 
                  
-                uri={image} 
+                uri={image}
+                onZooming={onZooming} 
                 style={{
-                    width:220,height:220,borderRadius:
-                    borderRadius,position:'absolute',right:0,top:10
+                    width:220,height:220,borderRadius
+                    /* position:'absolute',
+                    left:20,top:-10, */
+                    
                 }}  
             />
             :
             <ZoomableImage 
                 isCache={true}   
-                uri={image} 
+                uri={image}
+                onZooming={onZooming}  
                 style={{
-                    width:220,height:220,borderRadius:
-                    borderRadius,position:'absolute',right:0,top:10
+                    width:220,height:220,borderRadius
+                    
                 }}    
             />
             )
@@ -54,9 +80,10 @@ const index = (props) => {
     
 
     return (
-        <Pressable >
+        <View style={{borderRadius:20}} >
             <JustifyCenterImage 
                 parentRef={parentRef} 
+                isMoving={isMoving}
                 ChildrenComponent={
                     ()=>
                         <UploadImage {...props}
@@ -66,7 +93,7 @@ const index = (props) => {
                 BaseImage ={({ ref })=><RenderImage ref={ref}  borderRadius={0} /> }
                 imageUrl = {image}
             />
-        </Pressable>
+        </View>
     )
 }
 

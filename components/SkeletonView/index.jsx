@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, Text, View ,Animated, Easing} from 'react-native'
+import { StyleSheet, Text, View ,Animated, Easing, StyleProp , ViewStyle} from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient'
 import { screenSize } from '../../util/screenSize'
@@ -8,8 +8,10 @@ const AnimatedComponent = Animated.createAnimatedComponent(LinearGradient)
 
 /**
  * 
- * @param {Array<String>} colors 
- * @returns 
+ * @param {{
+ *  style : StyleProp<ViewStyle>
+ *  
+ * }}
  */
 const index = ({ style , duration,colors ,backgroundColor }) => {
 

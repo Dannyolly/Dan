@@ -17,9 +17,9 @@ import SkeletonView from '../../components/SkeletonView'
 import LikeAnimated from '../../components/LikeAnimated'
 import { showMessage } from 'react-native-flash-message'
 import { tapResponser ,messageResponser, selectionResponser} from '../../util/haptic'
-
+import { imageStore , observer } from '../../components/JustifyCenterImage/lock'
 import PostItemSkeletonView from '../../components/PostItemSkeletonView'
-
+import MaskView from '../../components/MaskView'
 function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset , zooming ,onZooming  }) {
 
 
@@ -135,9 +135,7 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
 
     useEffect(() => {
         if(item!==undefined && correctFirstTime.current===false){
-
                 setItem(()=>item)
-            
         }
     }, [item])
 
@@ -151,11 +149,15 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
         
     }, [])
 
-
+   
     return (
         
             <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{}]}>
                 {
+                    
+                }
+                {
+            
                 realItem!==undefined
                 &&
                 <View style={[styles.itemContent,isShadow===true?{padding:10,paddingTop:0,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>
@@ -169,23 +171,24 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                         }
                         <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
                     </View>                 
-                        <View ref={c=>viewRef.current=c}  >
+                        <View style={{zIndex:imageStore.index===index?1000:0}}  ref={c=>viewRef.current=c}  >
                             <MySwiper 
-                            zooming={zooming} 
-                            onZooming={onZooming} 
-                            index={index} 
-                            currentTopOffset={currentTopOffset}  
-                            isJustify={isShadow}  
-                            data={realItem.postImage} 
-                            style={isShadow===true?styles.shadowStylePostImage:styles.postImage} 
-                            doubleTapEvent={doubleTapEvent} />
+                                zooming={zooming} 
+                                onZooming={onZooming} 
+                                index={index} 
+                                currentTopOffset={currentTopOffset}  
+                                isJustify={isShadow}  
+                                data={realItem.postImage} 
+                                style={isShadow===true?styles.shadowStylePostImage:styles.postImage} 
+                                doubleTapEvent={doubleTapEvent} 
+                            />
                         </View>
                         
                         {/* LIke VIew */}
                         {
                         showLike===true
                         &&
-                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:999,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
+                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:9999,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
                             <LikeAnimated  />
                         </View>
                         }
@@ -216,11 +219,11 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
                 }
 
                 
-                {
+                {/* {
                     realItem===undefined
                     &&
                     <PostItemSkeletonView/>
-                }
+                } */}
                 
                    
             
@@ -231,12 +234,9 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
 }
 
 
-PostItem.prototype ={
-    item : PropTypes.object.isRequired,
-    index : PropTypes.number
-}
 
-export default PostItem
+
+export default observer(PostItem)
 
 const styles = StyleSheet.create({
     shadowStyle:{

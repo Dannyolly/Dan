@@ -5,25 +5,44 @@ import { observer } from 'mobx-react'
 
 class ImageStore {
 
-    isZooming  = false
+    isZooming = false
+
+    scale = 0
+
+    index = 0
 
     constructor() {
         makeObservable(this, {
             /* field */
-            isZooming:observable,
-
+            isZooming: observable,
+            scale: observable,
+            index: observable,
             /* function  */
-            setIsZooming:action
+            setIsZooming: action,
+            setScale: action,
+            setIndex: action,
+
         })
     }
 
     /** @param {boolean } [state] */
-    setIsZooming=( state )=>{
-        this.isZooming = ! this.isZooming
+    setIsZooming = (state) => {
+        state ?
+            this.isZooming = state :
+            this.isZooming = !this.isZooming
     }
-    
 
-   
+    /** @param {number } [scale] */
+    setScale = (scale) => {
+        this.scale = scale
+    }
+
+    setIndex = (index) => {
+        this.index = index
+    }
+
+
+
 }
 
 let imageStore = new ImageStore()

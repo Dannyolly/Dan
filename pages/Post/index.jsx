@@ -71,7 +71,7 @@ export default class index extends Component {
                     setTimeout(()=>{
                         
                         
-                        this.props.navigation.navigate('發現')
+                        this.props.navigation.navigate('discover')
                         defaultShowMessage(" 發布成功 !")
 
                     },1500)

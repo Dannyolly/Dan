@@ -82,7 +82,7 @@ export default function index( { route, navigation } ) {
     const scrollRef = useRef()
 
 
-    webSocket.onmessage=(e)=>{
+    webSocket.onmessage = (e)=>{
         let msg =JSON.parse(e.data)
         let formatMsg  
         let index  =0 
@@ -121,7 +121,9 @@ export default function index( { route, navigation } ) {
         /* 保存到本地... */
         let res = getMsgFormat(userStore.text,userInfo)
         //console.log(obj,res)
+        console.log(webSocket.CONNECTING)
         saveTheMessageToLocal(res,friendInfo.id,userInfo.id) 
+        console.log(typeof msg)
         webSocket.send(msg)
         /* showMessage({
             message:JSON.stringify(msg),
@@ -321,8 +323,7 @@ export default function index( { route, navigation } ) {
                     maxComposerHeight={35}
                     minInputToolbarHeight={60}
                     renderMessageImage={props=>{
-                        /* console.log('currentMessage' ,props.currentMessage.image) */
-                        console.log('currentMessage' ,props.currentMessage.image)
+                        
                         return(
                             <ChatImage  
                             parentRef={containerRef.current}  

@@ -14,10 +14,7 @@ export default observer(({ navigation })=>{
 
 
     return(
-        <SafeAreaView style={{flex:1}}>
-        <View style={{width:screenSize.width,height:95,position:'absolute',top:-50,zIndex:0}}>    
-            <StatusBar   />
-            
+        <View style={{width:screenSize.width,height:85,backgroundColor:"#FFFFFF",zIndex:0}}>    
             {/* <View onTouchEnd={()=>navigation.navigate('userInfo')} style={{position:'absolute',bottom:10,left:20}}>
                 {
                     userStore.userInfo!==undefined
@@ -41,14 +38,13 @@ export default observer(({ navigation })=>{
             </View>
 
         </View>
-        </SafeAreaView>
     )
 })
 
 const styles = StyleSheet.create({
     headerTitle:{
         position:'absolute',
-        top:50,
+        top:40,
         /* left:70, */
         color:"#3672CF",
         fontSize:30,

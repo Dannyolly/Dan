@@ -14,7 +14,7 @@ import {imageStore } from './lock'
 
 
 /** @param {{imageUrl :String}} */
-const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl } ) => {
+const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl ,isMoving} ) => {
 
     const ref = useRef()
 
@@ -59,7 +59,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
     }
 
     const zoomImage = ()=>{
-        
+    
         if(!showModal && !messageStore.scrolling ){
             measureCurrentElement(ref.current)
             setTimeout(()=>{
@@ -123,6 +123,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
             zoomImage()
         }else{
             collapseImage()
+            imageStore.setScale(0)
         }
     }
 
@@ -151,7 +152,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
 
                     <Modal 
                     style={{width:screenSize.width,height:screenSize.height,
-                    overflow:showModal?'visible':'hidden'}}
+                    /* overflow:showModal?'visible':'hidden' */}}
                      visible={showModal} 
                     transparent={true} >
                             <MaskView  opacity={opacity}   />
@@ -165,7 +166,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                                 </View>
                             }
 
-                            <Pressable onLongPress={()=>{
+                            <Pressable style={{width:screenSize.width,height:screenSize.height}} onLongPress={()=>{
                                 /* setImage(()=>imageUrl)
                                 setIsOpen(()=>true) */
                             }} > 
@@ -173,26 +174,31 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                                 /* onTouchStart */
                                 
                                 onTouchEnd={(event)=>{
-                                    console.log('>>><<<',imageStore.isZooming);
+                                    /* console.log('>>><<<',imageStore.isZooming); */
                                     if(imageStore.isZooming){
                                         
                                     }else{
                                         tapPic()
                                     }
                                 }}
-                                style={{width:220,height:220,borderRadius:0,
+                                style={{width:220,height:220,borderRadius:0,position:'absolute',
                                 transform:[
 
                                 {translateX:xyOffset.x},
                                 {translateY:xyOffset.y},
-                                {scaleX:scale},
-                                {scaleY:scale}
+                                {scaleX:Animated.add(scale,imageStore.scale>0?imageStore.scale:0)},
+                                {scaleY:Animated.add(scale,imageStore.scale>0?imageStore.scale:0)}
 
                                 ]}}>
                                     <BaseImage/>
                                 </Animated.View>
                             </Pressable>
-                        <BottomSheep isOpen={isOpen} setIsOpen={setIsOpen} savedImage={savedImageToMedia}  imageUrl={imageUrl}  />
+                        <BottomSheep 
+                            isOpen={isOpen} 
+                            setIsOpen={setIsOpen} 
+                            savedImage={savedImageToMedia}  
+                            imageUrl={imageUrl}  
+                        />
                     </Modal>
 
 

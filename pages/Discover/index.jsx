@@ -1,5 +1,5 @@
 import React, { Component ,useRef,useEffect,useState} from 'react'
-import { Text, View ,StyleSheet,DeviceEventEmitter,Image} from 'react-native'
+import { Text, View ,StyleSheet,DeviceEventEmitter,Image, Animated} from 'react-native'
 import WebSocket from '../../webSocket'
 
 import JustifyContentImage from '../../components/JustifyContentImage'
@@ -16,9 +16,12 @@ import Loading from '../../components/Loading'
 import { Platform } from 'react-native'
 import { base_url } from '../../api/config'
 import SkeletonView from '../../components/SkeletonView'
-import PostItemSkeletonView from '../../components/PostItemSkeletonView'
+import DiscoverSkeletonView from '../../components/DiscoverSkeletonView'
 import ShortVideo from './ShortVideo'
 import { useNavigation } from '@react-navigation/native'
+import { imageStore } from '../../components/JustifyCenterImage/lock'
+import DiscoverHeader from '../../components/Header/Discover'
+import MaskView from '../../components/MaskView'
 /**
  * 
  * @param {Boolean} props.onlyFlatList 
@@ -55,6 +58,8 @@ export default observer(({ navigation, onlyFlatList })=> {
     const [zooming, setZooming] = useState(false)
 
     const isSetTimeout = useRef(false)
+
+    const lastY = useRef(0)
 
     const handleToggle = ()=>{
         if(!setting.current){
@@ -152,12 +157,17 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     useEffect(()=>{
         // 這個是用戶自己上傳的新post
-        listener.current=DeviceEventEmitter.addListener('uploadPost',function ( obj ){
+        listener.current=DeviceEventEmitter.addListener('uploadPost',async function ( obj ){
             if(uploading.current===false){               
                 uploading.current =true
                 let temp = [obj,...dataRef.current]
-                //console.log('????again',[obj])
+                obj.userInfo = (await searchUser(`id=${obj.userId}`)).data
+                for (const i in obj.postImage) {
+                    obj.postImage[i]= base_url+obj.postImage[i]
+                }
+                
                 setData(()=>[obj,...dataRef.current])
+                dataRef.current = temp
                 setTimeout(()=>{
                     uploading.current = false
                 },5000)
@@ -171,35 +181,65 @@ export default observer(({ navigation, onlyFlatList })=> {
     },[])
 
 
-    const onZooming =(scale) =>{
+    const onZooming =(scale , index) =>{
         //console.log('move ', scale)
-        if(zooming===false && isSetTimeout.current === false && scale !==1 ){
-            //console.log('set')
+        if(isSetTimeout.current === false && scale !==1 ){
+            console.log('set',index)
+            imageStore.setIndex(index)
+            /* imageStore.setIsZooming(true) */
             isSetTimeout.current = true
             onScrollRef.current.setNativeProps({
-                scrollEnabled:!isSetTimeout.current
+                scrollEnabled:false
             }) 
             setTimeout(()=>{
                 isSetTimeout.current = false
+                /* imageStore.setIsZooming(false) */
                 onScrollRef.current.setNativeProps({
-                    scrollEnabled:!isSetTimeout.current
+                    scrollEnabled:true
                 }) 
                // console.log('can move !')
             },100)
         }
     }
 
+   /*  const onScrollBeginDrag = () =>{
+        isSetTimeout.current = true 
+        console.log('start to collapse')
+        DeviceEventEmitter.emit('collapseBottomTabBar')
+    } */
+
     return (  
-        <View  style={{width:screenSize.width,height:screenSize.height-150,backgroundColor:"#FFFFFF",paddingBottom:0}}>
+        <ScrollView 
+        ref={c=>onScrollRef.current=c} 
+        onScrollEndDrag={(event)=>{
+            isSetTimeout.current = false
+        }}
+        onScrollBeginDrag={(event)=>{
+            isSetTimeout.current = true
+            event.nativeEvent.contentOffset.y >= lastY.current?
+                    DeviceEventEmitter.emit('collapseBottomTabBar') :
+                    DeviceEventEmitter.emit('showBottomTabBar')
+
+            lastY.current = event.nativeEvent.contentOffset.y
+        }}
+        canCancelContentTouches={false}
+        style={{width:screenSize.width,height:screenSize.height,
+        backgroundColor:"#FFFFFF",paddingBottom:0}}>
+            
+            
+            
             
             {
                 data!==undefined
                 &&
                 <FlatList
-                onScrollBeginDrag={()=>isSetTimeout.current = true }
-                onScrollEndDrag={()=>isSetTimeout.current = false }
+                
                 scrollEnabled={!zooming}
-                ListHeaderComponent={()=><ShortVideo  navigation={navigation}  />}
+                ListHeaderComponent={()=><> 
+                    <DiscoverHeader  navigation={navigation} />
+                    <ShortVideo  navigation={navigation}  />
+                   
+                  </>}
                 ListFooterComponent={()=><BottomHandler/>}
                 onEndReached={onReach}
                 onEndReachedThreshold={0}
@@ -220,19 +260,18 @@ export default observer(({ navigation, onlyFlatList })=> {
                 }
                 keyExtractor={(item)=>item.id.toString()}
                 style={{flex:1}} 
-                ref={c=>onScrollRef.current=c} 
+                
                 showsVerticalScrollIndicator={false} 
                 overScrollMode={'always'}
                 
                 />
             }
-
+    
             {
-                data===undefined
-                &&
-                <PostItemSkeletonView />
+                
+                <DiscoverSkeletonView/>
             }     
-        </View>
+        </ScrollView>
     )
     
 })

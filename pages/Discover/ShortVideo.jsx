@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,memo} from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import ShortVideoItem from './ShortVideoItem'
@@ -24,8 +24,8 @@ const ShortVideo = ( {item ,index} ) => {
     }
 
     return (
-        <ScrollView onScrollBeginDrag={onScrolling} onScrollEndDrag={onScrolling} horizontal style={{padding:10,height:120}} showsHorizontalScrollIndicator={false} >
-            <View style={{height:100, flexDirection:'row'}} >
+        <ScrollView onScrollBeginDrag={onScrolling} onScrollEndDrag={onScrolling} horizontal style={{zIndex:0,padding:10,height:120}} showsHorizontalScrollIndicator={false} >
+            <View style={{height:100, flexDirection:'row',zIndex:0}} >
                 <ShortVideoItem navigateToVideoPage={navigateToVideoPage} isScroll={isScroll} />
                 <ShortVideoItem navigateToVideoPage={navigateToVideoPage} isScroll={isScroll} />
                 <ShortVideoItem navigateToVideoPage={navigateToVideoPage} isScroll={isScroll} />
@@ -39,6 +39,6 @@ const ShortVideo = ( {item ,index} ) => {
     )
 }
 
-export default ShortVideo
+export default memo(ShortVideo,()=>true)
 
 const styles = StyleSheet.create({})
