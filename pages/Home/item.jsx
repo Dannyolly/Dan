@@ -56,11 +56,21 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
         
         rightButtons={rightButtons} 
         rightActionActivationDistance={0}
-        onSwipeStart={()=>{
-            control.current=!control.current
-            //console.log('control.current',control.current);
+        onSwipeMove={()=>{
+            
+            control.current=false
+            /* console.log('control.current',control.current); */
             setOnScroll()
         }} 
+        
+        onSwipeComplete={()=>{
+
+            control.current = true
+            /* console.log('control.current release',control.current); */
+            
+        }}
+        
+      
         >
             <View style={{width:screenSize.width,height:80,zIndex:1}}>
                 
@@ -69,17 +79,19 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                     activeOpacity={0.6} 
                     underlayColor={"#F7F5F8"}
                     //underlayColor={"#F4F4F4"}
-                    
-                    onPressIn={()=>{
+                    delayPressIn={100}
+                    onPressOut={()=>{
                         if(control.current===true){
-                            userStore.setUnReadMessage([],index,true)
-                            userStore.calculateUnreadMsgCount()
-
                             navigation.navigate('Message',{
                                 item:item.objectInfo
                             })
+                            userStore.setUnReadMessage([],index,true)
+                            userStore.calculateUnreadMsgCount()
+
+                            
                         }
-                    }}>
+                    }}
+                    >
                         <View style={{width:screenSize.width,height:80,paddingLeft:65}}>
                             <CachedImage
                             uri={/* base_url+ */item.objectInfo.avatar}

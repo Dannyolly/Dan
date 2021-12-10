@@ -2,24 +2,26 @@
 "d:\html\react\react-native\MyWebSocket\pages\AddUser\FriendDelta.jsx", "JavaScript React", 336, 0, 44, 103, 483
 "d:\html\react\react-native\MyWebSocket\pages\AddUser\index.jsx", "JavaScript React", 76, 0, 1, 12, 89
 "d:\html\react\react-native\MyWebSocket\pages\AddUser\item.jsx", "JavaScript React", 39, 0, 0, 5, 44
-"d:\html\react\react-native\MyWebSocket\pages\CheckFriendRequest\index.jsx", "JavaScript React", 103, 0, 1, 29, 133
+"d:\html\react\react-native\MyWebSocket\pages\CheckFriendRequest\index.jsx", "JavaScript React", 103, 0, 7, 29, 139
 "d:\html\react\react-native\MyWebSocket\pages\Comment\MyFlatlist.jsx", "JavaScript React", 66, 0, 1, 20, 87
 "d:\html\react\react-native\MyWebSocket\pages\Comment\index.jsx", "JavaScript React", 351, 0, 17, 77, 445
 "d:\html\react\react-native\MyWebSocket\pages\Comment\item.jsx", "JavaScript React", 50, 0, 3, 25, 78
 "d:\html\react\react-native\MyWebSocket\pages\Comment\textInput.jsx", "JavaScript React", 21, 0, 0, 6, 27
-"d:\html\react\react-native\MyWebSocket\pages\Discover\PostItem.jsx", "JavaScript React", 185, 0, 32, 68, 285
-"d:\html\react\react-native\MyWebSocket\pages\Discover\index.jsx", "JavaScript React", 191, 0, 26, 48, 265
+"d:\html\react\react-native\MyWebSocket\pages\Discover\PostItem.jsx", "JavaScript React", 189, 0, 34, 69, 292
+"d:\html\react\react-native\MyWebSocket\pages\Discover\ShortVideo.jsx", "JavaScript React", 32, 0, 1, 12, 45
+"d:\html\react\react-native\MyWebSocket\pages\Discover\ShortVideoItem.jsx", "JavaScript React", 15, 0, 9, 9, 33
+"d:\html\react\react-native\MyWebSocket\pages\Discover\index.jsx", "JavaScript React", 239, 0, 31, 60, 330
 "d:\html\react\react-native\MyWebSocket\pages\Friend\index.jsx", "JavaScript React", 164, 0, 1, 47, 212
 "d:\html\react\react-native\MyWebSocket\pages\Home\homeUtils.js", "JavaScript", 0, 16, 6, 7, 29
-"d:\html\react\react-native\MyWebSocket\pages\Home\index.jsx", "JavaScript React", 218, 0, 53, 63, 334
+"d:\html\react\react-native\MyWebSocket\pages\Home\index.jsx", "JavaScript React", 224, 0, 60, 82, 366
 "d:\html\react\react-native\MyWebSocket\pages\Home\item.jsx", "JavaScript React", 147, 0, 5, 23, 175
 "d:\html\react\react-native\MyWebSocket\pages\Individual\Header.jsx", "JavaScript React", 67, 0, 5, 29, 101
 "d:\html\react\react-native\MyWebSocket\pages\Individual\index.jsx", "JavaScript React", 392, 0, 18, 68, 478
 "d:\html\react\react-native\MyWebSocket\pages\Login\index.jsx", "JavaScript React", 180, 0, 17, 53, 250
 "d:\html\react\react-native\MyWebSocket\pages\Message\Loading.jsx", "JavaScript React", 11, 0, 1, 4, 16
 "d:\html\react\react-native\MyWebSocket\pages\Message\MessageBox.jsx", "JavaScript React", 12, 0, 0, 5, 17
-"d:\html\react\react-native\MyWebSocket\pages\Message\index.jsx", "JavaScript React", 234, 0, 51, 79, 364
-"d:\html\react\react-native\MyWebSocket\pages\Message\messageUtils.js", "JavaScript", 0, 104, 65, 46, 215
+"d:\html\react\react-native\MyWebSocket\pages\Message\index.jsx", "JavaScript React", 233, 0, 53, 80, 366
+"d:\html\react\react-native\MyWebSocket\pages\Message\messageUtils.js", "JavaScript", 0, 104, 78, 49, 231
 "d:\html\react\react-native\MyWebSocket\pages\Message\messages.jsx", "JavaScript React", 12, 0, 0, 4, 16
 "d:\html\react\react-native\MyWebSocket\pages\Post\index.jsx", "JavaScript React", 152, 0, 13, 37, 202
 "d:\html\react\react-native\MyWebSocket\pages\Register\Step1.jsx", "JavaScript React", 72, 0, 1, 18, 91
@@ -28,4 +30,4 @@
 "d:\html\react\react-native\MyWebSocket\pages\Register\index.jsx", "JavaScript React", 23, 0, 0, 8, 31
 "d:\html\react\react-native\MyWebSocket\pages\Register\last.jsx", "JavaScript React", 84, 0, 5, 28, 117
 "d:\html\react\react-native\MyWebSocket\pages\UserInformation\index.jsx", "JavaScript React", 22, 0, 0, 8, 30
-"Total", "-", 3364, 120, 368, 974, 4826
+"Total", "-", 3468, 120, 413, 1031, 5032

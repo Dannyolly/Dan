@@ -22,6 +22,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import MySwiper from '../../components/MySwiper'
 import NonIdCachedImage from '../../components/NonIdCachedImage'
 import MyTextInput from './textInput'
+
 const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
     
@@ -172,7 +173,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
     }
 
     const onPanFinished = () =>{
-        console.log('touchX',currentTranslationX)
+        //console.log('touchX',currentTranslationX)
         if(currentTranslationX.current>170){
             Animated.spring(touchX,{
                 toValue:0,
@@ -283,18 +284,29 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                     style={styles.userIcon}   />
                                                     
 
-                                                    <TextInput 
+                                                    {/* <TextInput 
                                                     keyboardType={'twitter'}
                                                     returnKeyType='send'
                                                     onBlur={()=>collapseKeyBoard()}
                                                     onTouchStart={()=>clickedKeyBoard()}
                                                     onSubmitEditing={()=>submitMessage()}
-                                                    /* onKeyPress={()=>clickedKeyBoard()} */
+                
                                                     placeholder={"新增回應......"} 
                                                     style={styles.input} 
-                                                    onChangeText={text => onChangeText(text)} value={value} 
+                                                    onChangeText={text => onChangeText(text)} 
+                                                    value={value} 
+                                                    /> */}
+                                                    <MyTextInput  
+                                                        keyboardType={'twitter'}
+                                                        returnKeyType='send'
+                                                        onBlur={()=>collapseKeyBoard()}
+                                                        onTouchStart={()=>clickedKeyBoard()}
+                                                        onSubmitEditing={()=>submitMessage()}
+                                                        /* onKeyPress={()=>clickedKeyBoard()} */
+                                                        placeholder={"新增回應......"} 
+                                                        style={styles} 
+                                                         
                                                     />
-                                                
                                                 
                                         </Animated.View>
                                     </KeyboardAvoidingView>

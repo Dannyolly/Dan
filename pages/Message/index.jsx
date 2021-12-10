@@ -121,9 +121,9 @@ export default function index( { route, navigation } ) {
         /* 保存到本地... */
         let res = getMsgFormat(userStore.text,userInfo)
         //console.log(obj,res)
-        console.log(webSocket.CONNECTING)
+        //console.log(webSocket.CONNECTING)
         saveTheMessageToLocal(res,friendInfo.id,userInfo.id) 
-        console.log(typeof msg)
+        //console.log(typeof msg)
         webSocket.send(msg)
         /* showMessage({
             message:JSON.stringify(msg),

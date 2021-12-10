@@ -67,13 +67,13 @@ export default class index extends Component {
         Animated.spring(this.state.scale,{
             toValue:0.8,
             speed:8,
-            /* useNativeDriver:true */
+            useNativeDriver:false
         }).start()
 
         Animated.timing(this.state.opacity,{
             toValue:0,
             duration:100,
-            /* useNativeDriver:true */
+            useNativeDriver:false
         }).start()
 
 

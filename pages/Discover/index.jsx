@@ -210,7 +210,9 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     return (  
         <ScrollView 
+        refreshControl={ Platform.OS==='android'? null:<DownScrollLoading   /> }
         ref={c=>onScrollRef.current=c} 
+        
         onScrollEndDrag={(event)=>{
             isSetTimeout.current = false
         }}
@@ -244,7 +246,7 @@ export default observer(({ navigation, onlyFlatList })=> {
                 onEndReached={onReach}
                 onEndReachedThreshold={0}
                 canCancelContentTouches={false}
-                refreshControl={ Platform.OS==='android'? null:<DownScrollLoading   /> }
+                
                 data={data}
                 renderItem={
                     ({ item,index })=>
@@ -268,7 +270,8 @@ export default observer(({ navigation, onlyFlatList })=> {
             }
     
             {
-                
+                data!==undefined
+                &&
                 <DiscoverSkeletonView/>
             }     
         </ScrollView>
