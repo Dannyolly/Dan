@@ -20,6 +20,7 @@ import SwiperItem from './SwiperItem';
 function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zooming , onZooming  }) {
 
     
+    const ref = useRef()
 
     return (
         
@@ -28,20 +29,25 @@ function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zoomi
                 <Swiper
                 key={data.length}
                 paginationStyle={styles.pagination}
+                /* onMoveShouldSetResponderCapture={e=>true} */
+                /* scrollEnabled={false} */
+                ref={c=>ref.current = c}
+                /* onResponderTerminationRequest={e=>true} */
+                
                 >
                     {
                         data.map((item,i)=>{
                             return(
                                 <SwiperItem
-                                zooming={zooming}
-                                onZooming={onZooming}
-                                isJustify={isJustify}
-                                style={style}
-                                index={index}
-                                data={item}
-                                navigation={navigation}
-                                key={i}
-                                doubleTapEvent={doubleTapEvent}
+                                    zooming={zooming}
+                                    onZooming={onZooming}
+                                    isJustify={isJustify}
+                                    style={style}
+                                    index={index}
+                                    data={item}
+                                    navigation={navigation}
+                                    key={i}
+                                    doubleTapEvent={doubleTapEvent}
                                 />
                             )
                         })

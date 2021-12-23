@@ -1,6 +1,6 @@
 import React,{useRef,useState,useCallback, useMemo,memo, useEffect,Component} from 'react'
 import { StyleSheet, Text, View ,Image, Platform, Animated, Keyboard, Easing, KeyboardAvoidingView,} from 'react-native'
-import { FlatList, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { FlatList, ScrollView, TapGestureHandler, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { screenSize } from '../../util/screenSize'
 
 
@@ -98,7 +98,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
    
     
-    const Element = class Target extends Component {
+    /* const Element = class Target extends Component {
         render(){
 
             const { top } =this.props
@@ -133,10 +133,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                             
                             }}>
                         
-                                {/* <Image 
-                                source={require('../../assets/icon.png')} 
-                                style={styles.userIcon}   /> */}
-                                <NonIdCachedImage
+                              
                                 uri={base_url+item.userInfo[0].icon}
                                 style={styles.userIcon}   />
                           
@@ -153,7 +150,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
     
 
     const AnimatedView = Animated.createAnimatedComponent(Element)
-    
+     */
 
     const onPanGestureEvent = Animated.event([
         { 
@@ -215,6 +212,18 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                 onGestureEvent={onPanGestureEvent} 
                 onEnded={()=>onPanFinished()}>
                     <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
+                            
+
+                            
+                            
+                            <View style={{marginBottom:100}} >
+                                <View style={{position:'absolute',top:0,paddingLeft:10,paddingRight:10}}>
+                                                <CommentHeader  collapse={collapse} item={item} />
+                                </View>
+                            </View>
+                            
+                            
+                            
                             <Animated.ScrollView  scrollEventThrottle={16} onScroll={
                                     Animated.event(
                                         [
@@ -225,18 +234,20 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                         {useNativeDriver: false},
                                     )}  
                                     style={{flex:1}} 
+                                    /* contentContainerStyle={{paddingTop:100}} */
                                     showsVerticalScrollIndicator={false} 
                                     >
                                     
                                     
                                     <TouchableWithoutFeedback onPress={collapseKeyBoard} >
-                                        <View style={{position:'absolute',top:0,paddingLeft:10,paddingRight:10}}>
-                                            <CommentHeader  collapse={collapse} item={item} />
-                                        </View>
+                                        
                                         {
                                         <View style={styles.itemContent}>
                                                         
-                                                <MySwiper /* isJustify={true} */ data={item.postImage} style={styles.postImage} />
+                                                <MySwiper   /* isJustify={true} */
+                                                 data={item.postImage} 
+                                                 style={styles.postImage} 
+                                                 />
                                             
                                             <View style={{paddingLeft:5,paddingRight:5}} >
                                                 <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
@@ -261,47 +272,39 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                             <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
                                         </View>
                                     </TouchableWithoutFeedback>
-                                    <KeyboardAvoidingView behavior={Platform.OS == "ios" ? 'position' : "height"}>
+                                    <KeyboardAvoidingView style={{zIndex:1000}} 
+                                    keyboardVerticalOffset={155}
+                                    behavior={Platform.OS == "ios" ? 'position' : "height"}>
                                         <Animated.View 
                                                 style={{
                                                 width:screenSize.width,
-                                                height:100,
-                                                paddingTop:0,
-                                                paddingBottom:10,
+                                                height:70,
+                                                paddingBottom:0,
                                                 justifyContent:'center',
                                                 paddingLeft:70,
                                                 backgroundColor:"#FFFFFF",
                                                 position:'absolute',
-                                                top:Animated.add(Animated.add((screenSize.height-90),commentContainerOffset),Animated.multiply(offset,-1)) ,
-                                                zIndex:1
+                                                shadowColor:"#F4F4F4",
+                                                shadowRadius:20,
+                                                shadowOffset:{
+                                                    width:0,
+                                                    height:0
+                                                },
+                                                shadowOpacity:0.7,
+                                                top:Animated.add(85,commentContainerOffset),
+                                                zIndex:1000
                                                 }}>
                                             
-                                                    {/* <Image 
-                                                    source={require('../../assets/icon.png')} 
-                                                    style={styles.userIcon}   /> */}
                                                     <NonIdCachedImage
                                                     uri={base_url+item.userInfo[0].icon}
                                                     style={styles.userIcon}   />
-                                                    
-
-                                                    {/* <TextInput 
-                                                    keyboardType={'twitter'}
-                                                    returnKeyType='send'
-                                                    onBlur={()=>collapseKeyBoard()}
-                                                    onTouchStart={()=>clickedKeyBoard()}
-                                                    onSubmitEditing={()=>submitMessage()}
-                
-                                                    placeholder={"新增回應......"} 
-                                                    style={styles.input} 
-                                                    onChangeText={text => onChangeText(text)} 
-                                                    value={value} 
-                                                    /> */}
+                                                
                                                     <MyTextInput  
                                                         keyboardType={'twitter'}
                                                         returnKeyType='send'
                                                         onBlur={()=>collapseKeyBoard()}
-                                                        onTouchStart={()=>clickedKeyBoard()}
-                                                        onSubmitEditing={()=>submitMessage()}
+                                                        /* onTouchStart={()=>clickedKeyBoard()} */
+                                                        onSubmitEditing={(value)=>submitMessage(value)}
                                                         /* onKeyPress={()=>clickedKeyBoard()} */
                                                         placeholder={"新增回應......"} 
                                                         style={styles} 
@@ -311,8 +314,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                         </Animated.View>
                                     </KeyboardAvoidingView>
                                     {
-                                        /* data!==undefined
-                                        && */
+                                        
                                         <MyFlatlist 
                                         data={data} 
                                         offset={offset}
@@ -327,6 +329,9 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                 </PanGestureHandler>
                 :
                 <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
+                            <View style={{paddingLeft:10,paddingRight:10}}>
+                                    <CommentHeader  collapse={collapse} item={item} />
+                             </View>
                             <Animated.ScrollView  scrollEventThrottle={16} onScroll={
                                     Animated.event(
                                         [
@@ -343,9 +348,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                     
                                     
                                     <TouchableWithoutFeedback onPress={collapseKeyBoard} >
-                                        <View style={{paddingLeft:10,paddingRight:10}}>
-                                            <CommentHeader  collapse={collapse} item={item} />
-                                        </View>
+                                        
                                         {
                                         <View style={styles.itemContent}>
                                                         
@@ -374,7 +377,47 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                             <View style={{width:screenSize.width-40,height:1,backgroundColor:"#F4F4F4",}}/>
                                         </View>
                                     </TouchableWithoutFeedback>
-                                    <AnimatedView top={Animated.add(Animated.add((screenSize.height-70),commentContainerOffset),Animated.multiply(offset,-1))} />
+                                    <KeyboardAvoidingView style={{zIndex:1000,paddingTop:10}} 
+                                    keyboardVerticalOffset={245}
+                                    behavior={Platform.OS == "ios" ? 'position' : "height"}>
+                                        <Animated.View 
+                                                style={{
+                                                width:screenSize.width,
+                                                height:70,
+                                                paddingBottom:0,
+                                                justifyContent:'center',
+                                                paddingLeft:70,
+                                                backgroundColor:"#FFFFFF",
+                                                position:'absolute',
+                                                shadowColor:"#F4F4F4",
+                                                shadowRadius:20,
+                                                shadowOffset:{
+                                                    width:0,
+                                                    height:0
+                                                },
+                                                shadowOpacity:0.7,
+                                                top:Animated.add(85,commentContainerOffset),
+                                                zIndex:1000
+                                                }}>
+                                            
+                                                    <NonIdCachedImage
+                                                    uri={base_url+item.userInfo[0].icon}
+                                                    style={styles.userIcon}   />
+                                                
+                                                    <MyTextInput  
+                                                        keyboardType={'twitter'}
+                                                        returnKeyType='send'
+                                                        onBlur={()=>collapseKeyBoard()}
+                                                        /* onTouchStart={()=>clickedKeyBoard()} */
+                                                        onSubmitEditing={(value)=>submitMessage(value)}
+                                                        /* onKeyPress={()=>clickedKeyBoard()} */
+                                                        placeholder={"新增回應......"} 
+                                                        style={styles} 
+                                                         
+                                                    />
+                                                
+                                        </Animated.View>
+                                    </KeyboardAvoidingView>
                                     {
                                         /* data!==undefined
                                         && */
@@ -403,6 +446,7 @@ const styles = StyleSheet.create({
         marginBottom:10
     },
     itemContent:{
+        paddingTop:150,
         width:screenSize.width,
         borderRadius:20,
         flex:1,
@@ -423,6 +467,8 @@ const styles = StyleSheet.create({
     },
     container:{
         /* width:screenSize.width, */
+        paddingTop:50,
+        borderRadius:20,
         flex:1,
         backgroundColor:"#FFFFFF",
         padding:10,

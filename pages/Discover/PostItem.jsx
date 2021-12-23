@@ -20,9 +20,36 @@ import { tapResponser ,messageResponser, selectionResponser} from '../../util/ha
 import { imageStore , observer } from '../../components/JustifyCenterImage/lock'
 import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 import MaskView from '../../components/MaskView'
-function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopOffset , zooming ,onZooming  }) {
 
+/**
+ * @typedef PostItemProps
+ * @property {object} item
+ * @property {number} index
+ * @property {navigation } navigation
+ * @property {boolean} isShadow 
+ * @property {number}  currentTopOffset 
+ * @property {boolean } zooming 
+ * @property {(scale : number , index : number )=>void} onZooming 
+ * @returns 
+ */
 
+/**
+ * 
+ * @param {PostItemProps} prop 
+ * @returns 
+ */
+function PostItem({
+    item ,
+    index , 
+    navigation,
+    handleToggle ,
+    isShadow, 
+    currentTopOffset , 
+    zooming ,
+    onZooming  
+}) {
+
+    
     
 
     const [realItem, setItem] = useState(undefined)
@@ -149,29 +176,28 @@ function PostItem({ item ,index , navigation,handleToggle ,isShadow, currentTopO
         
     }, [])
 
-   
+
     return (
         
-            <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{}]}>
-                {
-                    
-                }
+            <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{},{zIndex:0}]}>
+
                 {
             
                 realItem!==undefined
                 &&
-                <View style={[styles.itemContent,isShadow===true?{padding:10,paddingTop:0,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>
-                    <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5}}>
-                       
-                        <CachedImage style={styles.iconStyle}  uri={base_url+realItem.userInfo[0].icon} />
-                        
-                        {
-                            
-                            <Text style={{paddingLeft:10,lineHeight:40,fontWeight:'bold'}}>{realItem.userInfo[0].username}</Text>
-                        }
-                        <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
-                    </View>                 
-                        <View style={{zIndex:imageStore.index===index?1000:0}}  ref={c=>viewRef.current=c}  >
+                <View style={[styles.itemContent,isShadow===true?{padding:10,paddingTop:0,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>          
+                        <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5,zIndex:0}}>
+                                
+                                <CachedImage style={styles.iconStyle}  uri={base_url+realItem.userInfo[0].icon} />
+                                
+                                {
+                                    
+                                    <Text style={{paddingLeft:10,lineHeight:40,fontWeight:'bold'}}>{realItem.userInfo[0].username}</Text>
+                                }
+                                <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
+                            </View> 
+                        <View style={{zIndex:imageStore.index===index?10000:0}}  ref={c=>viewRef.current=c}  >
+                               
                             <MySwiper 
                                 zooming={zooming} 
                                 onZooming={onZooming} 
@@ -267,18 +293,18 @@ const styles = StyleSheet.create({
         width:35,
         height:35,
         borderRadius:30,
-        zIndex:0
+        /* zIndex:0 */
     },
     postImage:{
         width:screenSize.width,
         height:500,
-        zIndex:4
+        /* zIndex:4 */
     },
     shadowStylePostImage:{
         width:screenSize.width-40,
         borderRadius:10,
         height:350,
-        zIndex:4
+        /* zIndex:4 */
     },
 
     // skeleton UI

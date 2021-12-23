@@ -3,7 +3,9 @@ import React,{useState,useRef,useEffect} from 'react'
 import { View, Text ,PanResponder,Animated,Image,StyleSheet, Dimensions
   ,StyleProp,
   ViewStyle
-
+  , ScrollView,
+  MutableRefObject,
+  
 } from 'react-native'
 
 import { screenSize } from '../../util/screenSize';
@@ -20,17 +22,20 @@ import { userStore } from '../../mobx/store';
 import ImageZoom,{IOnMove} from 'react-native-image-pan-zoom'
 
 import { imageStore ,observer  } from '../JustifyCenterImage/lock';
+import { Easing } from 'react-native';
+
 /**
  * 
  * @param {{
  *  uri : string,
  *  style : StyleProp<ViewStyle>
  *  isSwipe : boolean,
- *  setOnScroll : ()=>void,
+ *  setOnScroll : ()=>void ,
  *  isCache : boolean , 
  *  doubleTapEvent : ()=>void
- *  onZooming : (e : IOnMove , index )=>void
- *  index : number
+ *  onZooming : (scale :number , index:number )=>void 
+ *  index : number , 
+ *  autoReset? : boolean  ,
  * }}
  */
  function index( { 
@@ -42,7 +47,8 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
                             doubleTapEvent,
                             zooming,
                             onZooming,
-                            index
+                            index,
+                            autoReset
                                   } ) {
 
 
@@ -121,13 +127,106 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
  */
   
    
-  
-  
+    const zoomScale = useRef(new Animated.Value(0)).current
+
+    const isRelease = useRef(false)
+
+    /** @type {React.LegacyRef<ScrollView>}*/
+    const ref = useRef()
+    
+
+    const controlScrolling =  ( e ) =>{
+       ref.current.setNativeProps({
+         scrollEnabled:true
+       })
+    }
+
     return (
-      <Animated.View /* style={{width:screenSize.width,height:screenSize.height}} */ >
-        <Animated.View style={StyleSheet.absoluteFill}>
-            <ImageZoom 
-            /* style={{...StyleSheet.absoluteFill}} */
+      <TapGestureHandler onActivated={doubleTapEvent}  numberOfTaps={2} >
+        <Animated.View  >
+        <Animated.View style={[StyleSheet.absoluteFill,{width:style.width, height:style.height}, 
+            ]}>
+            <ScrollView 
+              contentContainerStyle={{
+                flex:1
+              }}
+              ref={r=>ref.current = r}
+              pinchGestureEnabled={true} 
+              maximumZoomScale={3}
+              minimumZoomScale={1} 
+              centerContent={true} 
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              /* disableScrollViewPanResponder={true} */
+              /* onTouchStart={e=>{
+                console.log(e.nativeEvent.touches)
+              }} */
+              scrollEnabled={!autoReset}
+              onScroll={e=>{
+                const a = e.nativeEvent.contentSize
+                let scale  =a.width / style.width-1
+                if(scale>=0){
+                  imageStore.setScale(a.width / style.width-1)
+                  if(onZooming!==undefined){
+                      onZooming(scale , index )
+                  }
+                  
+                }
+                 
+               }}
+               onResponderStart={
+                 e=>{
+                    /* console.log('start!') */
+                    
+                 }
+               }
+               onResponderEnd={e=>{
+                 /**
+                  * 這里是給discover 用的
+                  */
+                 console.log('??')
+                  if(autoReset){
+  
+                      ref.current.setNativeProps({
+                          scrollEnabled:false
+                      }) 
+                      ref.current.getScrollResponder().scrollResponderZoomTo({
+                        width:style.width,
+                        height:style.height,
+                
+                      })
+                      setTimeout(()=>{
+                          imageStore.setScale(0)
+                      },2000 )
+                  }
+               }}
+               /* onResponderTerminationRequest={e=>true} */
+               
+              scrollEventThrottle={1}
+             >
+                
+                   {
+                      isCache!==undefined?
+                      <CashedImage 
+                        
+                      uri={uri} 
+                      style={style }  
+                      />
+                      :
+                      <Image
+                      source={{
+                        uri:uri
+                      }}
+                      style={style}
+                    />
+                   }
+
+            </ScrollView>
+                      
+            
+            
+            {/* <ImageZoom 
+
             cropWidth={style.width} 
             cropHeight={style.height} 
             imageWidth={style.width} 
@@ -144,7 +243,7 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
                 imageStore.setScale((e.scale-1))
               }
               
-              //console.log((e.scale-1),e.zoomCurrentDistance)
+
               return onZooming!==undefined?onZooming(e.scale,index):undefined
             }}
             responderRelease={()=>{
@@ -169,9 +268,8 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
 
                           />
                         }
-              </ImageZoom>   
-
-                      
+              </ImageZoom>    */}
+            
               {/* <ReactNativeZoomableView
                   maxZoom={1.5}
                   minZoom={1}
@@ -187,7 +285,8 @@ import { imageStore ,observer  } from '../JustifyCenterImage/lock';
                   </ReactNativeZoomableView> */}
          
         </Animated.View>
-    </Animated.View>
+        </Animated.View>
+    </TapGestureHandler>
     )
     
 }

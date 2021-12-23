@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { makeObservable, observable, action ,makeAutoObservable} from "mobx"
+import { makeObservable, observable, action, makeAutoObservable } from "mobx"
 import { observer } from 'mobx-react'
 import { TouchableHighlightBase } from "react-native"
 import Animated from "react-native-reanimated"
@@ -14,15 +14,15 @@ class MessageStore {
 
     scrolling = false
 
-    setContainerSize (  size ){
+    setContainerSize(size) {
         this.containerSize = size
     }
 
-    setCurrentOffset ( offset ){
+    setCurrentOffset(offset) {
         this.currentOffset = offset
     }
 
-    setScrolling ( state ){
+    setScrolling(state) {
         this.scrolling = state
     }
 
@@ -30,9 +30,9 @@ class MessageStore {
         makeAutoObservable(this)
     }
 
-  
 
-   
+
+
 }
 
 var messageStore = new MessageStore()

@@ -36,7 +36,7 @@ import {
     saveTheMessageToLocal,
     getTheMessageFromLocal,
     getTheMessageFromLocalByCurrentPage,
-} from './messageUtils'
+} from './MessageHandler'
 
 
 import ChatImage from '../../components/ChatImage'

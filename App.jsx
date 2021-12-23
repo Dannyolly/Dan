@@ -1,3 +1,5 @@
+
+    
 import { StatusBar } from 'expo-status-bar';
 import React,{useState,useEffect, useRef}from 'react';
 import { StyleSheet, Text, View ,DeviceEventEmitter} from 'react-native';
@@ -7,6 +9,7 @@ import Login from './pages/Login';
 import { screenSize } from './util/screenSize';
 import { observer } from './mobx/store'
 import MessageIcon from './components/MessageIcon'
+import SplashView from './pages/SplashView'
 export default observer(()=>{
 
 
@@ -19,31 +22,26 @@ export default observer(()=>{
 
 
 
+
   /* useEffect(() => {
     
     loginRef.current = DeviceEventEmitter.addListener("loginIn",()=>{
       setLogin(()=>true)
     })
-
     reLoginRef.current =DeviceEventEmitter.addListener("reLoginIn",()=>{
       setLogin(()=>false)
     })
-
     return ()=>{
       loginRef.current.remove()
       reLoginRef.current.remove()
     }
-
   }, []) */
 
   return (
     <View style={styles.container}>
         
- {/*        {
-          login===false
-          &&
-          <Login/>
-        } */}
+        
+ 
         {
           /* login
           && */

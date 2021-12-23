@@ -113,10 +113,14 @@ const index = ({  item , index, navigation  }) => {
     return (
         <View >
             { 
-                <Modal   visible={isClick} style={{width:screenSize.width,height:screenSize.height,zIndex:1,justifyContent:'center',alignItems:'center'}} transparent={true}>
+                <Modal   visible={isClick} 
+                style={{width:screenSize.width,
+                height:screenSize.height,zIndex:1,
+                justifyContent:'center',alignItems:'center',
+                borderRadius:40}} transparent={true}>
                     <Animated.View 
                     style={{
-                        borderRadius:0,
+                        borderRadius:20,
                         width:scaleX,
                         height:scaleY,
                         /* backgroundColor:"rgba(0,0,0,0.4)" */
@@ -134,7 +138,7 @@ const index = ({  item , index, navigation  }) => {
                     onTouchStart={()=>{
                         //viewCollapseZooming()
                     }}>
-                        <Comment moveable={true} collapse={viewCollapseZooming} delayLoading={true} route={route} navigation={navigation} />
+                        <Comment moveable={true} collapse={viewCollapseZooming} delayLoading={false} route={route} navigation={navigation} />
 
 
                     </Animated.View >

@@ -35,7 +35,7 @@ const index = (props) => {
             isMovingRef.current = true
             // @link {'../JustifyCenterImage/lock'}
             imageStore.setIsZooming()
-            console.log('setting',imageStore.isZooming)
+            /* console.log('setting',imageStore.isZooming) */
             setTimeout(()=>{
                 isMovingRef.current = false
                 imageStore.setIsZooming()
@@ -55,6 +55,7 @@ const index = (props) => {
                  
                 uri={image}
                 onZooming={onZooming} 
+                autoReset={false}
                 style={{
                     width:220,height:220,borderRadius
                     /* position:'absolute',
@@ -70,7 +71,9 @@ const index = (props) => {
                 style={{
                     width:220,height:220,borderRadius
                     
-                }}    
+                }}   
+                
+                autoReset={false}
             />
             )
     },(pre,next)=>{

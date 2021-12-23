@@ -1,43 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {showMessage} from 'react-native-flash-message'
-import {screenSize } from '../util/screenSize'
-function directToPage(navigation,pageName,params){
-    return function(){
-        navigation.navigate(pageName,params)
-    }
-}
+import { CaughtException } from "mobx/dist/internal";
+import { showMessage } from 'react-native-flash-message'
+import { screenSize } from '../util/screenSize'
+import { ChatMsgA } from './type/index'
 
-function filterFieldData(courseData,field,doSlice){
-    const _data=courseData.filter((item,index)=>{
-        if(item.field === 'all'){
-            return true;
-        }
-        return item.field === field
-    })
-
-    return doSlice ? _data.slice(0,4) : _data
-}
 
 /**
  * @description 
  *          { name:abc,
  *          age:18  }       ==>    name=abc&age=18             
  *          
- * @param {Object} obj 
+ * @param {ChatMsgA} obj 
  * @returns 
  */
-function objTOParams(obj){
-    let keys = Object.keys(obj)
-        let values = Object.values(obj)
+function objTOParams(obj) {
 
-    let str =""
+    let keys = Object.keys(obj)
+    let values = Object.values(obj)
+
+    let str = ""
     for (const key in keys) {
         //console.log(keys[key],values[key])
-        if(Number(key)+1 !== keys.length){
+        if (Number(key) + 1 !== keys.length) {
 
-            str+= `${keys[key]}=${values[key]}&`
-        }else{
-            str+= `${keys[key]}=${values[key]}`
+            str += `${keys[key]}=${values[key]}&`
+        } else {
+            str += `${keys[key]}=${values[key]}`
         }
 
     }
@@ -48,10 +36,10 @@ function objTOParams(obj){
  * @param {Number}  list 請求好友數組
  * @return {Number}
  */
-function calculateRequestNotification(list){
-    let sum=0
+function calculateRequestNotification(list) {
+    let sum = 0
     for (const index in list) {
-        if(list[index].read===0){
+        if (list[index].read === 0) {
             sum += 1
         }
     }
@@ -63,14 +51,15 @@ function calculateRequestNotification(list){
  * 
  * @param {JSON} info 
  */
-async function setUserMainInfo(info){
-    await AsyncStorage.setItem("userInfo",info)
+async function setUserMainInfo(info) {
+    await AsyncStorage.setItem("userInfo", info)
 
 }
 
-async function getUserMainInfo(){
+
+async function getUserMainInfo() {
     let jsonRes = await AsyncStorage.getItem('userInfo')
-    let res =JSON.parse(jsonRes)
+    let res = JSON.parse(jsonRes)
     return res;
 }
 
@@ -95,8 +84,8 @@ function uuid() {
  * @explain    暫時只返回X月X日
  * @param {Date}
  */
-const calculateDate=( date )=>{
-    if(date!==undefined){
+const calculateDate = (date) => {
+    if (date !== undefined) {
         let currentTime = new Date()
         let testDate = new Date(date)
         var drr = Math.abs(currentTime.getTime() - testDate.getTime());
@@ -105,44 +94,40 @@ const calculateDate=( date )=>{
         var minutes = parseInt(drr % (60 * 60 * 1000) / (60 * 1000));
         var seconds = parseInt(drr % (60 * 1000) / 1000);
         var res = "相差" + day + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
-        
-        
-        
+
+
+
         //console.log(res);
         //console.log(`${currentTime.getMonth()+1}月${currentTime.getDate()}日`); 
 
         return `${testDate.getMonth()+1}月${testDate.getDate()}日`
     }
-    
+
 }
 
 /**
  * @description 計算總和
  */
-const calculateSum=(arr)=>{
-    let sum=0;
+const calculateSum = (arr) => {
+    let sum = 0;
     for (const item of arr) {
-        sum+=item
+        sum += item
     }
     return sum
 }
 
 
-/**
- * @confine     只給上傳文章用...
- * @description 轉化為FormData 即上傳圖片格式
- * @param {String} uri 
- */
-const transformToFormDataByPost =(uris,userId,introduction)=>{
+
+const transformToFormDataByPost = (uris, userId, introduction) => {
     let param = new FormData()
-    param.append('userId',userId)
-    param.append('introduction',introduction)
+    param.append('userId', userId)
+    param.append('introduction', introduction)
     let arr = []
     for (const item of uris) {
-        param.append("files",{
-            uri:item,
-            type:'multipart/form-data',
-            name:".png"
+        param.append("files", {
+            uri: item,
+            type: 'multipart/form-data',
+            name: ".png"
         })
     }
     //param.append('files',arr)
@@ -152,21 +137,18 @@ const transformToFormDataByPost =(uris,userId,introduction)=>{
 
 }
 
-/**
- * @confine     只給發送圖片用...
- * @description 轉化為FormData 即上傳圖片格式
- * @param {Array<String>} uris
- */
- const transformToFormDataByMessage =(uris,senderId,receiverId)=>{
+
+const transformToFormDataByMessage = (uris, senderId, receiverId) => {
     let param = new FormData()
-    param.append('senderId',senderId)
-    param.append('receiverId',receiverId)
+
+    param.append('senderId', senderId)
+    param.append('receiverId', receiverId)
     let arr = []
     for (const item of uris) {
-        param.append("files",{
-            uri:item,
-            type:'multipart/form-data',
-            name:".png"
+        param.append("files", {
+            uri: item,
+            type: 'multipart/form-data',
+            name: ".png"
         })
     }
 
@@ -179,17 +161,17 @@ const transformToFormDataByPost =(uris,userId,introduction)=>{
  * @description 轉化為FormData 即上傳圖片格式
  * @param {Array<String>} uris
  */
- const transformToFormDataByRegisterInfo =(uris,users)=>{
+const transformToFormDataByRegisterInfo = (uris, users) => {
     let param = new FormData()
-    param.append('users',users)
-    //console.log(uris);
+    param.append('users', users)
+        //console.log(uris);
     let arr = []
     for (const item of uris) {
         //console.log(item);
-        param.append("files",{
-            uri:item,
-            type:'multipart/form-data',
-            name:".png"
+        param.append("files", {
+            uri: item,
+            type: 'multipart/form-data',
+            name: ".png"
         })
     }
 
@@ -200,24 +182,58 @@ const transformToFormDataByPost =(uris,userId,introduction)=>{
 /**
  * @description 假如只發一句話..
  */
-const defaultShowMessage=(message,type)=>{
+const defaultShowMessage = (message, type) => {
 
     showMessage({
-        icon:type || 'info',
-        message:message,
-        titleStyle:{position:"relative",fontSize:14},
-        style:{
-            height:40,
-            backgroundColor:"#8C8E8F",
-            width:screenSize.width-20,
-            borderRadius:10,
-            paddingLeft:20,
-            left:10,
-            top:40,
+        icon: type || 'info',
+        message: message,
+        titleStyle: { position: "relative", fontSize: 14 },
+        style: {
+            height: 40,
+            backgroundColor: "#8C8E8F",
+            width: screenSize.width - 20,
+            borderRadius: 10,
+            paddingLeft: 20,
+            left: 10,
+            top: 40,
         }
     })
 }
 
+
+
+/**
+ * @description  這個是負責上傳的各類操作
+ */
+class UpLoadHandler {
+
+
+    /**
+     * @confine     只給發送圖片用...
+     * @description 轉化為FormData 即上傳圖片格式
+     * @param {Array<String>} uris
+     */
+    static transformToFormDataByMessage = transformToFormDataByMessage
+
+
+    /**
+     * @confine     只給上傳文章用...
+     * @description 轉化為FormData 即上傳圖片格式
+     * @param {String} uri 
+     */
+    static transformToFormDataByPost = transformToFormDataByPost
+
+
+
+    /**
+     * @confine     只給發送注冊用...
+     * @description 轉化為FormData 即上傳圖片格式
+     * @param {Array<String>} uris
+     */
+    static transformToFormDataByRegisterInfo = transformToFormDataByRegisterInfo
+
+
+}
 
 
 
@@ -233,5 +249,10 @@ export {
     transformToFormDataByMessage,
     transformToFormDataByPost,
     transformToFormDataByRegisterInfo,
-    defaultShowMessage
+    defaultShowMessage,
+
+
+    UpLoadHandler
+
+
 }

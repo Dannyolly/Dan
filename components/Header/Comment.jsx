@@ -17,11 +17,12 @@ const Comment = ({ item , collapse }) => {
 
     // console.log(item)
     return (
-        <View style={{width:screenSize.width,height:95,paddingTop:50,flexDirection:'row',paddingLeft:0,marginBottom:10}}>    
+        <View style={{zIndex:100,width:screenSize.width,height:80,paddingTop:45,flexDirection:'row',paddingLeft:0,marginBottom:10}}>    
             <TouchableWithoutFeedback onPress={()=>{
+                console.log('???');
                 return collapse?collapse():navigation.goBack()
             }}>
-                <Ionicons   name="ios-chevron-back-outline" style={{fontSize:30,lineHeight:45,marginRight:10}} />
+                <Ionicons   name="ios-chevron-back-outline" style={{fontSize:30,lineHeight:40,marginRight:10}} />
             </TouchableWithoutFeedback>
             <CachedImage uri={base_url+item.userInfo[0].icon} style={styles.picStyle} />
        

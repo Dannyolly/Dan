@@ -166,7 +166,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                                 </View>
                             }
 
-                            <Pressable style={{width:screenSize.width,height:screenSize.height}} onLongPress={()=>{
+                            <View style={{width:screenSize.width,height:screenSize.height}} onLongPress={()=>{
                                 /* setImage(()=>imageUrl)
                                 setIsOpen(()=>true) */
                             }} > 
@@ -192,7 +192,7 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
                                 ]}}>
                                     <BaseImage/>
                                 </Animated.View>
-                            </Pressable>
+                            </View>
                         <BottomSheep 
                             isOpen={isOpen} 
                             setIsOpen={setIsOpen} 

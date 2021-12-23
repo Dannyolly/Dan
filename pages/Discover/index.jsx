@@ -1,5 +1,5 @@
-import React, { Component ,useRef,useEffect,useState} from 'react'
-import { Text, View ,StyleSheet,DeviceEventEmitter,Image, Animated} from 'react-native'
+import React, { Component ,useRef,useEffect,useState, MutableRefObject} from 'react'
+import { Text, View ,StyleSheet,DeviceEventEmitter,Image, Animated , NativeSyntheticEvent,NativeScrollEvent} from 'react-native'
 import WebSocket from '../../webSocket'
 
 import JustifyContentImage from '../../components/JustifyContentImage'
@@ -14,7 +14,7 @@ import { showMessage } from 'react-native-flash-message'
 import DownScrollLoading from '../../components/DownScrollLoading'
 import Loading from '../../components/Loading'
 import { Platform } from 'react-native'
-import { base_url } from '../../api/config'
+import { base_url, post } from '../../api/config'
 import SkeletonView from '../../components/SkeletonView'
 import DiscoverSkeletonView from '../../components/DiscoverSkeletonView'
 import ShortVideo from './ShortVideo'
@@ -22,10 +22,24 @@ import { useNavigation } from '@react-navigation/native'
 import { imageStore } from '../../components/JustifyCenterImage/lock'
 import DiscoverHeader from '../../components/Header/Discover'
 import MaskView from '../../components/MaskView'
+import { LocalCacheManager } from '../../util/LocalCacheManager'
+import { getUserMainInfo } from '../../util/function'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 /**
- * 
- * @param {Boolean} props.onlyFlatList 
+ * 此為處理後的 POST
+ * @typedef Post
+ * @property {number} id
+ * @property {string} introduction
+ * @property {number} likeCount
+ * @property {Date} postDate
+ * @property {Array<String>} postImage
+ * @property {number} userId
+ * @property {Array<UserInfo} userInfo
  */
+
+
+
 export default observer(({ navigation, onlyFlatList })=> {
 
     
@@ -61,6 +75,23 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     const lastY = useRef(0)
 
+    
+    const isNewMessage = useRef(false)
+
+    const newMessageCount  = useRef(0)
+
+    /** @type {MutableRefObject<Array<Post>>} */
+    const newMessageTemp = useRef([])
+
+    /**
+     *  @description 這里是給上拉加載的..
+     */
+    const bottomLockRef = useRef(false)
+    
+    const firstTimeChecking = useRef(false)
+
+    const  isAllCheckOut = useRef(false)
+
     const handleToggle = ()=>{
         if(!setting.current){
             //console.log(scrollRef.current)
@@ -77,18 +108,48 @@ export default observer(({ navigation, onlyFlatList })=> {
     }
 
 
-    const getData=( isAdd )=>{
-       // console.log(userStore.userInfo.userInfo.id);
-        getAllUserPost(userStore.userInfo.userInfo.id,currentPage.current*pageSize,pageSize).then(async res=>{
-         
+    const checkOutNewPost = async () =>{
+
+        if(firstTimeChecking.current){
+            return
+        }
+
+        firstTimeChecking.current = true
+        //console.log('started to check new post ')
+
+        /** @type {{userInfo :import('../../util/LocalCacheManager').UserInfo}}   */
+        const data = await getUserMainInfo()
+        
+        
+        let res = await LocalCacheManager.getAllPost(data.userInfo.id)    
+        let localCount = res!==undefined? res.length : 0
+        let allMessage = (await getAllUserPost(data.userInfo.id, 0 , 1000) ).data
+        let allMessageCount = allMessage.length
+        
+        isNewMessage.current = localCount !== allMessageCount
+        newMessageCount.current  = Math.abs( localCount - allMessageCount )
+
+        if(isNewMessage.current){
+            newMessageTemp.current = allMessage 
+        } 
+        isAllCheckOut.current = true
+        console.log('newMessage',isNewMessage.current )
+
+    }
+
+    /** @param { Array<Post> } res */
+    const processData = async ( res ) =>{
+
             // 沒有更多了...
-            if(res.data.length===0){
-                setIsShowEndHandler(()=>true)
+            if(res.length===0){
+                //setIsShowEndHandler(()=>true)
                 return 
             }
-
+            
             // 化成規格化data
-            let temp = res.data
+            /** @type {Array<Post>} */
+            let temp = res
+
             for (const index in temp) {   
                 let result = temp[index].postImage.charAt(",")
                 if(result!==0){
@@ -97,22 +158,71 @@ export default observer(({ navigation, onlyFlatList })=> {
                         temp[index].postImage[i]= base_url+temp[index].postImage[i]
                     }
                 }     
-
-                
                 temp[index].userInfo = (await searchUser(`id=${temp[index].userId}`)).data
-                //console.log(temp[index])
+            }
+            
+            return temp 
+    }
+
+
+    const getData=async (  )=>{
+        if(!isAllCheckOut.current){
+            return
+        }
+
+        console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current )
+        if(isNewMessage.current === true){
+
+              // 有新POST
+            let res
+            if(newMessageCount.current > 5){
+                // 如果大於5則分開加載...
+                res = newMessageTemp.current.slice(currentPage.current* 5 , (currentPage.current+1) * 5  )
+                currentPage.current ++ 
+                newMessageCount.current -= 5
+                await cachePost(res)
+            }
+            else if(newMessageCount.current >0){
+                // <= 5 但還有剩餘信息...
+                res = newMessageTemp.current.slice(currentPage.current* 5 , (currentPage.current+1) * 5  )
+                
+                //console.log(res);
+                currentPage.current = 0 
+                newMessageCount.current = 0
+                isNewMessage.current = false
             }
 
-            if(isAdd===true){
-                setData(()=>[...data,...temp])
-            }else {
-                setData(()=>temp)
-            }
-
+            
+            let processedData  = await processData(res)
+            let temp  = dataRef.current !==undefined ? [...dataRef.current, ...processedData] : [...processedData] 
+            // 更新....
+            setData(()=>[...temp]) 
             dataRef.current=temp
-        }).catch(err=>{
-            console.log(err)
-        })
+
+        }else if(isNewMessage.current===false){
+
+            console.log('in???')
+            // 沒有新消息 , 則訪問以後保存的緩存...
+            let posts = 
+            await 
+            LocalCacheManager.
+            getThePostFromLocalByCurrentPage(userStore.userInfo.userInfo.id, currentPage.current )
+            console.log(posts.length, isAllCheckOut.current )
+            if(posts===null && isAllCheckOut.current===true || posts.length===0 && isAllCheckOut.current ){
+                // 沒有更多post了...
+                // undefined 表示完了...
+                console.log('end')
+                isNewMessage.current = undefined 
+                setIsShowEndHandler(()=>true)
+                return
+            }
+
+            let temp  = dataRef.current !==undefined ? [...dataRef.current, ...posts] : [...posts] 
+            currentPage.current++
+            setData(()=>[...temp])
+            dataRef.current = temp
+        } 
+       // console.log(dataRef.current)
 
     }
 
@@ -142,20 +252,20 @@ export default observer(({ navigation, onlyFlatList })=> {
         )
     }
 
-    const onReach=()=>{
+    const onReach=async ()=>{
         setIsShowLoader(()=>true)
-        currentPage.current+=1
-        getData(true)
+        getData()
     }
 
-    useEffect(() => {
-        if(userStore.userInfo.userInfo!==undefined){
-            getData(false)
-        }
-    }, [JSON.stringify(userStore)])
-    
+    const cachePost = async (data) =>{
+
+        await LocalCacheManager.savePostToLocal( data, userStore.userInfo.userInfo.id )
+    }
 
     useEffect(()=>{
+
+       
+        
         // 這個是用戶自己上傳的新post
         listener.current=DeviceEventEmitter.addListener('uploadPost',async function ( obj ){
             if(uploading.current===false){               
@@ -181,10 +291,27 @@ export default observer(({ navigation, onlyFlatList })=> {
     },[])
 
 
+
+    useEffect(() => {
+        if(userStore.userInfo.userInfo!==undefined){
+            // 檢查有沒有新的POSt . . .. 
+           // console.log('hi hi',userStore.userInfo.userInfo);
+           (async () => {
+                await checkOutNewPost()
+                await getData()
+            })()
+            
+            //cachePost() 
+        }
+    }, [JSON.stringify(userStore)])
+    
+
+    
+
     const onZooming =(scale , index) =>{
-        //console.log('move ', scale)
-        if(isSetTimeout.current === false && scale !==1 ){
-            console.log('set',index)
+        /* console.log('move ', scale) */
+        if(isSetTimeout.current === false && scale !==0 ){
+           /*  console.log('set',index) */
             imageStore.setIndex(index)
             /* imageStore.setIsZooming(true) */
             isSetTimeout.current = true
@@ -202,6 +329,27 @@ export default observer(({ navigation, onlyFlatList })=> {
         }
     }
 
+    /** @param {{ nativeEvent : NativeSyntheticEvent<NativeScrollEvent>}} */
+    const onScroll = async ({ nativeEvent }) => {
+        const { contentOffset , contentSize,layoutMeasurement} = nativeEvent
+        
+
+        //console.log(contentOffset.y , contentSize.height-screenSize.height )
+        // reach the end of scrollView 
+        if(contentSize.height-screenSize.height-contentOffset.y<=0 && !bottomLockRef.current ){
+            // lock
+            bottomLockRef.current = true
+
+            // console.log('reach');
+            await onReach()
+            setTimeout(()=>{
+                bottomLockRef.current = false
+            },1000)
+
+        }
+
+    }
+
    /*  const onScrollBeginDrag = () =>{
         isSetTimeout.current = true 
         console.log('start to collapse')
@@ -210,9 +358,10 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     return (  
         <ScrollView 
+        
         refreshControl={ Platform.OS==='android'? null:<DownScrollLoading   /> }
         ref={c=>onScrollRef.current=c} 
-        
+        /* nestedScrollEnabled={false} */
         onScrollEndDrag={(event)=>{
             isSetTimeout.current = false
         }}
@@ -224,10 +373,17 @@ export default observer(({ navigation, onlyFlatList })=> {
 
             lastY.current = event.nativeEvent.contentOffset.y
         }}
-        canCancelContentTouches={false}
+        /* canCancelContentTouches={false} */
         style={{width:screenSize.width,height:screenSize.height,
-        backgroundColor:"#FFFFFF",paddingBottom:0}}>
-            
+        backgroundColor:"#FFFFFF",paddingBottom:0}}
+        /* stickyHeaderIndices={[0]} */
+        stickyHeaderHiddenOnScroll={true}
+        onScroll={onScroll}
+        
+        scrollEventThrottle={0}
+        >
+        
+        <DiscoverHeader  navigation={navigation} />
             
             
             
@@ -235,18 +391,28 @@ export default observer(({ navigation, onlyFlatList })=> {
                 data!==undefined
                 &&
                 <FlatList
+                /* stickyHeaderIndices={[0]}
+                stickyHeaderHiddenOnScroll */
                 
-                scrollEnabled={!zooming}
+                /* invertStickyHeaders */
+                /* scrollEnabled={!zooming} */
+                
                 ListHeaderComponent={()=><> 
-                    <DiscoverHeader  navigation={navigation} />
+                    
                     <ShortVideo  navigation={navigation}  />
-                   
+                    {/* <MaskView  
+                        visible={true} 
+                        opacity={0.7} 
+                        zIndex={10050}
+                        color='black'
+                        height={100000}
+                    /> */}
                   </>}
-                ListFooterComponent={()=><BottomHandler/>}
-                onEndReached={onReach}
-                onEndReachedThreshold={0}
-                canCancelContentTouches={false}
-                
+                /* ListFooterComponent={()=><BottomHandler/>} */
+                /* onEndReached={onReach}
+                onEndReachedThreshold={0} */
+                /* canCancelContentTouches={false} */
+                /* nestedScrollEnabled={false} */
                 data={data}
                 renderItem={
                     ({ item,index })=>
@@ -264,13 +430,13 @@ export default observer(({ navigation, onlyFlatList })=> {
                 style={{flex:1}} 
                 
                 showsVerticalScrollIndicator={false} 
-                overScrollMode={'always'}
+                overScrollMode={'never'}
                 
                 />
             }
-    
+            <BottomHandler/>
             {
-                data!==undefined
+                data==undefined
                 &&
                 <DiscoverSkeletonView/>
             }     

@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, View ,TextInput, Keyboard , StyleProp , ViewStyle, ReturnKeyTypeOptions, KeyboardTypeOptions} from 'react-native'
+import { Animated,StyleSheet, Text, View ,TextInput, Keyboard , StyleProp , ViewStyle, ReturnKeyTypeOptions, KeyboardTypeOptions} from 'react-native'
 
-
+Animated.View
 /**
  * 
  * @param {{
@@ -23,17 +23,21 @@ const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKey
             keyboardType={keyboardType || 'twitter'}
             returnKeyType={returnKeyType || 'send'}
             onBlur={()=>{
-                onBlur()
+                if(onBlur!==undefined) {
+                    onBlur()
+                }
                 Keyboard.dismiss()
             }}
             onSubmitEditing={()=>{
                 onSubmitEditing(value)
                 onChangeText(()=>'')
             }}
+            placeholderTextColor={"#CDCDCD"}
             placeholder={placeholder || "新增回應......"} 
             style={styles.input} 
-            onChangeText={text => onChangeText(text)} value={value} 
-            onTouchStart={onTouchStart}
+            onChangeText={text => onChangeText(text)} 
+            value={value} 
+            onTouchStart={onTouchStart?onTouchStart:undefined}
         />
     )
 }

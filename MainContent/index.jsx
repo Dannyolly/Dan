@@ -93,8 +93,9 @@ import { messageResponser, selectionResponser } from '../util/haptic';
 import { EventEmitter } from 'react-native';
 import test from './test';
 import { Easing } from 'react-native';
-
-
+import Testing from '../components/ZoomableImage1'
+import {  AppState } from 'react-native'
+import SplashView from '../pages/SplashView'
 /**
  * @description 根據hooks來判斷要返回那一個請求頭
  * @param {Number} whichHeader 
@@ -231,7 +232,7 @@ const BottomTab = observer((props)=>{
     
     return (
         <Tab.Navigator
-    
+         
          screenOptions={ ({route}) => ({
             
             tabBarIcon:( {focused,color,size} ) =>{
@@ -317,7 +318,7 @@ const BottomTab = observer((props)=>{
                     
                 }}
                 options={{
-                    /* headerLeft:props=><DiscoverHeader {...props} navigation={navigation}   />, */
+                
                     title:"發現",
                     headerShown:false
                     
@@ -372,12 +373,9 @@ const BottomTab = observer((props)=>{
                 name="通讯录"
                 component={ Friend}
                 options={{
-                    /* headerTitleStyle:{
-                        color:"#FFFFFF"
-                    }, */
+                   
                     headerShown:false,
-                    /* headerLeft:props=><FriendHeader {...props} navigation={navigation} />,
-                     */
+                   
                 }}
             />
 
@@ -437,7 +435,36 @@ export default observer((props)=>{
     const Stack = createNativeStackNavigator()
 
     /* const Stack = createStackNavigator() */
-    let instance 
+    let instance
+
+
+    
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+    useEffect(() => {
+        AppState.addEventListener("change", _handleAppStateChange);
+
+        return () => {
+        AppState.removeEventListener("change", _handleAppStateChange);
+        };
+    }, []);
+
+    const _handleAppStateChange = (nextAppState) => {
+        if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+        ) {
+        console.log("App has come to the foreground!");
+        }
+
+        appState.current = nextAppState;
+        setAppStateVisible(appState.current);
+        console.log("AppState", appState.current);
+    };
+
+    
+
 
     const getAllNotification=async ()=>{      
         let json =await AsyncStorage.getItem('userInfo')
@@ -482,24 +509,30 @@ export default observer((props)=>{
 
     },[])
 
+
+
     return (
         <View style={{flex:1}}>
-            
+            {
+                <SplashView/>
+            }   
         <NavigationContainer 
+         
         >   
             
             <Stack.Navigator 
             screenOptions={{
                 headerStyle:{
-                    /* backgroundColor:'#29C0FD', */
+       
                     shadowColor: 'transparent',
-                    /* height:200 */
+        
                 },          
                 headerShadowVisible:false,
                 headerBackTitleStyle:{
                     color:"black"
                 },
-                headerShown:false
+                headerShown:false,
+                
                 }}>
                 
                 {
@@ -509,13 +542,7 @@ export default observer((props)=>{
                     name="login" 
                     component={Login}
                     options={{
-                        
-                    // headerLeft:props=>which(whichHeader)
-                    /* headerLeft:props=> which() */
-                    /*   
-                    headerTitle: props => <Logo {...props} />,
-                    headerRight:  props => <HeaderLeft {...props}/>,
-                        */
+      
                         headerShown:false
                     }}
                     />
@@ -534,9 +561,7 @@ export default observer((props)=>{
                     name="step1" 
                     component={Step1}
                     options={{
-                    /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                        /* headerTitle:"我的二維碼",
-                        headerBackTitle:"", */
+     
                         headerShown:false,
                     }}
                     />
@@ -545,9 +570,7 @@ export default observer((props)=>{
                     name="step2" 
                     component={Step2}
                     options={{
-                    /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                        /* headerTitle:"我的二維碼",
-                        headerBackTitle:"", */
+   
                         headerShown:false,
                     }}
                     />
@@ -556,9 +579,7 @@ export default observer((props)=>{
                     name="step3" 
                     component={Step3}
                     options={{
-                    /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                        /* headerTitle:"我的二維碼",
-                        headerBackTitle:"", */
+ 
                         headerShown:false,
                     }}
                     />
@@ -567,9 +588,7 @@ export default observer((props)=>{
                     name="last" 
                     component={Last}
                     options={{
-                    /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                        /* headerTitle:"我的二維碼",
-                        headerBackTitle:"", */
+        
                         headerShown:false,
                     }}
                     />
@@ -580,12 +599,7 @@ export default observer((props)=>{
                         name="Tab" 
                         children={()=><BottomTab  />}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
+      
                             headerShown:false,
                             
                         }}
@@ -595,12 +609,7 @@ export default observer((props)=>{
                         name="Post" 
                         component={Post}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
+    
                             headerShown:false,
                             presentation:'modal'
                         }}
@@ -610,18 +619,11 @@ export default observer((props)=>{
                         name="comment" 
                         component={Comment}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
-                        /* headerBackVisible:false, */
+              
                         headerBackTitle:"",
                         headerTitle:'留言',
                         headerShown:false
-                        /* headerLeft: props=><CommentHeader {...props}  /> */
-                        
+
                         }}
                         />
 
@@ -645,16 +647,11 @@ export default observer((props)=>{
                         name="userInfo" 
                         component={UserInformation}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
+
                             headerShown:false,
                             headerBlurEffect:'dark',
                             presentation:Platform.OS==='ios'?'modal':'fullScreenModal',
-                            /* animation:'slide_from_left' */
+       
                             
                         }}
                         />
@@ -667,12 +664,7 @@ export default observer((props)=>{
                         name="Message" 
                         component={Message}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
+       
                             headerShown:false,
                             
                         }}
@@ -683,12 +675,7 @@ export default observer((props)=>{
                         name="checkFriendRequest" 
                         children={()=><CheckFriendRequest />}
                         options={{
-                        // headerLeft:props=>which(whichHeader)
-                        /* headerLeft:props=> which() */
-                        /*   
-                        headerTitle: props => <Logo {...props} />,
-                        headerRight:  props => <HeaderLeft {...props}/>,
-                            */
+          
                             headerShown:true,
                             headerStyle:{backgroundColor:"#FFFFFF"},
                             headerBackVisible:true,
@@ -698,14 +685,12 @@ export default observer((props)=>{
                         />
 
 
-                        
-                        
-                        {/* OwnQRcode */}
+
                         <Stack.Screen 
                         name="addUser" 
                         children={()=><AddUser/>}
                         options={{
-                        /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
+      
                             headerTitle:"添加好友",
                             headerBackTitle:"",                      
                             headerStyle:{backgroundColor:"#FFFFFF"}
@@ -714,7 +699,7 @@ export default observer((props)=>{
                         
                         <Stack.Screen 
                         name="friendDelta" 
-                        /// children={()=><FriendDelta />}
+        
                         component={FriendDelta}
                         options={{
                             headerShown:false
@@ -730,13 +715,12 @@ export default observer((props)=>{
                         }}
                         />
 
-                        {/* OwnQRcode */}
+  
                         <Stack.Screen 
                         name="OwnQRcode" 
                         children={()=><OwnQRcode/>}
                         options={{
-                        /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                            /* headerTitle:"我的二維碼", */
+
                             headerBackTitle:"",
                             presentation:'modal',
                             headerShown:false
@@ -747,9 +731,7 @@ export default observer((props)=>{
                         name="individual" 
                         component={Individual}
                         options={{
-                        /*     headerLeft:()=><QrCodeHeader title={'我的二維碼'} /> */
-                            /* headerTitle:"我的二維碼",
-                            headerBackTitle:"", */
+            
                             headerShown:false,
                             presentation:'modal'
                         }}
@@ -775,6 +757,7 @@ export default observer((props)=>{
                 
 
             </Stack.Navigator>
+
         </NavigationContainer>
     </View>
     )

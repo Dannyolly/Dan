@@ -3,13 +3,13 @@ import React,{useEffect} from 'react'
 import { View, Text } from 'react-native'
 import { getUserMainInfo, objTOParams } from '../util/function';
 
-import { chatMsg, PULL_FRIEND } from '../pages/Message/messageUtils';
-import { CONNECT ,KEEPALIVE} from '../pages/Message/messageUtils';
+import { chatMsg, PULL_FRIEND } from '../pages/Message/MessageHandler';
+import { CONNECT ,KEEPALIVE} from '../pages/Message/MessageHandler';
 
 
 import { EventEmitter } from '@unimodules/react-native-adapter';
 
-import { getMsgFormat } from '../pages/Message/messageUtils';
+import { getMsgFormat } from '../pages/Message/MessageHandler';
 import { online, searchUser } from '../api/api';
 import { DeviceEventEmitter } from 'react-native';
 import { showMessage } from 'react-native-flash-message';

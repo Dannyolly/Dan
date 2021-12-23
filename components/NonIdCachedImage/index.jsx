@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View , StyleProp, ViewStyle } from 'react-native'
 
 import {Image,CacheManager} from "react-native-expo-image-cache";
 
-
+/** @param {{ previewUri: string , uri : string , style : StyleProp<ViewStyle>  }} */
 const index = ({ previewUri  , uri , style  } ) => {
     return (
         <Image  

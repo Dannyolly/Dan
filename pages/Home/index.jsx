@@ -17,13 +17,13 @@ import { useNavigation } from '@react-navigation/native'
 import { EventEmitter } from '@unimodules/react-native-adapter'
 
 import { userStore,observer } from '../../mobx/store'
-import { getMsgFormat } from '../Message/messageUtils'
+import { getMsgFormat } from '../Message/MessageHandler'
 import { base_url } from '../../api/config'
 import { getMostUnReadMessageArr } from './homeUtils'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { ChatMsg } from '../Message/messageUtils'
+import { ChatMsg } from '../Message/MessageHandler'
 
 export default observer(()=>{
 
