@@ -168,6 +168,9 @@ const TabNumber = observer(({ iconName,color,size,index })=>{
 
 const UserTabIcon = observer(()=>{
     
+
+ 
+
     return(
         <View  style={{paddingTop:5}} >
             {
@@ -285,6 +288,7 @@ const BottomTab = observer((props)=>{
             tabBarStyle:{
                 /* display:'none', */
                 position:'absolute',
+                paddingTop:5,
                 transform:[{translateY:translateY}],
                 borderTopColor:'#FFFFFF',
                 shadowRadius:2,
@@ -437,9 +441,10 @@ export default observer((props)=>{
     /* const Stack = createStackNavigator() */
     let instance
 
+    const [isClose, setIsClose] = useState(false)
 
-    
     const appState = useRef(AppState.currentState);
+
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
     useEffect(() => {
@@ -489,9 +494,7 @@ export default observer((props)=>{
         //console.log('getNotification~~~~')
     }
 
-
     
-
     useEffect(()=>{
 
         getAllNotification() 
@@ -510,14 +513,62 @@ export default observer((props)=>{
     },[])
 
 
+    const checkUserLogIn=async ()=>{
+        //await AsyncStorage.clear()
+        let userInfo = await AsyncStorage.getItem('userInfo')
+
+        let res = JSON.parse(userInfo)
+        console.log('?',res.userInfo.id)
+        
+       // console.log(await AsyncStorage.getAllKeys())
+       // console.log('test',JSON.parse(userInfo))
+
+        if(userInfo!==undefined && userInfo!==null){
+
+            userStore.setUserInfo({
+                ...JSON.parse(userInfo)
+            })    
+            console.log('checked')
+            userStore.setIsSignIn(true)
+            
+        }
+
+
+        await AsyncStorage.setItem(`${res.userInfo.id}userInfo`,userInfo)
+       
+    }
+
+    useEffect(() => {
+        // 先檢查一下有沒有登入過...
+        checkUserLogIn()
+        
+        setTimeout(()=>{
+            setIsClose(()=>true)
+            console.log('close')
+            console.log(userStore.isSignIn)
+        // loading something 
+        },2000)
+
+        console.log('times')
+
+    }, [])
+    
+
+    
+    if(!userStore.isSignIn && isClose!==true){
+        return <SplashView/>
+    }
+
 
     return (
         <View style={{flex:1}}>
             {
+                !isClose
+                &&
                 <SplashView/>
-            }   
+            }
         <NavigationContainer 
-         
+          
         >   
             
             <Stack.Navigator 

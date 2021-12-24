@@ -115,25 +115,27 @@ export default observer(({ navigation, onlyFlatList })=> {
         }
 
         firstTimeChecking.current = true
-        //console.log('started to check new post ')
+        
 
         /** @type {{userInfo :import('../../util/LocalCacheManager').UserInfo}}   */
         const data = await getUserMainInfo()
         
         
         let res = await LocalCacheManager.getAllPost(data.userInfo.id)    
+        
         let localCount = res!==undefined? res.length : 0
+        
         let allMessage = (await getAllUserPost(data.userInfo.id, 0 , 1000) ).data
         let allMessageCount = allMessage.length
         
         isNewMessage.current = localCount !== allMessageCount
         newMessageCount.current  = Math.abs( localCount - allMessageCount )
-
+        
         if(isNewMessage.current){
             newMessageTemp.current = allMessage 
         } 
         isAllCheckOut.current = true
-        console.log('newMessage',isNewMessage.current )
+        
 
     }
 
@@ -170,7 +172,10 @@ export default observer(({ navigation, onlyFlatList })=> {
             return
         }
 
-        console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current )
+        /** @type {{userInfo :import('../../util/LocalCacheManager').UserInfo}}   */
+        const data = await getUserMainInfo()
+
+        /* console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current ) */
         if(isNewMessage.current === true){
 
               // 有新POST
@@ -201,17 +206,17 @@ export default observer(({ navigation, onlyFlatList })=> {
 
         }else if(isNewMessage.current===false){
 
-            console.log('in???')
+            /* console.log('in???') */
             // 沒有新消息 , 則訪問以後保存的緩存...
             let posts = 
             await 
             LocalCacheManager.
-            getThePostFromLocalByCurrentPage(userStore.userInfo.userInfo.id, currentPage.current )
+            getThePostFromLocalByCurrentPage(data.userInfo.id, currentPage.current )
             console.log(posts.length, isAllCheckOut.current )
             if(posts===null && isAllCheckOut.current===true || posts.length===0 && isAllCheckOut.current ){
                 // 沒有更多post了...
                 // undefined 表示完了...
-                console.log('end')
+                /* console.log('end') */
                 isNewMessage.current = undefined 
                 setIsShowEndHandler(()=>true)
                 return
@@ -222,7 +227,7 @@ export default observer(({ navigation, onlyFlatList })=> {
             setData(()=>[...temp])
             dataRef.current = temp
         } 
-       // console.log(dataRef.current)
+       /* console.log(dataRef.current) */
 
     }
 

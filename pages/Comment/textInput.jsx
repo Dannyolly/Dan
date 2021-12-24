@@ -11,10 +11,11 @@ Animated.View
  *  placeholder? : string,
  *  returnKeyType?  : ReturnKeyTypeOptions,
  *  keyboardType? : KeyboardTypeOptions,
- *  onTouchStart? : ()=>void
+ *  onTouchStart? : ()=>void , 
+ *  onFocus? : () => void
  * }}
  */
-const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKeyType , keyboardType , onTouchStart }) => {
+const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKeyType , keyboardType , onTouchStart , onFocus }) => {
 
     const [value, onChangeText] = React.useState();
 
@@ -22,6 +23,11 @@ const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKey
         <TextInput 
             keyboardType={keyboardType || 'twitter'}
             returnKeyType={returnKeyType || 'send'}
+            onFocus={()=>{
+                if(onFocus!==undefined) {
+                    onFocus()
+                }
+            }}
             onBlur={()=>{
                 if(onBlur!==undefined) {
                     onBlur()

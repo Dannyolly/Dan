@@ -273,7 +273,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                         </View>
                                     </TouchableWithoutFeedback>
                                     <KeyboardAvoidingView style={{zIndex:1000}} 
-                                    keyboardVerticalOffset={155}
+                                    keyboardVerticalOffset={245}
                                     behavior={Platform.OS == "ios" ? 'position' : "height"}>
                                         <Animated.View 
                                                 style={{

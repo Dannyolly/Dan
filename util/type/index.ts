@@ -10,6 +10,8 @@
  * @property {Array<UserInfo} userInfo
  */
 
+import { Component } from "react";
+
 
 /**
  * @typedef UserInfo
@@ -49,13 +51,13 @@ let a
 
 interface ChatMsgA {
     
-    id: number ,
+    id?: number ,
 
-    text : string ,
+    text? : string ,
 
-    image : string ,
+    image? : string ,
 
-    isFinish : boolean
+    isFinish? : boolean
 
     createdAt : Date , 
 
@@ -67,18 +69,6 @@ interface ChatMsgA {
     }
 }
 
-class Danny {
-
-
-    danny : ()=>void 
 
 
 
-
-}
-
-
-
-export {
-    ChatMsgA
-}

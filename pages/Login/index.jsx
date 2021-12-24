@@ -1,8 +1,8 @@
 import React, { useState ,useEffect,useRef} from 'react'
-import { View, Text ,StyleSheet,Image,TextInput,TouchableWithoutFeedback, Keyboard,Animated,DeviceEventEmitter} from 'react-native'
+import { View, Text ,StyleSheet,Image,TextInput,TouchableWithoutFeedback, Keyboard,Animated,DeviceEventEmitter, Easing} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { screenSize } from '../../util/screenSize'
-import { FontAwesome5 } from '../../util/Icon'
+import { AntDesign, FontAwesome5 } from '../../util/Icon'
 
 
 // mobx 
@@ -19,12 +19,17 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { defaultShowMessage } from '../../util/function'
-
+import MyTextInput from '../Comment/textInput'
+import CachedImage from '../../components/NonIdCachedImage'
+import { base_url } from '../../api/config'
 export default observer( (props)=>{
 
     const viewRef = useRef()
 
-    const dx = 140
+    const dx = 135
+
+    
+
 
 
     const [username, onChangeUsername] = React.useState();
@@ -39,7 +44,17 @@ export default observer( (props)=>{
 
     const navigation =  useNavigation()
 
-    const reLoginIn = useRef()
+    const [userInfoArr, setUserInfoArr] = useState([])
+
+    const userInfoArrRef = useRef([])
+
+    // 帳號動晝
+    const accountContainerHeight = useRef(new Animated.Value(0)).current; 
+
+    const accountContainerIsCollapseRef = useRef(true)
+
+    const [accountContainerIsCollapse, setAccountContainerIsCollapse] = useState(true)
+
 
     const ChangeText=(value)=>{
         if(value===0){
@@ -71,7 +86,7 @@ export default observer( (props)=>{
     const pressKeyBoard=(value)=>{
         
         /* console.log('hi') */
-        Animated.timing(topOffSet, {
+        Animated.spring(topOffSet, {
             toValue: 70,
             duration: 250,
             useNativeDriver:false
@@ -80,7 +95,7 @@ export default observer( (props)=>{
 
     const collapseKeyBoard=()=>{
         Keyboard.dismiss()
-        Animated.timing(topOffSet, {
+        Animated.spring(topOffSet, {
             toValue: 0,
             duration: 250,
             useNativeDriver:false
@@ -88,9 +103,13 @@ export default observer( (props)=>{
     }
 
 
-    const login=()=>{
-        userLogin(username,password).then(async res=>{
+    const login=( isUseRef ,index )=>{
+        const usernameTemp = isUseRef? userInfoArr[index].userInfo.username : username
+        const passwordTemp = isUseRef? userInfoArr[index].userInfo.password : password
 
+        console.log(usernameTemp , passwordTemp)
+        userLogin(usernameTemp , passwordTemp ).then(async res=>{
+            console.log(res.data)
             defaultShowMessage(res.data.msg==='error'? '帳號或者密碼錯誤':'登入成功')
             
 
@@ -105,11 +124,14 @@ export default observer( (props)=>{
                 let data = await AsyncStorage.setItem('userInfo',JSON.stringify(res.data.userInfo),err=>{
                     console.log(err)
                 });
-                
+                await AsyncStorage.setItem(`${res.data.userInfo.userInfo.id}userInfo`,JSON.stringify(res.data.userInfo))
                 // 通知信息刷新...  -- >MainContent.Notification()
                 //DeviceEventEmitter.emit('refreshNotification')
 
                 await userStore.resetUnReadMessage()
+
+                // 2021 / 12 /24 重登BUG ...
+                DeviceEventEmitter
 
                // defaultShowMessage(JSON.stringify(userStore.unreadMessage))
                 userStore.setIsSignIn(true)
@@ -121,6 +143,26 @@ export default observer( (props)=>{
         })
        
     }
+
+    const findOutLoginInfo = async () =>{
+        let keys = await AsyncStorage.getAllKeys()
+        let userInfoArr = []
+        for (const index in keys) {
+            let result = keys[index].search(/userInfo/)
+            if(result=== -1 ) continue
+            keys[index] === 'userInfo' ? undefined : userInfoArr.push(keys[index])
+        }
+        userInfoArrRef.current =  [...userInfoArr]
+
+        const realUserInfo = []
+        for (const info of userInfoArrRef.current) {
+            let userInfo  = JSON.parse(await AsyncStorage.getItem(info))
+            realUserInfo.push(userInfo)
+        }
+
+        setUserInfoArr(()=>[...realUserInfo])
+    }
+
 
     /**
      * @description 檢查是否以前登錄過...
@@ -137,11 +179,46 @@ export default observer( (props)=>{
             userStore.setUserInfo({
                 userInfo:JSON.parse(userInfo)
             })    
+            
             userStore.setIsSignIn(true)
             navigation.replace('Tab')
             
         }
     }
+
+    const  onChooseAccount =  ()=>{
+
+        let duration  = 1000
+        if(accountContainerIsCollapseRef.current){
+            setAccountContainerIsCollapse(()=>false)
+            Animated.spring(accountContainerHeight , {
+                toValue: 75 * userInfoArr.length, 
+                duration:duration,
+                useNativeDriver:false,
+            }).start()
+            accountContainerIsCollapseRef.current = false
+            
+        }else{
+            Animated.spring(accountContainerHeight , {
+                toValue:0 , 
+                duration:duration,
+                useNativeDriver:false,
+            }).start()
+            accountContainerIsCollapseRef.current = true
+            
+            setTimeout(()=>{
+                setAccountContainerIsCollapse(()=>true)
+            },duration/(3  / userInfoArr.length))
+            
+        }
+    }
+
+    const onClickAccount = ( index ) =>{
+
+        login( true, index)
+        
+    }
+
 
     useEffect(()=>{
         async function clearData (){
@@ -149,9 +226,12 @@ export default observer( (props)=>{
         }
         clearData()
 
-
+        findOutLoginInfo()
 
     },[])
+
+
+
 
     return (
         <View style={styles.container} ref={viewRef} >
@@ -192,7 +272,42 @@ export default observer( (props)=>{
                             placeholder="輸入帳號"
                             onChangeText={text=>onChangeUsername(text)}
                         />
+                        <View onTouchStart={onChooseAccount} style={{height:75,width:60,position:'absolute',right:40,justifyContent:'center',alignItems:"center" }}  >
+                            <AntDesign  name='caretdown' style={{color:"black"}}  />
+                        </View>
+                        
+
+                        
+
                     </Animated.View>
+
+                    
+                    {/* Choice border */}
+                    {
+                        !accountContainerIsCollapse
+                        &&
+                        <Animated.View   style={{ padding:20,width:screenSize.width-80,height:Animated.multiply(accountContainerHeight,1),position:'absolute',backgroundColor:'#E9EBF1',top:(screenSize.height- 220)/2,left:(80)/2, borderRadius:30,zIndex:100 }} >
+                        {
+                            userInfoArr.map((item,index)=>{
+                                return (
+                                    <View onTouchStart={()=>onClickAccount(index)}   style={{flex:1,flexDirection:'row',zIndex:101,justifyContent:'center',alignItems:'center'}} >
+                                        <CachedImage  
+                                            uri={ base_url + item.userInfo.icon } 
+                                            style={{width:37,height:37,zIndex:2,borderRadius:20,position:'absolute',left:0}} 
+                                        />
+                                        <Text style={{fontSize:19}} >
+                                            {item.userInfo.username}
+                                        </Text>
+                                        
+                                    </View>
+                                        
+                                )
+                            })
+                        }
+                    </Animated.View>
+                    }
+
+
                     <Animated.View 
                     style={{opacity:0.7,width:screenSize.width,justifyContent:'center',alignItems:'center',height:40,
                     transform:[{translateY:Animated.subtract(270,topOffSet)}] }}>
@@ -244,6 +359,7 @@ export default observer( (props)=>{
 const styles = StyleSheet.create({
     container:{
         width:screenSize.width,
-        height:screenSize.height
+        height:screenSize.height,
+        backgroundColor:'#FFFFFF'
     }
 })

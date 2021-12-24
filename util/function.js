@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CaughtException } from "mobx/dist/internal";
+
 import { showMessage } from 'react-native-flash-message'
 import { screenSize } from '../util/screenSize'
-import { ChatMsgA } from './type/index'
+
+
 
 
 /**

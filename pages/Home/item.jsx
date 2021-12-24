@@ -12,6 +12,7 @@ import { DeviceEventEmitter } from 'react-native'
 import Swipeable from 'react-native-swipeable';
 
 import { Entypo ,MaterialCommunityIcons} from '../../util/Icon'
+
 export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
 
     // 控制當左右拉時,不能點入聊天

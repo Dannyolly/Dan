@@ -31,6 +31,7 @@ const index = () => {
                       <Image style={{width:60,height:60,marginRight:5}} source={require('../../assets/home.png')}  />
                       <Text style={{fontSize:42,fontWeight:'600',color:'#3672CF'}} >DanDan</Text>
                   </View>
+                  
                 </View>
 
     </Modal>
