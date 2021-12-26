@@ -57,6 +57,7 @@ export default observer(()=>{
     
     const currentTopOffset = useRef(new Animated.Value(0)).current
     
+    const isFoundUnReadMessage = useRef(false)
     /**
     * @description 這里只是為了找出各聊天的最後一句和跟多少聊天過,并列出所有列表
     * @mark        可視為刷新函數...
@@ -68,9 +69,6 @@ export default observer(()=>{
         let { data } = await getAllFriend(userInfo.userInfo.id)
         let messageArr = [] 
         let remindListTemp =  []
-        //console.log(userStore.userInfo.userInfo.id)
-        //await AsyncStorage.removeItem(`${item.id}msg${userInfo.userInfo.id}`)
-       // console.log(await AsyncStorage.getAllKeys())
         for (const item of data) {
            // console.log(item)
             let a = await AsyncStorage.getItem(`${item.id}msg${userInfo.userInfo.id}`)
@@ -87,7 +85,7 @@ export default observer(()=>{
                 let {data} = await searchUser(`id=${item.id}`)
                 let formatInfo  = getMsgFormat(item.msg,data[0],1)
                 obj.objectInfo=formatInfo.user
-                console.log(obj)
+                //console.log(obj)
                 messageArr.push(obj)
                 remindListTemp.push(0)
             }
@@ -95,6 +93,13 @@ export default observer(()=>{
         }
         setRemindList(()=>remindListTemp)
         setChatList(()=>messageArr)
+        //console.log('messageArr',messageArr)
+        messageArr  = messageArr.sort((a, b)=>{
+            let dateA = Date.parse(a.lastMsgDetail.createdAt)
+            let dateB = Date.parse(b.lastMsgDetail.createdAt)
+           // console.log(dateA , dateB ,dateA > dateB)
+            return dateA > dateB
+        })
        // console.log('messageArr',messageArr)
         chatListRef.current=messageArr
         remindListRef.current=remindListTemp
@@ -115,7 +120,12 @@ export default observer(()=>{
          * @tips        根據每個朋友的ID再去匹配1,然後找出每個信息的所在地...
          */
 
+        // 記錄新信息是甚麼的數組
         let listTemp = await getMostUnReadMessageArr()
+        
+        // 記錄原數組...
+        let realList = []
+        
         if(data!==undefined || data.length===0){
             for (const item of data) {
                 // 所在地方...
@@ -152,12 +162,35 @@ export default observer(()=>{
                     // 格式化後,則往數組push一個obj...
                     let newChatList = [...chatList]
                     newChatList.push(obj)
-                    setChatList(()=>newChatList)
-                    chatListRef.current=newChatList
+                    realList.push([...newChatList])
+                    //setChatList(()=>newChatList)
+                    //chatListRef.current=newChatList
                 }
             }
             
+            // 排序
+            //console.log('listTemp',listTemp)
+            let sortList = [...realList , ...chatList]
+            
+
+            sortList =  sortList.sort((a,b)=>{
+                let dateA = Date.parse(a.lastMsgDetail.createdAt)
+                let dateB = Date.parse(b.lastMsgDetail.createdAt)
+                console.log(dateA , dateB ,dateA - dateB)
+                if(dateA - dateB>0){
+                    return -1 
+                }else if(dateA - dateB <0){
+                    return 1
+                }else{
+                    return 0
+                }
+            })
+            isFoundUnReadMessage.current = true
+            console.log('sortList' , sortList)
+            setChatList(()=>[...sortList])
         }
+        
+
         /* console.log('hi??'); */
         userStore.setUnReadMessage(listTemp,undefined,undefined,true)
         
@@ -180,7 +213,7 @@ export default observer(()=>{
         /**
          * 查找多少未讀消息...
          */
-        if(chatList!==undefined){
+        if(chatList!==undefined && !isFoundUnReadMessage.current){
             findOutUnReadMessage()
         }
     
@@ -215,7 +248,7 @@ export default observer(()=>{
             // 這里要判斷它是否沒有跟任何人談話過...
             if(chatListRef.current!==undefined ){
                 newChatListArr= [obj,...chatListRef.current]
-                console.log('add?')
+                //console.log('add?')
             }else{
                 newChatListArr.push(obj)
             }
@@ -237,11 +270,12 @@ export default observer(()=>{
             }
 
             chatListRef.current = sortMessage( list ,listIndex)
+            
             setChatList(()=>chatListRef.current)
         }
         
         // 排序一下....
-        
+        console.log('remind ~~~~~',remindListTemp)
 
 
         setRemindList(()=>remindListTemp)
@@ -288,15 +322,20 @@ export default observer(()=>{
     useEffect(() => {
         getData()
         eventEmitter = DeviceEventEmitter.addListener("receiveMsg",function (msgInfo){
-            console.log(msgInfo)
+            //console.log(msgInfo)
             findOutMessageLocation(msgInfo)
         })
 
         refreshEmitter =DeviceEventEmitter.addListener("refresh",function (){
+            console.log(' start to refresh')
             getData()
         })
 
         return()=>{
+
+
+            console.log('EMitter removed ')
+
             eventEmitter.remove()
             refreshEmitter.remove()
         }

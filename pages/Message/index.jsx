@@ -207,6 +207,11 @@ export default function index( { route, navigation } ) {
             let msgs  =   []
             //console.log('not receive',res1.data)
             for (const item1 of res1.data) {
+                
+                if(item1.sendUserId !== item.id){
+                    continue
+                }
+
                 ids.push(item1.id)
                 
                 if(item1.msg.substring(0,1)==='/'){

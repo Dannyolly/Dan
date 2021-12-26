@@ -19,10 +19,10 @@ const Item =  ( {item , offset } ) =>{
             return screenSize.width
         } else{
             
-            if(9*commentInfo.length> 14*username.length){
-                return 9*commentInfo.length
+            if(9*commentInfo.length> 15*username.length){
+                return 10*commentInfo.length
             }else{
-                return 14*username.length
+                return 15*username.length
             }
         }
     }

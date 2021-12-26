@@ -12,15 +12,19 @@ Animated.View
  *  returnKeyType?  : ReturnKeyTypeOptions,
  *  keyboardType? : KeyboardTypeOptions,
  *  onTouchStart? : ()=>void , 
- *  onFocus? : () => void
+ *  onFocus? : () => void,
+ *  autoFocus? : boolean ,
+ *  onType? : ( text :string)=>void
  * }}
  */
-const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKeyType , keyboardType , onTouchStart , onFocus }) => {
+const  MyTextInput = ({ onType,autoFocus,style , onSubmitEditing , onBlur ,placeholder , returnKeyType , keyboardType , onTouchStart , onFocus }) => {
 
     const [value, onChangeText] = React.useState();
 
     return (
         <TextInput 
+            editable
+            autoFocus={autoFocus?autoFocus:false}
             keyboardType={keyboardType || 'twitter'}
             returnKeyType={returnKeyType || 'send'}
             onFocus={()=>{
@@ -40,9 +44,13 @@ const MyTextInput = ({ style , onSubmitEditing , onBlur ,placeholder , returnKey
             }}
             placeholderTextColor={"#CDCDCD"}
             placeholder={placeholder || "新增回應......"} 
-            style={styles.input} 
-            onChangeText={text => onChangeText(text)} 
+            style={style!==undefined?style.input:undefined} 
+            onChangeText={text => {
+                onType!==undefined?onType(text):undefined
+                onChangeText(text)
+            }} 
             value={value} 
+            
             onTouchStart={onTouchStart?onTouchStart:undefined}
         />
     )

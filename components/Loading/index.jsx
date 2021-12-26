@@ -1,9 +1,12 @@
+import { useAssets } from 'expo-asset'
 import React from 'react'
 import { View, Text ,Image} from 'react-native'
 import { screenSize } from '../../util/screenSize'
 
 export default function index({ topOffset , text ,isFinish }) {
     
+    const [assets, error] = useAssets([require('../../assets/giphy.gif'),require('../../assets/finish.gif')]);
+
     
     console.log(text)
     return (

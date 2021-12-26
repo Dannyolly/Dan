@@ -12,6 +12,9 @@ import { messageResponser, selectionResponser } from '../../util/haptic'
 import FriendHeader from '../../components/Header/FriendHeader'
 import { ScreenWidth } from 'react-native-elements/dist/helpers'
 import { Keyboard } from 'react-native'
+import { friendStore } from '../../mobx/friend'
+import FriendItem from '../../components/FriendList/item'
+import MyTextInput from '../Comment/textInput'
 export default observer(()=>{
 
     const navigation = useNavigation()
@@ -29,7 +32,7 @@ export default observer(()=>{
 
     const width = useRef(new Animated.Value(screenSize.width*0.9)).current
 
-    
+    const [demonStrationFriendList, setDemonStrationFriendList] = useState([])
 
 
     const [focus, setFocus] = useState(false)
@@ -99,30 +102,26 @@ export default observer(()=>{
         },400)
     }
 
-    const MyTextInput = () =>{
+    const onType = text =>{
 
-        const [value, onChangeText] = React.useState('');
-
-        return(
-            <TextInput
-                autoFocus
-                editable 
-                style={{
-                    marginRight:20,
-                    paddingLeft:40,
-                    alignItems:'center',
-                    height:35,
-                    width:screenSize.width,
-                    borderRadius:50,
-                    backgroundColor:"#F4F4F4",
-                    marginBottom:10}} 
-                onChangeText={onChangeText} 
-                value={value} 
-                />
-        )
+        let temp =  []
+        for (const index in friendStore.friendList) {
+            let res = friendStore.friendList[index].username.toLowerCase().search(`${text.toLowerCase()}`)
+            res!==-1 ? temp.push(friendStore.friendList[index]): undefined 
+        }
+        console.log(temp.length , text)
+        if(text===''){
+            setDemonStrationFriendList(()=>[])
+            return
+        }
+        setDemonStrationFriendList(()=>[...temp])
     }
 
-    
+    const onTap = () =>{
+
+        setClicked(()=>false)
+
+    }
 
     useEffect(() => {
         if(clicked ){
@@ -154,7 +153,12 @@ export default observer(()=>{
 
                     <Animated.View style={[styles.onlineContainer,{transform:[{translateY:Animated.divide(textBoxTopOffset,2)}]}]}>
                             <Animated.View style={{height:35,width:width,overflow:'hidden',borderRadius:80,marginRight:10}}>
-                                <MyTextInput />
+                                <MyTextInput 
+                                    autoFocus={true}
+                                    style={styles}
+                                    placeholder=' '
+                                    onType={onType}
+                                />
                             </Animated.View>
                             
                             <AntDesign  name="search1" size={18} style={{color:"#CDCDCD",position:'absolute',left:40,top:25}} />
@@ -162,7 +166,25 @@ export default observer(()=>{
                         <TouchableWithoutFeedback onPress={()=>collapseSearchBar()}>
                             <Text style={{fontSize:16,color:"#3672CF",paddingBottom:15}} >取消</Text>
                         </TouchableWithoutFeedback>
+                        
                     </Animated.View>
+                    <View style={{transform:[{translateY:-30}]}}>
+                        <FlatList
+                                keyExtractor={item=>item.id.toString()}
+                                data={demonStrationFriendList}
+                                renderItem={({item,index})=>{
+                                    return(
+                                        <FriendItem 
+                                            onTap={onTap}
+                                            item={item}
+                                            index={index}
+                                            
+                                        />
+                                    )
+                                }}
+                            
+                            />
+                    </View>
                 </TouchableWithoutFeedback>
             </Modal>
 
@@ -208,5 +230,15 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         paddingLeft:20
     },
+    input:{
+        marginRight:20,
+        paddingLeft:40,
+        alignItems:'center',
+        height:35,
+        width:screenSize.width,
+        borderRadius:50,
+        backgroundColor:"#F4F4F4",
+        marginBottom:10
+    }
     
 })

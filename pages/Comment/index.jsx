@@ -296,7 +296,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                 }}>
                                             
                                                     <NonIdCachedImage
-                                                    uri={base_url+item.userInfo[0].icon}
+                                                    uri={base_url+userStore.userInfo.userInfo.icon}
                                                     style={styles.userIcon}   />
                                                 
                                                     <MyTextInput  
@@ -401,7 +401,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                 }}>
                                             
                                                     <NonIdCachedImage
-                                                    uri={base_url+item.userInfo[0].icon}
+                                                    uri={base_url+userStore.userInfo.userInfo.icon}
                                                     style={styles.userIcon}   />
                                                 
                                                     <MyTextInput  
@@ -412,7 +412,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                         onSubmitEditing={(value)=>submitMessage(value)}
                                                         /* onKeyPress={()=>clickedKeyBoard()} */
                                                         placeholder={"新增回應......"} 
-                                                        style={styles} 
+                                                        /* style={styles} */ 
                                                          
                                                     />
                                                 
@@ -484,12 +484,12 @@ const styles = StyleSheet.create({
         left:0
     },
     userIcon:{
-        width:50,
-        height:50,
+        width:40,
+        height:40,
         borderRadius:30,
         position:'absolute',
-        left:10,
-        bottom:10
+        left:15,
+        bottom:15
     },
     input:{
         width:screenSize.width*0.73,

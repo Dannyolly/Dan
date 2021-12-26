@@ -51,6 +51,20 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
 
    // console.log( 'item```', item.objectInfo.avatar)
 
+
+    if(userStore.unreadMessage[index].length == undefined ){
+
+        console.log(`${userStore.unreadMessage}`)
+
+        return (
+            <View>
+                <Text>?</Text>
+            </View>
+        )
+    }
+
+    
+
     return (
         <View style={{zIndex:1}}>
             <Swipeable  
@@ -86,6 +100,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                             navigation.navigate('Message',{
                                 item:item.objectInfo
                             })
+                            
                             userStore.setUnReadMessage([],index,true)
                             userStore.calculateUnreadMsgCount()
 
@@ -112,6 +127,8 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                                             &&
                                             userStore.unreadMessage[index]!==undefined
                                             &&
+                                            userStore.unreadMessage[index].length !== undefined 
+                                            &&
                                             userStore.unreadMessage[index].length>0?
                                             <Text>{userStore.unreadMessage[index][userStore.unreadMessage[index].length-1].text || "圖片"}</Text> 
                                             :
@@ -127,6 +144,8 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                                             userStore.unreadMessage.length>0
                                             &&
                                             userStore.unreadMessage[index]!==undefined
+                                            &&
+                                            userStore.unreadMessage[index].length !== undefined 
                                             &&
                                             userStore.unreadMessage[index].length>0?
                                             <Text>{`${userStore.unreadMessage[index][userStore.unreadMessage[index].length-1].text}`|| "圖片"}</Text> 
@@ -146,6 +165,8 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                                     &&
                                     userStore.unreadMessage[index]!==undefined
                                     &&
+                                    userStore.unreadMessage[index].length !== undefined 
+                                    &&
                                     userStore.unreadMessage[index].length===0?
                                     calculateDate(item.lastMsgDetail.createdAt)
                                     :
@@ -162,6 +183,8 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                                 &&
                                 userStore.unreadMessage[index].length!==0
                                 &&
+                                userStore.unreadMessage[index].length !== undefined 
+                                            &&
                                 <View style={{justifyContent:"center",alignItems:'center',width:20,height:20,borderRadius:10,backgroundColor:'#28C1FD',position:"absolute",right:40,bottom:32}}>
                                     <Text style={{fontSize:12,color:"#F4F4F4"}}>{userStore.unreadMessage[index].length}</Text>
                                 </View>

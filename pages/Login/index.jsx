@@ -22,6 +22,7 @@ import { defaultShowMessage } from '../../util/function'
 import MyTextInput from '../Comment/textInput'
 import CachedImage from '../../components/NonIdCachedImage'
 import { base_url } from '../../api/config'
+import { getMostUnReadMessageArr } from '../Home/homeUtils'
 export default observer( (props)=>{
 
     const viewRef = useRef()
@@ -107,34 +108,21 @@ export default observer( (props)=>{
         const usernameTemp = isUseRef? userInfoArr[index].userInfo.username : username
         const passwordTemp = isUseRef? userInfoArr[index].userInfo.password : password
 
-        console.log(usernameTemp , passwordTemp)
         userLogin(usernameTemp , passwordTemp ).then(async res=>{
-            console.log(res.data)
-            defaultShowMessage(res.data.msg==='error'? '帳號或者密碼錯誤':'登入成功')
+            defaultShowMessage({message: res.data.msg==='error'? '帳號或者密碼錯誤':'登入成功' })
             
-
             if(res.data.msg!=='error'){
                 //存入userStore..
-                userStore.setUserInfo({/* 
-                    sessionId:res.data.sessionId,
-                    userInfo: */
+                userStore.setUserInfo({
                     ...res.data.userInfo
                 })
-                //console.log(await AsyncStorage.getAllKeys())
-                let data = await AsyncStorage.setItem('userInfo',JSON.stringify(res.data.userInfo),err=>{
+                 await AsyncStorage.setItem('userInfo',JSON.stringify(res.data.userInfo),err=>{
                     console.log(err)
                 });
                 await AsyncStorage.setItem(`${res.data.userInfo.userInfo.id}userInfo`,JSON.stringify(res.data.userInfo))
-                // 通知信息刷新...  -- >MainContent.Notification()
-                //DeviceEventEmitter.emit('refreshNotification')
-
-                await userStore.resetUnReadMessage()
-
-                // 2021 / 12 /24 重登BUG ...
-                DeviceEventEmitter
-
-               // defaultShowMessage(JSON.stringify(userStore.unreadMessage))
                 userStore.setIsSignIn(true)
+                userStore.setUnReadMessage(await getMostUnReadMessageArr(),undefined, undefined ,true)
+                console.log(userStore.unreadMessage)
                 navigation.replace('Tab')
             }
 
@@ -167,7 +155,7 @@ export default observer( (props)=>{
     /**
      * @description 檢查是否以前登錄過...
      */
-    const checkUserLogIn=async ()=>{
+    const checkUserLogIn= async ()=>{
         //await AsyncStorage.clear()
         let userInfo = await AsyncStorage.getItem('userInfo')
 
@@ -214,9 +202,7 @@ export default observer( (props)=>{
     }
 
     const onClickAccount = ( index ) =>{
-
         login( true, index)
-        
     }
 
 
@@ -225,7 +211,6 @@ export default observer( (props)=>{
             checkUserLogIn()
         }
         clearData()
-
         findOutLoginInfo()
 
     },[])
@@ -286,11 +271,11 @@ export default observer( (props)=>{
                     {
                         !accountContainerIsCollapse
                         &&
-                        <Animated.View   style={{ padding:20,width:screenSize.width-80,height:Animated.multiply(accountContainerHeight,1),position:'absolute',backgroundColor:'#E9EBF1',top:(screenSize.height- 220)/2,left:(80)/2, borderRadius:30,zIndex:100 }} >
+                        <Animated.View   style={{ padding:10,paddingLeft:20,paddingRight:20                 ,width:screenSize.width-80,height:Animated.multiply(accountContainerHeight,1),position:'absolute',backgroundColor:'#E9EBF1',top:(screenSize.height- 220)/2,left:(80)/2, borderRadius:30,zIndex:100 }} >
                         {
                             userInfoArr.map((item,index)=>{
                                 return (
-                                    <View onTouchStart={()=>onClickAccount(index)}   style={{flex:1,flexDirection:'row',zIndex:101,justifyContent:'center',alignItems:'center'}} >
+                                    <View onTouchStart={()=>onClickAccount(index)}   style={{padding:10,flex:1,flexDirection:'row',zIndex:101,justifyContent:'center',alignItems:'center'}} >
                                         <CachedImage  
                                             uri={ base_url + item.userInfo.icon } 
                                             style={{width:37,height:37,zIndex:2,borderRadius:20,position:'absolute',left:0}} 

@@ -34,7 +34,7 @@ const savePostToLocal = async(post, userId) => {
         await AsyncStorage.setItem(`${userId}Post`, JSON.stringify(post))
     } else {
         /** @type {Array<FormattedPost>} */
-        let res = JSON(json)
+        let res = JSON.parse(json)
 
         await AsyncStorage.setItem(`${userId}Post`, JSON.stringify([...res, ...post]))
     }

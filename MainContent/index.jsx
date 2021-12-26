@@ -226,9 +226,9 @@ const BottomTab = observer((props)=>{
             showBottomTabBar()
         })
 
-        return ()=>{
+        /* return ()=>{
             DeviceEventEmitter.removeAllListeners()
-        }
+        } */
     }, [])
 
 
@@ -465,7 +465,7 @@ export default observer((props)=>{
 
         appState.current = nextAppState;
         setAppStateVisible(appState.current);
-        console.log("AppState", appState.current);
+        //console.log("AppState", appState.current);
     };
 
     
@@ -501,7 +501,7 @@ export default observer((props)=>{
           
         // 接收信息,,,
         instance =  DeviceEventEmitter.addListener('refreshNotification',()=>{
-            console.log('getNotification~~~~')
+           // console.log('getNotification~~~~')
             getAllNotification()
             
         })
@@ -518,7 +518,7 @@ export default observer((props)=>{
         let userInfo = await AsyncStorage.getItem('userInfo')
 
         let res = JSON.parse(userInfo)
-        console.log('?',res.userInfo.id)
+       // console.log('?',res.userInfo.id)
         
        // console.log(await AsyncStorage.getAllKeys())
        // console.log('test',JSON.parse(userInfo))
@@ -528,7 +528,7 @@ export default observer((props)=>{
             userStore.setUserInfo({
                 ...JSON.parse(userInfo)
             })    
-            console.log('checked')
+            //console.log('checked')
             userStore.setIsSignIn(true)
             
         }
@@ -544,12 +544,7 @@ export default observer((props)=>{
         
         setTimeout(()=>{
             setIsClose(()=>true)
-            console.log('close')
-            console.log(userStore.isSignIn)
-        // loading something 
         },2000)
-
-        console.log('times')
 
     }, [])
     

@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Item from './item'
 import { base_url } from '../../api/config'
 import FriendHeader from '../Header/FriendHeader'
+import {friendStore } from '../../mobx/friend'
 export default observer(({ navigation })=>{
 
     
@@ -18,6 +19,7 @@ export default observer(({ navigation })=>{
         let userInfo = JSON.parse(jsonUserInfo)
         getAllFriend(userInfo.userInfo.id).then(res=>{
             //console.log(res.data)
+            friendStore.setFriendList(res.data)
             setList(()=>res.data)
         })
         

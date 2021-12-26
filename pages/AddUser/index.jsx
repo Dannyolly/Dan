@@ -41,8 +41,8 @@ export default function index(  ) {
     return (
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()} >
             <ScrollView style={{backgroundColor:"#FFFFFF",height:screenSize.height}}>
-                <View style={{padding:20,width:screenSize.width,backgroundColor:"#FFFFFF"}}>
-                    <AntDesign name="search1" size={18} style={{position:"absolute",left:30,top:30,zIndex:1}} />
+                <View style={{padding:20,paddingTop:60,width:screenSize.width,backgroundColor:"#FFFFFF"}}>
+                    <AntDesign name="search1" size={18} style={{position:"absolute",left:30,top:70,zIndex:1}} />
                     <TextInput
                     onChangeText={text => onChangeText(text)}
                     value={value}
@@ -64,7 +64,7 @@ export default function index(  ) {
                     &&
                     <FlatList  
                         data={list}
-                        renderItem={ ({item})=><Item item={item} navigation={navigation} />  }
+                        renderItem={ ({item})=><Item item={item} text={value} navigation={navigation} />  }
                         keyExtractor={item=>item.id.toString()}
                     />
                 }

@@ -19,7 +19,7 @@ import { searchUser, updateUserInfo } from '../../api/api';
 
 export default class index extends Component {
 
-    settings=['名字','性別','DAN號','我的二維碼','黑白模式','簡介','隱私','登出']
+    settings=['名字','性別','DAN號','我的二維碼','黑白模式','簡介','隱私','收藏','登出']
 
 
     keys = ['username','cid','introduction']
@@ -128,16 +128,17 @@ export default class index extends Component {
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} 
                 style={{width:screenSize.width,height:screenSize.height}}>
-                    <View style={{height:185,width:screenSize.width}}>
+                    <View style={{height:360,width:screenSize.width,position:'absolute',top:-180,paddingTop:180}}>
                         <LinearGradient 
                         locations={[0.1,0.5,1]}
                         colors={['#4399FE','#28C1FD','#21CFFF']}
-                        style={{width:screenSize.width,zIndex:0,marginBottom:20,borderBottomLeftRadius:10,borderBottomRightRadius:10}}
+                        style={{width:screenSize.width,zIndex:0,marginBottom:20,
+                            borderBottomLeftRadius:10,borderBottomRightRadius:10}}
                         >
                             <Header />
                         </LinearGradient>
                     </View>
-
+                    <View  style={{marginBottom:185}} />
 
                     <TouchableOpacity 
                     onPress={()=>{
@@ -337,10 +338,34 @@ export default class index extends Component {
                         <View style={styles.settingRealContainer}>
                             <View style={{flexDirection:'row',alignItems:'center'}}>
                                 <View style={styles.fontIconContainerStyle}>
-                                    <AntDesign name={'logout'}  
+                                    <MaterialIcons name={'collections'}  
                                     style={{fontSize:17,lineHeight:30,color:"#ffffff"}}  />
                                 </View>
                                 <Text style={{lineHeight:60,fontSize:15}}>{this.settings[7]}</Text>
+                            </View>
+                            <View style={{position:'absolute',right: 15,flexDirection:'row'}}>
+                                
+                                <AntDesign
+                                name={'right'}
+                                size={15}
+                                style={{fontSize:17,lineHeight:60,color:"#C4C4C4"}}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                    onPress={this.logOut}
+                    style={styles.settingContainer} 
+                        activeOpacity={0.7}>
+                        
+                        <View style={styles.settingRealContainer}>
+                            <View style={{flexDirection:'row',alignItems:'center'}}>
+                                <View style={styles.fontIconContainerStyle}>
+                                    <AntDesign name={'logout'}  
+                                    style={{fontSize:17,lineHeight:30,color:"#ffffff"}}  />
+                                </View>
+                                <Text style={{lineHeight:60,fontSize:15}}>{this.settings[8]}</Text>
                             </View>
                             <View style={{position:'absolute',right: 15,flexDirection:'row'}}>
                                 

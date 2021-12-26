@@ -4,14 +4,27 @@ import { View, Text ,Image} from 'react-native'
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler'
 import { base_url } from '../../api/config'
 import { screenSize } from '../../util/screenSize'
-
-export default function item({ item ,navigation }) {
+import { friendStore } from '../../mobx/friend'
+export default function item({ item ,navigation , text }) {
 
 
     return (
         <TouchableHighlight activeOpacity={0.6} underlayColor={"#F7F5F8"} 
         onPress={() =>{
-            navigation.navigate('friendDelta',{item:item,isFriend:false})
+            let isFriend = false
+            for (const index in friendStore.friendList) {
+                let res = friendStore.friendList[index].username.toLowerCase().search(`${text.toLowerCase()}`)
+                if(res>=0){
+                    isFriend = true
+                    break;
+                }
+            }
+
+            navigation.navigate('friendDelta',{
+                item:item,
+                isFriend:isFriend,
+                self:false
+            })
         }}
         
         >

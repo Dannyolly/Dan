@@ -10,7 +10,7 @@ import { searchUser } from '../../api/api'
 import { defaultShowMessage } from '../../util/function'
 
 
-export default function item({ item }) {
+export default function item({ item , index, onTap }) {
 
     const [online, setOnline] = useState(false)
 
@@ -52,12 +52,16 @@ export default function item({ item }) {
         activeOpacity={0.6} 
         underlayColor={"#F7F5F8"} 
         onPress={
-            () =>navigation.navigate('friendDelta',{
-            item:item,
-            isFriend:true,
-            self:false,
-        })
-        }
+            () =>{
+                if(onTap!==undefined){
+                    onTap()
+                }
+                navigation.navigate('friendDelta',{
+                item:item,
+                isFriend:true,
+                self:false,
+            }
+        )}}
         /* onPress={()=>navigation.navigate('qrcode')} */
         >
             <View style={{paddingLeft:40,paddingTop:10}}>

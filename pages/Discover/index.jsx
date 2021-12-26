@@ -1,5 +1,5 @@
-import React, { Component ,useRef,useEffect,useState, MutableRefObject} from 'react'
-import { Text, View ,StyleSheet,DeviceEventEmitter,Image, Animated , NativeSyntheticEvent,NativeScrollEvent} from 'react-native'
+import React, { Component, useRef, useEffect, useState, MutableRefObject } from 'react'
+import { Text, View, StyleSheet, DeviceEventEmitter, Image, Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
 import WebSocket from '../../webSocket'
 
 import JustifyContentImage from '../../components/JustifyContentImage'
@@ -8,7 +8,7 @@ import VerticalScrollableVideo from '../../components/VerticalScrollableVideo'
 import PostItem from './PostItem'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { getAllUserPost, searchUser } from '../../api/api'
-import { userStore,observer } from '../../mobx/store'
+import { userStore, observer } from '../../mobx/store'
 import { uploadAsync } from 'expo-file-system'
 import { showMessage } from 'react-native-flash-message'
 import DownScrollLoading from '../../components/DownScrollLoading'
@@ -23,7 +23,7 @@ import { imageStore } from '../../components/JustifyCenterImage/lock'
 import DiscoverHeader from '../../components/Header/Discover'
 import MaskView from '../../components/MaskView'
 import { LocalCacheManager } from '../../util/LocalCacheManager'
-import { getUserMainInfo } from '../../util/function'
+import { defaultShowMessage, getUserMainInfo } from '../../util/function'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 /**
@@ -40,9 +40,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
-export default observer(({ navigation, onlyFlatList })=> {
+export default observer(({ navigation, onlyFlatList }) => {
 
-    
+
 
     // scrollRef
     const onScrollRef = useRef()
@@ -73,12 +73,14 @@ export default observer(({ navigation, onlyFlatList })=> {
 
     const isSetTimeout = useRef(false)
 
+
     const lastY = useRef(0)
 
-    
+    // 有信息?
     const isNewMessage = useRef(false)
 
-    const newMessageCount  = useRef(0)
+    // 新信息
+    const newMessageCount = useRef(0)
 
     /** @type {MutableRefObject<Array<Post>>} */
     const newMessageTemp = useRef([])
@@ -87,371 +89,421 @@ export default observer(({ navigation, onlyFlatList })=> {
      *  @description 這里是給上拉加載的..
      */
     const bottomLockRef = useRef(false)
-    
+
+    // 首次檢查
     const firstTimeChecking = useRef(false)
 
-    const  isAllCheckOut = useRef(false)
+    // 是否檢查
+    const isAllCheckOut = useRef(false)
 
-    const handleToggle = ()=>{
-        if(!setting.current){
+    // 已經獲取信息狀態
+    const isGotData = useRef(false)
+
+    // 沒有任何信息狀態...
+    const [nothing, setNothing] = useState(false)
+
+    const handleToggle = () => {
+        if (!setting.current) {
             //console.log(scrollRef.current)
-            setting.current=true
-            scrollRef.current =!scrollRef.current
+            setting.current = true
+            scrollRef.current = !scrollRef.current
             //console.log(scrollRef.current)
             onScrollRef.current.setNativeProps({
-                scrollEnabled:scrollRef.current
-            })   
-            setTimeout(()=>{
-                setting.current=false
-            },300)
+                scrollEnabled: scrollRef.current
+            })
+            setTimeout(() => {
+                setting.current = false
+            }, 300)
         }
     }
 
 
-    const checkOutNewPost = async () =>{
+    const checkOutNewPost = async () => {
 
-        if(firstTimeChecking.current){
+        if (firstTimeChecking.current) {
             return
         }
 
         firstTimeChecking.current = true
-        
+
 
         /** @type {{userInfo :import('../../util/LocalCacheManager').UserInfo}}   */
         const data = await getUserMainInfo()
-        
-        
-        let res = await LocalCacheManager.getAllPost(data.userInfo.id)    
-        
-        let localCount = res!==undefined? res.length : 0
-        
-        let allMessage = (await getAllUserPost(data.userInfo.id, 0 , 1000) ).data
+
+        let res = await LocalCacheManager.getAllPost(data.userInfo.id)
+        let localCount = ((res !== undefined) && (res !== null)) ? res.length : 0
+        let allMessage = (await getAllUserPost(data.userInfo.id, 0, 1000)).data
         let allMessageCount = allMessage.length
-        
+
         isNewMessage.current = localCount !== allMessageCount
-        newMessageCount.current  = Math.abs( localCount - allMessageCount )
-        
-        if(isNewMessage.current){
-            newMessageTemp.current = allMessage 
-        } 
+        newMessageCount.current = Math.abs(localCount - allMessageCount)
+
+        // 假如甚麼信息也沒有...
+        if (localCount === 0 && allMessageCount === 0) {
+            setIsShowEndHandler(() => true)
+            setNothing(()=>true) 
+            
+            return 
+        }
+        console.log(allMessageCount , localCount)
+
+        if (isNewMessage.current) {
+            newMessageTemp.current = allMessage
+        }
         isAllCheckOut.current = true
-        
+
 
     }
 
-    /** @param { Array<Post> } res */
-    const processData = async ( res ) =>{
+    /**
+     * @description 處理信息....
+     * @param { Array<Post> } res 
+     * @returns 
+     */
+    const processData = async (res) => {
 
-            // 沒有更多了...
-            if(res.length===0){
-                //setIsShowEndHandler(()=>true)
-                return 
-            }
-            
-            // 化成規格化data
-            /** @type {Array<Post>} */
-            let temp = res
-
-            for (const index in temp) {   
-                let result = temp[index].postImage.charAt(",")
-                if(result!==0){
-                    temp[index].postImage = temp[index].postImage.split(',')
-                    for (const i in temp[index].postImage) {
-                        temp[index].postImage[i]= base_url+temp[index].postImage[i]
-                    }
-                }     
-                temp[index].userInfo = (await searchUser(`id=${temp[index].userId}`)).data
-            }
-            
-            return temp 
-    }
-
-
-    const getData=async (  )=>{
-        if(!isAllCheckOut.current){
+        // 沒有更多了...
+        if (res.length === 0) {
+            //setIsShowEndHandler(()=>true)
             return
         }
 
-        /** @type {{userInfo :import('../../util/LocalCacheManager').UserInfo}}   */
-        const data = await getUserMainInfo()
+        // 化成規格化data
+        /** @type {Array<Post>} */
+        let temp = res
+
+        for (const index in temp) {
+            let result = temp[index].postImage.charAt(",")
+            if (result !== 0) {
+                temp[index].postImage = temp[index].postImage.split(',')
+                for (const i in temp[index].postImage) {
+                    temp[index].postImage[i] = base_url + temp[index].postImage[i]
+                }
+            }
+            temp[index].userInfo = (await searchUser(`id=${temp[index].userId}`)).data
+        }
+
+        return temp
+    }
+
+
+    /**
+     * @description 獲取數據
+     * @return null
+     */
+    const getData = async () => {
+        if (!isAllCheckOut.current) {
+            return
+        }
+
 
         /* console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current ) */
-        if(isNewMessage.current === true){
+        if (isNewMessage.current === true) {
 
-              // 有新POST
+            // 有新POST
             let res
-            if(newMessageCount.current > 5){
+            if (newMessageCount.current > 5) {
                 // 如果大於5則分開加載...
-                res = newMessageTemp.current.slice(currentPage.current* 5 , (currentPage.current+1) * 5  )
-                currentPage.current ++ 
+                res = newMessageTemp.current.slice(currentPage.current * 5, (currentPage.current + 1) * 5)
+                currentPage.current++
                 newMessageCount.current -= 5
-                await cachePost(res)
-            }
-            else if(newMessageCount.current >0){
-                // <= 5 但還有剩餘信息...
-                res = newMessageTemp.current.slice(currentPage.current* 5 , (currentPage.current+1) * 5  )
                 
+            }
+            else if (newMessageCount.current > 0) {
+                // <= 5 但還有剩餘信息...
+                res = newMessageTemp.current.slice(currentPage.current * 5, (currentPage.current + 1) * 5)
+
                 //console.log(res);
-                currentPage.current = 0 
+                currentPage.current = 0
                 newMessageCount.current = 0
                 isNewMessage.current = false
             }
 
-            
-            let processedData  = await processData(res)
-            let temp  = dataRef.current !==undefined ? [...dataRef.current, ...processedData] : [...processedData] 
-            // 更新....
-            setData(()=>[...temp]) 
-            dataRef.current=temp
 
-        }else if(isNewMessage.current===false){
+            let processedData = await processData(res)
+            let temp = dataRef.current !== undefined ? [...dataRef.current, ...processedData] : [...processedData]
+            
+            // cache
+            cachePost(processedData)
+
+            // 更新....
+            setData(() => [...temp])
+            dataRef.current = temp
+
+        } else if (isNewMessage.current === false) {
 
             /* console.log('in???') */
             // 沒有新消息 , 則訪問以後保存的緩存...
-            let posts = 
-            await 
-            LocalCacheManager.
-            getThePostFromLocalByCurrentPage(data.userInfo.id, currentPage.current )
-            console.log(posts.length, isAllCheckOut.current )
-            if(posts===null && isAllCheckOut.current===true || posts.length===0 && isAllCheckOut.current ){
+            let id
+            if(userStore.userInfo!==undefined){
+                id = userStore.userInfo.userInfo.id
+            }else{
+                id = (await getUserMainInfo()).userInfo.id
+            }
+            let posts =
+                await
+                    LocalCacheManager.
+                        getThePostFromLocalByCurrentPage(id ,currentPage.current)
+            console.log(posts.length, isAllCheckOut.current)
+            if (posts === null && isAllCheckOut.current === true || posts.length === 0 && isAllCheckOut.current) {
                 // 沒有更多post了...
                 // undefined 表示完了...
                 /* console.log('end') */
-                isNewMessage.current = undefined 
-                setIsShowEndHandler(()=>true)
+                isNewMessage.current = undefined
+                setIsShowEndHandler(() => true)
                 return
             }
 
-            let temp  = dataRef.current !==undefined ? [...dataRef.current, ...posts] : [...posts] 
+            let temp = dataRef.current !== undefined ? [...dataRef.current, ...posts] : [...posts]
             currentPage.current++
-            setData(()=>[...temp])
+            setData(() => [...temp])
             dataRef.current = temp
-        } 
-       /* console.log(dataRef.current) */
+        }
+        /* console.log(dataRef.current) */
 
     }
 
-    const BottomHandler=()=>{
 
-        return(
-                <View>
-                    {
-                        isShowLoader===true&&isShowEndHandler===false
-                        &&
-                        <View style={{width:screenSize.width,height:50,justifyContent:'center',alignItems:'center'}}>
-                            <Image  source={require('../../assets/giphy.gif')} style={{width:100,height:50}} />
-                        </View>
-                    }
-                    {
-                        isShowEndHandler===true
-                        &&
-                        <View style={{width:screenSize.width-20,height:200,justifyContent:'center',alignItems:'center'}}>
-                            
-                            <Image source={require('../../assets/home.png')} style={{width:100,height:100,borderRadius:50}} />
-                            <Text style={{fontWeight:'500'}}>沒有更多信息了~</Text>
-                        </View>
-                        
-                    }
-                </View>
-            
-        )
-    }
 
-    const onReach=async ()=>{
-        setIsShowLoader(()=>true)
+    const onReach = async () => {
+        setIsShowLoader(() => true)
         getData()
     }
 
-    const cachePost = async (data) =>{
+    const cachePost = async (data) => {
 
-        await LocalCacheManager.savePostToLocal( data, userStore.userInfo.userInfo.id )
+        await LocalCacheManager.savePostToLocal(data, userStore.userInfo.userInfo.id)
     }
 
-    useEffect(()=>{
-
-       
-        
-        // 這個是用戶自己上傳的新post
-        listener.current=DeviceEventEmitter.addListener('uploadPost',async function ( obj ){
-            if(uploading.current===false){               
-                uploading.current =true
-                let temp = [obj,...dataRef.current]
-                obj.userInfo = (await searchUser(`id=${obj.userId}`)).data
-                for (const i in obj.postImage) {
-                    obj.postImage[i]= base_url+obj.postImage[i]
-                }
-                
-                setData(()=>[obj,...dataRef.current])
-                dataRef.current = temp
-                setTimeout(()=>{
-                    uploading.current = false
-                },5000)
-
-            }
-        })
-        return ()=>{
-            
-            listener.current.remove()
-        }
-    },[])
 
 
 
-    useEffect(() => {
-        if(userStore.userInfo.userInfo!==undefined){
-            // 檢查有沒有新的POSt . . .. 
-           // console.log('hi hi',userStore.userInfo.userInfo);
-           (async () => {
-                await checkOutNewPost()
-                await getData()
-            })()
-            
-            //cachePost() 
-        }
-    }, [JSON.stringify(userStore)])
-    
-
-    
-
-    const onZooming =(scale , index) =>{
-        /* console.log('move ', scale) */
-        if(isSetTimeout.current === false && scale !==0 ){
-           /*  console.log('set',index) */
+    const onZooming = (scale, index) => {
+        if (isSetTimeout.current === false && scale !== 0) {
             imageStore.setIndex(index)
-            /* imageStore.setIsZooming(true) */
             isSetTimeout.current = true
             onScrollRef.current.setNativeProps({
-                scrollEnabled:false
-            }) 
-            setTimeout(()=>{
+                scrollEnabled: false
+            })
+            setTimeout(() => {
                 isSetTimeout.current = false
-                /* imageStore.setIsZooming(false) */
                 onScrollRef.current.setNativeProps({
-                    scrollEnabled:true
-                }) 
-               // console.log('can move !')
-            },100)
+                    scrollEnabled: true
+                })
+            }, 100)
         }
     }
 
     /** @param {{ nativeEvent : NativeSyntheticEvent<NativeScrollEvent>}} */
     const onScroll = async ({ nativeEvent }) => {
-        const { contentOffset , contentSize,layoutMeasurement} = nativeEvent
-        
+        const { contentOffset, contentSize, layoutMeasurement } = nativeEvent
+
 
         //console.log(contentOffset.y , contentSize.height-screenSize.height )
         // reach the end of scrollView 
-        if(contentSize.height-screenSize.height-contentOffset.y<=0 && !bottomLockRef.current ){
+        if (contentSize.height - screenSize.height - contentOffset.y <= 0 && !bottomLockRef.current) {
             // lock
             bottomLockRef.current = true
 
             // console.log('reach');
             await onReach()
-            setTimeout(()=>{
+            setTimeout(() => {
                 bottomLockRef.current = false
-            },1000)
+            }, 1000)
 
         }
 
     }
 
-   /*  const onScrollBeginDrag = () =>{
-        isSetTimeout.current = true 
-        console.log('start to collapse')
-        DeviceEventEmitter.emit('collapseBottomTabBar')
-    } */
 
-    return (  
-        <ScrollView 
-        
-        refreshControl={ Platform.OS==='android'? null:<DownScrollLoading   /> }
-        ref={c=>onScrollRef.current=c} 
-        /* nestedScrollEnabled={false} */
-        onScrollEndDrag={(event)=>{
-            isSetTimeout.current = false
-        }}
-        onScrollBeginDrag={(event)=>{
-            isSetTimeout.current = true
-            event.nativeEvent.contentOffset.y >= lastY.current?
+    useEffect(() => {
+        if (userStore.userInfo.userInfo !== undefined && !isGotData.current) {
+            // 檢查有沒有新的POSt . . .. 
+            // console.log('hi hi',userStore.userInfo.userInfo);
+            (async () => {
+                
+                
+                isGotData.current = true
+                await checkOutNewPost()
+                if(!nothing){
+                    console.log('getData')
+                    //console.log(await AsyncStorage.getAllKeys())
+                    //console.log(await AsyncStorage.removeItem(`2Post`))
+                    await getData()
+                }
+                
+
+            })()
+
+            //cachePost() 
+        }
+    }, [JSON.stringify(userStore)])
+
+    useEffect(() => {
+
+
+        // 這個是用戶自己上傳的新post
+        listener.current = DeviceEventEmitter.addListener('uploadPost', async function (obj) {
+            if (uploading.current === false) {
+                uploading.current = true
+                let temp = [obj, ...dataRef.current]
+                obj.userInfo = (await searchUser(`id=${obj.userId}`)).data
+                for (const i in obj.postImage) {
+                    obj.postImage[i] = base_url + obj.postImage[i]
+                }
+
+                setData(() => [obj, ...dataRef.current])
+                dataRef.current = temp
+                setTimeout(() => {
+                    uploading.current = false
+                }, 5000)
+
+            }
+        })
+        return () => {
+            console.log(' discover page has removed ')
+            listener.current.remove()
+        }
+    }, [])
+
+
+     /** 
+     * @returns {JSX.Element} 
+     * @description 底下顯示結束還是加載 
+     */
+      const BottomHandler = () => {
+
+
+        if( nothing ){
+            return (
+                <View>
+                    <View style={{ width: screenSize.width - 20, height: screenSize.height-150, justifyContent: 'center', alignItems: 'center' }}>
+
+                        <Image source={require('../../assets/home.png')} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                        <Text style={{ fontWeight: '500' }}>沒有更多信息了~</Text>
+                    </View>
+                </View>
+    
+            )
+        }
+
+        return (
+            <View>
+                {
+                    isShowLoader === true && isShowEndHandler === false
+                    &&
+                    <View style={{ width: screenSize.width, height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                        <Image source={require('../../assets/giphy.gif')} style={{ width: 100, height: 50 }} />
+                    </View>
+                }
+                {
+                    isShowEndHandler === true
+                    &&
+                    <View style={{ width: screenSize.width - 20, height: 200, justifyContent: 'center', alignItems: 'center' }}>
+
+                        <Image source={require('../../assets/home.png')} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                        <Text style={{ fontWeight: '500' }}>沒有更多信息了~</Text>
+                    </View>
+
+                }
+            </View>
+
+        )
+    }
+
+    return (
+        <ScrollView
+
+            
+            ref={c => onScrollRef.current = c}
+            /* nestedScrollEnabled={false} */
+            onScrollEndDrag={(event) => {
+                isSetTimeout.current = false
+            }}
+            onScrollBeginDrag={(event) => {
+                isSetTimeout.current = true
+                event.nativeEvent.contentOffset.y >= lastY.current ?
                     DeviceEventEmitter.emit('collapseBottomTabBar') :
                     DeviceEventEmitter.emit('showBottomTabBar')
 
-            lastY.current = event.nativeEvent.contentOffset.y
-        }}
-        /* canCancelContentTouches={false} */
-        style={{width:screenSize.width,height:screenSize.height,
-        backgroundColor:"#FFFFFF",paddingBottom:0}}
-        /* stickyHeaderIndices={[0]} */
-        stickyHeaderHiddenOnScroll={true}
-        onScroll={onScroll}
-        
-        scrollEventThrottle={0}
+                lastY.current = event.nativeEvent.contentOffset.y
+            }}
+            /* canCancelContentTouches={false} */
+            style={{
+                width: screenSize.width, height: screenSize.height,
+                backgroundColor: "#FFFFFF", paddingBottom: 0
+            }}
+            /* stickyHeaderIndices={[0]} */
+            stickyHeaderHiddenOnScroll={true}
+            onScroll={onScroll}
+
+            scrollEventThrottle={0}
         >
-        
-        <DiscoverHeader  navigation={navigation} />
-            
-            
-            
+
+            <DiscoverHeader navigation={navigation} />
+
+
+
             {
-                data!==undefined
+                data !== undefined
                 &&
                 <FlatList
-                /* stickyHeaderIndices={[0]}
-                stickyHeaderHiddenOnScroll */
-                
-                /* invertStickyHeaders */
-                /* scrollEnabled={!zooming} */
-                
-                ListHeaderComponent={()=><> 
-                    
-                    <ShortVideo  navigation={navigation}  />
-                    {/* <MaskView  
+                    /* stickyHeaderIndices={[0]}
+                    stickyHeaderHiddenOnScroll */
+
+                    /* invertStickyHeaders */
+                    /* scrollEnabled={!zooming} */
+                    refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
+                    ListHeaderComponent={() => <>
+
+                        <ShortVideo navigation={navigation} />
+                        {/* <MaskView  
                         visible={true} 
                         opacity={0.7} 
                         zIndex={10050}
                         color='black'
                         height={100000}
                     /> */}
-                  </>}
-                /* ListFooterComponent={()=><BottomHandler/>} */
-                /* onEndReached={onReach}
-                onEndReachedThreshold={0} */
-                /* canCancelContentTouches={false} */
-                /* nestedScrollEnabled={false} */
-                data={data}
-                renderItem={
-                    ({ item,index })=>
-                        <PostItem 
-                            onZooming =  {onZooming}
-                            zooming = {zooming}
-                            index ={index}
-                            uploading={uploading}
-                            navigation={navigation} 
-                            item={item}
-                            handleToggle={handleToggle} 
-                        />
-                }
-                keyExtractor={(item)=>item.id.toString()}
-                style={{flex:1}} 
-                
-                showsVerticalScrollIndicator={false} 
-                overScrollMode={'never'}
-                
+                    </>}
+                    /* ListFooterComponent={()=><BottomHandler/>} */
+                    /* onEndReached={onReach}
+                    onEndReachedThreshold={0} */
+                    /* canCancelContentTouches={false} */
+                    /* nestedScrollEnabled={false} */
+                    data={data}
+                    renderItem={
+                        ({ item, index }) =>
+                            <PostItem
+                                onZooming={onZooming}
+                                zooming={zooming}
+                                index={index}
+                                uploading={uploading}
+                                navigation={navigation}
+                                item={item}
+                                handleToggle={handleToggle}
+                            />
+                    }
+                    keyExtractor={(item) => item.id.toString()}
+                    style={{ flex: 1 }}
+
+                    showsVerticalScrollIndicator={false}
+                    overScrollMode={'never'}
+
                 />
             }
-            <BottomHandler/>
+            <BottomHandler />
             {
-                data==undefined
+                (data == undefined && !isShowEndHandler  )
                 &&
-                <DiscoverSkeletonView/>
-            }     
+                <DiscoverSkeletonView />
+            }
         </ScrollView>
     )
-    
+
 })
 
 const styles = StyleSheet.create({
-    shadowStyle:{
+    shadowStyle: {
         /* shadowColor:"#FFFFFF",
         shadowOpacity:1,
         shadowOffset:{
@@ -459,45 +511,45 @@ const styles = StyleSheet.create({
             height:5
         },
         shadowRadius:0, */
-        borderRadius:10,
-        backgroundColor:"#FFFFFF",
-        marginBottom:20
+        borderRadius: 10,
+        backgroundColor: "#FFFFFF",
+        marginBottom: 20
     },
-    itemContainer:{
-        width:screenSize.width-20,
-        flex:1,
-        marginBottom:5,
+    itemContainer: {
+        width: screenSize.width - 20,
+        flex: 1,
+        marginBottom: 5,
     },
-    itemContent:{
-        width:screenSize.width-20,
-        borderRadius:20,
-        flex:1,
-        paddingTop:20,
-        
+    itemContent: {
+        width: screenSize.width - 20,
+        borderRadius: 20,
+        flex: 1,
+        paddingTop: 20,
+
     },
-    iconStyle:{
-        width:35,
-        height:35,
-        borderRadius:30,
-        zIndex:0
+    iconStyle: {
+        width: 35,
+        height: 35,
+        borderRadius: 30,
+        zIndex: 0
     },
-    postImage:{
-        width:screenSize.width,
-        height:500,
-        zIndex:4
+    postImage: {
+        width: screenSize.width,
+        height: 500,
+        zIndex: 4
     },
-    shadowStylePostImage:{
-        width:screenSize.width-40,
-        borderRadius:10,
-        height:350,
-        zIndex:4
+    shadowStylePostImage: {
+        width: screenSize.width - 40,
+        borderRadius: 10,
+        height: 350,
+        zIndex: 4
     },
 
     // skeleton UI
 
-    textStyle:{
-        width:150,
-        height:20,
-        borderRadius:20
+    textStyle: {
+        width: 150,
+        height: 20,
+        borderRadius: 20
     }
 })
