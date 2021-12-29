@@ -7,7 +7,7 @@ import { screenSize } from '../../util/screenSize'
 import CachedImage from '../../components/CachedImage'
 import { userStore } from '../../mobx/store'
 import { base_url } from '../../api/config'
-import item from '../../components/FriendList/item'
+import item from '../Friend/FriendList/item'
 import MyFlatlist from './MyFlatlist'
 import { addComment, getAllComment } from '../../api/api'
 
@@ -69,8 +69,8 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                 username:userStore.userInfo.userInfo.username
             }
     
-            setData(()=>[obj,...data])
-            
+            setData(()=>[obj, ...data])
+            console.log([obj, ...data])
             //onChangeText(()=>'')
     
             addComment(userId,postId,value).then(res=>{
@@ -87,13 +87,10 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
     useEffect(() => {
         //getComment()
-        if(delayLoading){
-            setTimeout(()=>{
-                getComment()
-            },1000)
-        }else{
-            getComment()
-        }
+        
+        getComment()
+            
+        
     }, [])
 
    
@@ -307,7 +304,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                         onSubmitEditing={(value)=>submitMessage(value)}
                                                         /* onKeyPress={()=>clickedKeyBoard()} */
                                                         placeholder={"新增回應......"} 
-                                                        style={styles} 
+                                                        //style={styles} 
                                                          
                                                     />
                                                 
@@ -412,7 +409,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                         onSubmitEditing={(value)=>submitMessage(value)}
                                                         /* onKeyPress={()=>clickedKeyBoard()} */
                                                         placeholder={"新增回應......"} 
-                                                        /* style={styles} */ 
+                                                        //style={styles} 
                                                          
                                                     />
                                                 

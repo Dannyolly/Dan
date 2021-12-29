@@ -52,7 +52,7 @@ export default function index({ isOpen ,setIsOpen ,setBackgroundImage } ) {
                     refRBSheet.current.close()
                     return 
                 }
-                setBackgroundImage(res.uri)
+                
                 
                 
                 // 先存去本地.. 數據庫的是給其它用戶看
@@ -60,11 +60,15 @@ export default function index({ isOpen ,setIsOpen ,setBackgroundImage } ) {
                 
                 if(res!== undefined){
                     uploadBackgroundImage(res.uri, userStore.userInfo.userInfo.id)
-                    .then(res=>{
-                        console.log(res.data)
-                        if(res.data.msg==='上傳成功'){
+                    .then(res1=>{
+                        //console.log(res.data)
+                        setBackgroundImage(res.uri)
+                        if(res1.data.msg==='上傳成功'){
                             refRBSheet.current.close()
-                            defaultShowMessage(`${res.data.msg}`)
+                            defaultShowMessage({
+                                message:`${res1.data.msg}`
+                            })
+                            
                         }
                     }).catch(err=>{
                         console.log(err)

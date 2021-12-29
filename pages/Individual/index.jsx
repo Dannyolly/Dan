@@ -45,6 +45,10 @@ export default class index extends Component {
         
     } 
 
+
+    
+
+
     openSetting=()=>{
         //console.log('.....',this.state.opacity.__getValue())
         this.setState({setting:true},()=>{
@@ -331,7 +335,9 @@ export default class index extends Component {
                     </TouchableOpacity>
 
                     <TouchableOpacity 
-                    onPress={this.logOut}
+                    onPress={()=>{
+                        this.props.navigation.push('collection')
+                    }}
                     style={styles.settingContainer} 
                         activeOpacity={0.7}>
                         

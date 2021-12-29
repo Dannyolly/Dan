@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import { screenSize } from '../../util/screenSize';
 
 
-import { imageStore ,observer } from '../JustifyCenterImage/lock';
+import { imageStore ,observer } from '../../mobx/lock';
 import SwiperItem from './SwiperItem';
 /**
  * 
@@ -24,7 +24,7 @@ function index({ data,navigation ,style ,isJustify,doubleTapEvent, index , zoomi
 
     return (
         
-        <View style={ style!==undefined?{...style,transform:[{scale:index===imageStore.index?imageStore.scale+1:1}]}:styles.container}>
+        <View style={[style!==undefined?{...style,transform:[{scale:index===imageStore.index?imageStore.scale+1:1}]}:styles.container]}>
             <View style={style!==undefined?{...style}:styles.realContainer}>
                 <Swiper
                 key={data.length}

@@ -10,6 +10,7 @@ import { screenSize } from './util/screenSize';
 import { observer } from './mobx/store'
 import MessageIcon from './components/MessageIcon'
 import SplashView from './pages/SplashView'
+import MaskView from './components/MaskView'
 export default observer(()=>{
 
 
@@ -47,7 +48,7 @@ export default observer(()=>{
           && */
           <MainContent/>
         }
-
+        
         <FlashMessage 
         position="top" 
         statusBarHeight={0}

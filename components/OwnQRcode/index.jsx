@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import CachedImage from '../../components/CachedImage'
-import item from '../FriendList/item'
+import item from '../../pages/Friend/FriendList/item'
 
 export default observer(()=>{
     

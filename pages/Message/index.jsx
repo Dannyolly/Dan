@@ -109,6 +109,7 @@ export default function index( { route, navigation } ) {
 
         setMessages(previousMessages => GiftedChat.append(previousMessages, [formatMsg]))
 
+        
         DeviceEventEmitter.emit('refresh')
     }
     
@@ -271,6 +272,7 @@ export default function index( { route, navigation } ) {
 
         return ()=>{
             /* 取消連接  當關閉時... */
+            console.log('disconnect')
             ws.onmessage=initOnMessage
         }
         

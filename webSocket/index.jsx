@@ -81,14 +81,39 @@ const receiveChatMessage = async (msg) =>{
 
     showMessage({
         icon:'info',
+        /* style: {
+            height: 40,
+            backgroundColor: "#8C8E8F",
+            width: screenSize.width - 20,
+            borderRadius: 10,
+            paddingLeft: 20,
+            left: 10,
+            top: 40,
+        }, */
         message:formatMsg.user.name,
         description:flag?formatMsg.text:"[ 圖片 ]",
         renderFlashMessageIcon:(icon,style,image)=>
         <MessageIcon icon={icon} style={style} image={formatMsg.user.avatar}  
         />,
+        /* style:{
+            backgroundColor:"#8C8E8F",
+          height:75,
+          width:screenSize.width-20,
+          borderRadius:10,
+          paddingLeft:20,
+          left:10,
+          top:40,
+        } */
+        textStyle:{
+            padding:30,
+            paddingLeft:31,
+            paddingBottom:0
+        }
         /* titleStyle:{lineHeight:30,fontSize:18,fontWeight:'400'} */
         
     })
+    userStore.setUnReadMessageCount(userStore.unreadMessageCount + 1)
+    console.log(userStore.unreadMessageCount)
 }
 
 const initOnMessage = async (e)=>{

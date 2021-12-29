@@ -9,12 +9,13 @@ import { userStore,observer } from '../../mobx/store';
 import CachedImage from '../CachedImage'
 import { base_url } from '../../api/config';
 import PostItem from '../../pages/Discover/PostItem';
+import { imageStore } from '../../mobx/lock';
 
 export default observer(({ navigation })=>{
 
 
     return(
-        <View style={{width:screenSize.width,height:85,backgroundColor:"#FFFFFF",zIndex:0}}>    
+        <View style={{width:screenSize.width,height:85,backgroundColor:"#FFFFFF",zIndex:0,opacity:imageStore.isStart===true?0:1}}>    
             {/* <View onTouchEnd={()=>navigation.navigate('userInfo')} style={{position:'absolute',bottom:10,left:20}}>
                 {
                     userStore.userInfo!==undefined

@@ -10,8 +10,6 @@
  * @property {Array<UserInfo} userInfo
  */
 
-import { Component } from "react";
-
 
 /**
  * @typedef UserInfo
@@ -49,26 +47,73 @@ import { Component } from "react";
  */
 let a
 
-interface ChatMsgA {
-    
-    id?: number ,
 
-    text? : string ,
+/**
+ * @description UserInfo 用戶屬性
+ */
+interface UserInfo {
 
-    image? : string ,
+    id: number ,
 
-    isFinish? : boolean
+    cid : number ,
 
-    createdAt : Date , 
+    introduction : string ,
 
-    user : {
-        _id : number ,
-        id :number ,
-        name : string ,
-        avatar : string 
-    }
+    online : number ,
+
+    password : string ,
+
+    qrcode : string ,
+
+    username : string 
+
+
 }
 
+/**
+ * @description 格式化後的Post
+ */
+interface FormattedPost {
 
 
+    id : number , 
+
+    introduction :string ,
+
+    likeCount :number,
+
+    postDate : Date,
+
+    postImage : Array<String>,
+
+    userId : number ,
+
+    userInfo : Array<UserInfo>
+
+}
+
+/**
+ * @description 未格式化的Post
+ */
+interface Post {
+
+     id : number , 
+
+     introduction :string ,
+ 
+     likeCount :number,
+ 
+     postDate : Date,
+ 
+     postImage : Array<String>,
+
+     userId : number ,
+}
+
+export{
+    FormattedPost , 
+    UserInfo ,
+    Post
+
+}
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View ,Image,Animated, Vibration} from 'react-native'
 import { screenSize } from '../../util/screenSize'
 
 import CachedImage from '../../components/NonIdCachedImage'
-import { AntDesign, Feather , FontAwesome} from '../../util/Icon'
+import { AntDesign, Feather , FontAwesome, Ionicons} from '../../util/Icon'
 import ZoomableImage from '../../components/ZoomableImage'
 import { base_url } from '../../api/config'
 import { userStore } from '../../mobx/store'
@@ -17,10 +17,11 @@ import SkeletonView from '../../components/SkeletonView'
 import LikeAnimated from '../../components/LikeAnimated'
 import { showMessage } from 'react-native-flash-message'
 import { tapResponser ,messageResponser, selectionResponser} from '../../util/haptic'
-import { imageStore , observer } from '../../components/JustifyCenterImage/lock'
+import { imageStore , observer } from '../../mobx/lock'
 import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 import MaskView from '../../components/MaskView'
-
+import AutoSizeMaskView from './AutoSizeMaskView'
+import { LocalCacheManager } from '../../util/LocalCacheManager'
 /**
  * @typedef PostItemProps
  * @property {object} item
@@ -30,6 +31,7 @@ import MaskView from '../../components/MaskView'
  * @property {number}  currentTopOffset 
  * @property {boolean } zooming 
  * @property {(scale : number , index : number )=>void} onZooming 
+ * @property {()=>void} setOpenBottomSheet
  * @returns 
  */
 
@@ -46,7 +48,8 @@ function PostItem({
     isShadow, 
     currentTopOffset , 
     zooming ,
-    onZooming  
+    onZooming  ,
+    setOpenBottomSheet
 }) {
 
     
@@ -63,6 +66,9 @@ function PostItem({
     const [liked, setLiked] = useState(false)
     
     const [commentCount, setCommentCount] = useState(false)
+
+    const [isCollection, setIsCollection] = useState(false)
+
 
     const viewRef = useRef();
 
@@ -102,6 +108,7 @@ function PostItem({
 
     /**
      * @description 修正一下屬性...
+     * @deprecated
      */
     const correctItem=async ()=>{
 
@@ -129,6 +136,7 @@ function PostItem({
         
     }
 
+    
 
     /**
      * @description 檢查是否已點過讚...
@@ -168,6 +176,35 @@ function PostItem({
 
 
 
+    useEffect(()=>{
+
+        (async ()=>{
+
+            await checkIsCollection()?setIsCollection(()=>true):undefined
+
+        })()
+
+    },[realItem])
+
+
+    const checkIsCollection = async ( ) =>{
+        return await LocalCacheManager.checkPostSavedToCollection(userStore.userInfo.userInfo.id,item.id)
+    }
+
+    /**
+     * 保存到收藏...
+     */
+    const saveToCollection = async (  ) =>{
+
+        await tapResponser()
+        await LocalCacheManager.savePostToCollection(item, userStore.userInfo.userInfo.id)
+        setIsCollection(()=>true)
+        defaultShowMessage({
+            message:'收藏成功~'
+        })
+
+    }
+
   
 
     useEffect(() => {
@@ -179,8 +216,12 @@ function PostItem({
 
     return (
         
-            <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{},{zIndex:0}]}>
-
+            <View style={[styles.itemContainer,isShadow===true?styles.shadowStyle:{}]}>
+                {/* {
+                    index === 0
+                    &&
+                    <AutoSizeMaskView/>
+                } */}
                 {
             
                 realItem!==undefined
@@ -194,27 +235,32 @@ function PostItem({
                                     
                                     <Text style={{paddingLeft:10,lineHeight:40,fontWeight:'bold'}}>{realItem.userInfo[0].username}</Text>
                                 }
-                                <Feather name="more-horizontal" style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
+                                <Feather name="more-horizontal" onPress={setOpenBottomSheet} style={{position:'absolute',right:isShadow===true?0:-10,fontSize:24,lineHeight:40/* ,color:"#CDCDCD" */}} />
                             </View> 
-                        <View style={{zIndex:imageStore.index===index?10000:0}}  ref={c=>viewRef.current=c}  >
-                               
-                            <MySwiper 
-                                zooming={zooming} 
-                                onZooming={onZooming} 
-                                index={index} 
-                                currentTopOffset={currentTopOffset}  
-                                isJustify={isShadow}  
-                                data={realItem.postImage} 
-                                style={isShadow===true?styles.shadowStylePostImage:styles.postImage} 
-                                doubleTapEvent={doubleTapEvent} 
-                            />
+                        <View style={{zIndex:imageStore.index===index?1000000000000:0}}  ref={c=>viewRef.current=c}  >
+                            {
+                                
+                                <AutoSizeMaskView index={index}  />
+                            }
+                            <View style={{zIndex:2}}>
+                                <MySwiper 
+                                    zooming={zooming} 
+                                    onZooming={onZooming} 
+                                    index={index} 
+                                    currentTopOffset={currentTopOffset}  
+                                    isJustify={isShadow}  
+                                    data={realItem.postImage} 
+                                    style={isShadow===true?styles.shadowStylePostImage:styles.postImage} 
+                                    doubleTapEvent={doubleTapEvent} 
+                                />
+                            </View>
                         </View>
                         
                         {/* LIke VIew */}
                         {
                         showLike===true
                         &&
-                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:9999,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
+                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:10000,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
                             <LikeAnimated  />
                         </View>
                         }
@@ -223,7 +269,12 @@ function PostItem({
                         <AntDesign  name={liked?'heart':'hearto'} style={{fontSize:23,marginRight:20,color:liked?"#FF1C45":"black",fontWeight:'500'}} />
                         <FontAwesome name="comment-o" style={{fontSize:23,marginRight:20,fontWeight:'500'}} />
                         <Feather name="send" style={{fontSize:22,fontWeight:'500',paddingTop:3}} />
-                        <Feather name="bookmark" style={{fontSize:23,fontWeight:'500',position:'absolute',right:-5,bottom:0}} />
+                        {
+                            isCollection?
+                            <FontAwesome name="bookmark" style={{color:'#28C1FD',fontSize:26,fontWeight:'900',position:'absolute',right:-5,bottom:-3}} />
+                            :
+                            <FontAwesome name="bookmark-o" onPress={saveToCollection} style={{fontSize:26,fontWeight:'900',position:'absolute',right:-5,bottom:-3}} />
+                        }
                     </View>
                     <Text style={{padding:15,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
                         {realItem.likeCount} 讚好

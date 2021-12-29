@@ -7,7 +7,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import Octicons from 'react-native-vector-icons/Octicons'
 /// <reference path="./LocalCacheManager.js" />
 
 /**
@@ -28,5 +28,6 @@ export {
     SimpleLineIcons,
     Entypo,
     MaterialIcons,
-    FontAwesome
+    FontAwesome,
+    Octicons
 }

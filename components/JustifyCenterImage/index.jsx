@@ -10,7 +10,7 @@ import MaskView from '../MaskView'
 
 import BottomSheep from '../BottomSheet/MessageImage'
 import OriginImage from './OriginImage';
-import {imageStore } from './lock'
+import {imageStore } from '../../mobx/lock'
 
 
 /** @param {{imageUrl :String}} */

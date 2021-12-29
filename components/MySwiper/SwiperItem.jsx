@@ -36,6 +36,8 @@ export default function SwiperItem({
                     />
                     :
                     <ZoomableImage 
+                        usingOnDiscover={true}
+                        closeTabBarWhenZooming={true}
                         autoReset={true}
                         zooming={zooming} 
                         onZooming={onZooming} 

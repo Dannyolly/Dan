@@ -4,12 +4,12 @@ import { screenSize } from '../../util/screenSize'
 /**
  * 
  * @param {{
- *      style :StyleProp<ViewStyle> ,
- *      visible : boolean,
- *      opacity : number ,
- *      color : string ,
- *      zIndex : number , 
- *      height : number
+ *      style? :StyleProp<ViewStyle> ,
+ *      visible? : boolean,
+ *      opacity? : number ,
+ *      color? : string ,
+ *      zIndex? : number , 
+ *      height? : number
  * 
  * }} 
  * @returns 

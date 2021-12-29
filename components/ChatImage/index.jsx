@@ -6,7 +6,7 @@ import CacheImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config'
 import ZoomableImage from '../ZoomableImage'
 
-import { imageStore } from '../JustifyCenterImage/lock'
+import { imageStore } from '../../mobx/lock'
 /**
  * @typedef MyImageProps
  * @property {String} image
@@ -62,6 +62,8 @@ const index = (props) => {
                     left:20,top:-10, */
                     
                 }}  
+                closeTabBarWhenZooming={false}
+                usingOnDiscover={false}
             />
             :
             <ZoomableImage 
@@ -72,7 +74,8 @@ const index = (props) => {
                     width:220,height:220,borderRadius
                     
                 }}   
-                
+                closeTabBarWhenZooming={false}
+                usingOnDiscover={false}
                 autoReset={false}
             />
             )

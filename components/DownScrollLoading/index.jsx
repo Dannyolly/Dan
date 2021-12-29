@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View ,RefreshControl} from 'react-native'
-
-export default class index extends Component {
+import {imageStore , observer } from '../../mobx/lock'
+ class index extends Component {
 
     state={
         isRefreshing:false
@@ -47,3 +47,5 @@ export default class index extends Component {
         )
     }
 }
+
+export default index

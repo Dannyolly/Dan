@@ -117,7 +117,9 @@ export default observer(({ route, navigation })=>{
         let jsonRes = await AsyncStorage.getItem('userInfo')
         let res =JSON.parse(jsonRes)
         addRequest(res.userInfo.id,item.id,value)  
-        defaultShowMessage('已提交好友請求')
+        defaultShowMessage({
+            message:'已提交好友請求'
+        })
 
     }
 
@@ -260,7 +262,7 @@ export default observer(({ route, navigation })=>{
         <View  style={styles.container}>
 
             <Animated.ScrollView 
-            /* style={{flex:1}} */
+            style={{flex:1}}
             ref={c=>onScrollRef.current=c}
             overScrollMode={'always'}
             scrollEventThrottle={16}
@@ -294,7 +296,7 @@ export default observer(({ route, navigation })=>{
                                 width:screenSize.width,marginBottom:20,
                                 height:screenSize.height*0.38,alignItems:'center',
                                 transform:[{
-                                    translateY:Animated.divide(zoomOffset,1)
+                                    translateY:Animated.divide(Animated.add(zoomOffset,-20),1)
                                 }]
                             }}>
                             <Animated.Image source={{

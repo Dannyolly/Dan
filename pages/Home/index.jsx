@@ -17,22 +17,24 @@ import { useNavigation } from '@react-navigation/native'
 import { EventEmitter } from '@unimodules/react-native-adapter'
 
 import { userStore,observer } from '../../mobx/store'
-import { getMsgFormat } from '../Message/MessageHandler'
+import { getMsgFormat, MessageHandler } from '../Message/MessageHandler'
 import { base_url } from '../../api/config'
-import { getMostUnReadMessageArr } from './homeUtils'
+import { dateCompare, getMostUnReadMessageArr } from './homeUtils'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { ChatMsg } from '../Message/MessageHandler'
-
+import DownScrollLoading from '../../components/DownScrollLoading'
 export default observer(()=>{
 
     const [chatList, setChatList] = useState(undefined)
 
     const navigation = useNavigation()
 
-    const [userInfo, setUserInfo] = useState(undefined)
+    //const [userInfo, setUserInfo] = useState(undefined)
     
+    const userInfo = useRef(undefined)
+
     /*  這個是用來監聽信息 */
     let eventEmitter
 
@@ -40,11 +42,6 @@ export default observer(()=>{
     let refreshEmitter
 
     const chatListRef = useRef()
-
-    /**    這個是記錄有多少新信息   */
-    const [remindList, setRemindList] = useState([])
-
-    const remindListRef =useRef()
 
     // scrollRef
     const onScrollRef = useRef()
@@ -58,24 +55,37 @@ export default observer(()=>{
     const currentTopOffset = useRef(new Animated.Value(0)).current
     
     const isFoundUnReadMessage = useRef(false)
+
+
     /**
     * @description 這里只是為了找出各聊天的最後一句和跟多少聊天過,并列出所有列表
     * @mark        可視為刷新函數...
     */
     const findOutChatList = async ()=>{
-        let userInfo = await getUserMainInfo()  
-        //console.log('userinfo',userInfo)
-        setUserInfo(()=>userInfo.userInfo)
-        let { data } = await getAllFriend(userInfo.userInfo.id)
+        let a =new Date().getTime()
+        console.log(a)
+
+        /** @type {{ userInfo  : import('../../api/api').UserInfo}} */
+        let userInfoTemp  
+        if(userInfo.current ===undefined){
+            userInfoTemp = userStore.userInfo
+            
+            userInfo.current  = userInfoTemp
+        }else{
+            userInfoTemp = userInfo.current
+        }
+
+        let { data } = await getAllFriend(userInfoTemp.userInfo.id)
+
         let messageArr = [] 
-        let remindListTemp =  []
         for (const item of data) {
-           // console.log(item)
-            let a = await AsyncStorage.getItem(`${item.id}msg${userInfo.userInfo.id}`)
-            //console.log(a);
-            let itemDetails = JSON.parse(a)
+
+
+            let itemDetails = await MessageHandler.getTheMessageFromLocal(item.id , userInfoTemp.userInfo.id)
+
             if(itemDetails===null){
                 // 兩者沒有對話...
+
             }else{
                 // 其中一方對話或兩者都對話...
                 let obj={
@@ -85,47 +95,56 @@ export default observer(()=>{
                 let {data} = await searchUser(`id=${item.id}`)
                 let formatInfo  = getMsgFormat(item.msg,data[0],1)
                 obj.objectInfo=formatInfo.user
-                //console.log(obj)
                 messageArr.push(obj)
-                remindListTemp.push(0)
             }
             
         }
-        setRemindList(()=>remindListTemp)
-        setChatList(()=>messageArr)
-        //console.log('messageArr',messageArr)
-        messageArr  = messageArr.sort((a, b)=>{
-            let dateA = Date.parse(a.lastMsgDetail.createdAt)
-            let dateB = Date.parse(b.lastMsgDetail.createdAt)
-           // console.log(dateA , dateB ,dateA > dateB)
-            return dateA > dateB
-        })
-       // console.log('messageArr',messageArr)
+        let b =new Date().getTime()
+            console.log(b)
+        //  排序...
+        messageArr  = messageArr.sort(dateCompare)
+        console.log(messageArr)
+        if(messageArr.length !== 0){
+
+            setChatList(()=>messageArr)
+        
+        }else{
+            // 新用戶....
+            console.log('new User')
+            findOutUnReadMessage()
+
+        }
+        
         chatListRef.current=messageArr
-        remindListRef.current=remindListTemp
+        console.log('findOutChatList')
+
+        
     }
 
     /**
      * @description 找出離線收到的信息,并展示出頁面...
      */
     const findOutUnReadMessage = async ()=>{
-        let userInfo = await getUserMainInfo()
+        let userInfo = userStore.userInfo
 
         let { data }  = await getAllNotReceiveMsg(userInfo.userInfo.id)
 
+        // 記錄新信息是甚麼的數組, 先進行初始化
+        let newMessageList = await getMostUnReadMessageArr()
+        
+        // 是記錄原數組沒有的人... 比如沒人跟此人對過話,則應從後方推入
+        let neverCommunicatedList = []
+        
+        // 最後用來排序的數組...
+        let sortList = []
+
+        //console.log(data,newMessageList[0].length)
 
         /**
          * @step 1 
-         * @description 先分類... 這里先假設每個朋友都有談話..後尾會補上
+         * @description 先分類并排序chatList(只記錄最後一條信息)  ( 這里先假設每個朋友都有談話..後尾會補上 )
          * @tips        根據每個朋友的ID再去匹配1,然後找出每個信息的所在地...
          */
-
-        // 記錄新信息是甚麼的數組
-        let listTemp = await getMostUnReadMessageArr()
-        
-        // 記錄原數組...
-        let realList = []
-        
         if(data!==undefined || data.length===0){
             for (const item of data) {
                 // 所在地方...
@@ -136,22 +155,24 @@ export default observer(()=>{
                  *      這里是找一下chatlist chatlist也是只記一下最後消息
                         看看有沒有跟他對話,有則往數組加上...
                  */
-                for( const list of chatList ) {
+                if(chatList!==undefined){
+                    for( const list of chatList ) {
                     
-                    if(list.objectInfo!==undefined &&list.objectInfo.id===item.sendUserId){
-                        listTemp[index].push(getMsgFormat(item.msg,item))
-                        break;
-                    }
-                    index+=1
-                } 
+                        if(list.objectInfo!==undefined &&list.objectInfo.id===item.sendUserId){
+                            newMessageList[index].push(getMsgFormat(item.msg,item))
+                            break;
+                        }
+                        index+=1
+                    } 
+                }
                 
                 // 在chatList找不到 ,則往chatList推一個...
-                if(listTemp[index].length===0){
-                    listTemp[index].push(getMsgFormat(item.msg,item))
+                if(newMessageList[index].length===0){
+                    newMessageList[index].push(getMsgFormat(item.msg,item))
                     
                     
                     let obj={
-                        lastMsgDetail:listTemp[index][0],
+                        lastMsgDetail:newMessageList[index][0],
                         objectInfo:undefined
                     }
 
@@ -160,64 +181,94 @@ export default observer(()=>{
                     obj.objectInfo=formatInfo.user
 
                     // 格式化後,則往數組push一個obj...
-                    let newChatList = [...chatList]
+                    let newChatList = []
                     newChatList.push(obj)
-                    realList.push([...newChatList])
-                    //setChatList(()=>newChatList)
-                    //chatListRef.current=newChatList
+                    neverCommunicatedList.push(...newChatList)
                 }
             }
             
             // 排序
-            //console.log('listTemp',listTemp)
-            let sortList = [...realList , ...chatList]
-            
+            if(chatList!==undefined){
+                
+                sortList = [...neverCommunicatedList , ...chatList]
 
-            sortList =  sortList.sort((a,b)=>{
-                let dateA = Date.parse(a.lastMsgDetail.createdAt)
-                let dateB = Date.parse(b.lastMsgDetail.createdAt)
-                console.log(dateA , dateB ,dateA - dateB)
-                if(dateA - dateB>0){
-                    return -1 
-                }else if(dateA - dateB <0){
-                    return 1
-                }else{
-                    return 0
+            }else{
+
+                sortList = [...neverCommunicatedList ]
+            }
+           // console.log(neverCommunicatedList)
+            //console.log('sortList',sortList)
+            // 先把新信息插進去...
+            if(sortList.length === 1 ){
+                // 只有一條信息,就不排了...
+                isFoundUnReadMessage.current = true
+
+            }else{
+
+                for (const index in sortList) {
+                    if(newMessageList[index].length !== 0 ){
+                        sortList[index].lastMsgDetail = newMessageList[index][0]
+                    }
                 }
-            })
-            isFoundUnReadMessage.current = true
-            console.log('sortList' , sortList)
+                sortList =  sortList.sort(dateCompare)
+                isFoundUnReadMessage.current = true
+            }
             setChatList(()=>[...sortList])
+            
         }
         
 
-        /* console.log('hi??'); */
-        userStore.setUnReadMessage(listTemp,undefined,undefined,true)
+        /**
+         * @step 2
+         * @description 這里是因為原數組換了位置, 提示新信息數組也應一起換位置
+         */
+        let unReadMessageList = [...newMessageList]
+
+        if(unReadMessageList.length !==1 ){
+            unReadMessageList  = sortUnreadMsg(sortList ,newMessageList ,unReadMessageList )
+        }
+        
         
 
+        /**
+         * @step 3
+         * @description 設置
+         */
+        userStore.setUnReadMessage(unReadMessageList,undefined,undefined,true)
         userStore.calculateUnreadMsgCount()
 
-        
+       // console.log('findOutUnReadMessage')
+    }
+
+    const sortUnreadMsg = (sortList , newMessageList , unReadMessageList ) =>{
+        // 先清空...
+        for (const index in unReadMessageList) {
+            unReadMessageList[index] = []
+        }
+
+
+        for (const sortListIndex in sortList) {
+            for (const newMessageListIndex in newMessageList) {
+                if(newMessageList[newMessageListIndex].length === 0 ){
+                    continue
+                }
+                if(newMessageList[newMessageListIndex][0]._id === sortList[sortListIndex].lastMsgDetail._id){
+                    unReadMessageList[sortListIndex] = newMessageList[newMessageListIndex]
+
+                }
+            }
+        }
+        return unReadMessageList
     }
 
     const getData=async ()=>{
         /**
          * @step1 
          */
-        findOutChatList()
+        await findOutChatList()
 
         
     }
-
-    useEffect(() => {
-        /**
-         * 查找多少未讀消息...
-         */
-        if(chatList!==undefined && !isFoundUnReadMessage.current){
-            findOutUnReadMessage()
-        }
-    
-    }, [chatList])
 
 
     /**
@@ -225,11 +276,10 @@ export default observer(()=>{
      */
     const findOutMessageLocation = async (msgInfo) => {
         let list = chatListRef.current
-        let remindListTemp = [...remindListRef.current]
         //用來記錄數組第幾個信息來信息了...
         let listIndex = 0;
         //下列這種情況是當在兩方發過信息時的情況...
-        let userInfo = await getUserMainInfo()
+        let userInfo = userStore.userInfo
         
         let a = await AsyncStorage.getItem(`${msgInfo.user.id}msg${userInfo.userInfo.id}`)
         let chatHistory = JSON.parse(a)
@@ -254,7 +304,6 @@ export default observer(()=>{
             }
             setChatList(()=>newChatListArr)
             chatListRef.current=newChatListArr
-            remindListTemp[newChatListArr.length-1]+=1
             listIndex=newChatListArr.length-1
             
 
@@ -263,7 +312,6 @@ export default observer(()=>{
 
             for (const index in list) {
                 if (msgInfo.user.id === list[index].objectInfo.id) {
-                    remindListTemp[index]+=1
                     break;
                 }
                 listIndex++
@@ -275,14 +323,14 @@ export default observer(()=>{
         }
         
         // 排序一下....
-        console.log('remind ~~~~~',remindListTemp)
+        //console.log('remind ~~~~~',remindListTemp)
 
 
-        setRemindList(()=>remindListTemp)
-        remindListRef.current=remindListTemp
+        //setRemindList(()=>remindListTemp)
+        //remindListRef.current=remindListTemp
 
         /* 設置多少個信息未看 */
-        userStore.setUnReadMessage({...msgInfo},listIndex)
+        userStore.setUnReadMessage({...msgInfo},0)
         userStore.calculateUnreadMsgCount()
 
 
@@ -320,7 +368,10 @@ export default observer(()=>{
     }
 
     useEffect(() => {
+
+
         getData()
+
         eventEmitter = DeviceEventEmitter.addListener("receiveMsg",function (msgInfo){
             //console.log(msgInfo)
             findOutMessageLocation(msgInfo)
@@ -341,7 +392,16 @@ export default observer(()=>{
         }
     }, [])
 
-   
+    useEffect(() => {
+        /**
+         * 查找多少未讀消息...
+         */
+        if(chatList!==undefined && !isFoundUnReadMessage.current){
+            console.log('??')
+            findOutUnReadMessage()
+        }
+    
+    }, [chatList])
 
     const ListHeader = ()=>{
         return (
@@ -358,7 +418,7 @@ export default observer(()=>{
 
 
     return (
-        <SafeAreaView style={{flex:1,backgroundColor:"#FFFFFF"}}>
+
             <View style={{width:screenSize.width,height:screenSize.height,backgroundColor:"#FfFfFf"}}>
             {/* header */}
             
@@ -366,9 +426,10 @@ export default observer(()=>{
                 chatList!==undefined
                 && 
                 <Animated.FlatList 
-                style={{zIndex:1}}
+                overScrollMode={'always'}
                 ref={c=>onScrollRef.current=c}
                 data={chatList}
+                refreshControl={props=><DownScrollLoading  {...props} />}
                 onScroll={
                     Animated.event(
                     [
@@ -380,15 +441,18 @@ export default observer(()=>{
                 
                     )
                 } 
-                ListHeaderComponent={ListHeader}
+                //ListHeaderComponent={ListHeader}
                 /* scrollEnabled={false} */
-                renderItem={({ item,index })=><Item 
-                isSwipe={scrollRef.current} 
-                setOnScroll={handleToggle}
-                item={item} 
-                index={index} 
-                userInfo={userInfo}  
-                navigation={navigation} /> }
+                renderItem={({ item,index })=>
+                <Item 
+                    isSwipe={scrollRef.current} 
+                    setOnScroll={handleToggle}
+                    item={item} 
+                    index={index} 
+                    userInfo={userInfo}  
+                    navigation={navigation} 
+                /> 
+            }
                 keyExtractor={item=>{
                     if(item.objectInfo!==undefined){
                         return item.objectInfo.id.toString()
@@ -400,6 +464,6 @@ export default observer(()=>{
 
 
             </View>
-        </SafeAreaView>
+        
     )
 })

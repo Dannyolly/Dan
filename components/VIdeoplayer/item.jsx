@@ -102,7 +102,7 @@ export default  item = observer(({currentPage , index })=>{
     },[currentPage])
     
 
-    navigation.canGoBack()
+    //navigation.canGoBack()
 
     return (
             <View style={{width:screenSize.width,height:screenSize.height}} key={index.toString()}>
@@ -110,7 +110,7 @@ export default  item = observer(({currentPage , index })=>{
                     <View>
                             <Animated.View style={{transform:[{translateY:0}]}} >
                                 <View onTouchEnd={()=>{
-                                    console.log(navigation.canGoBack())
+                                    ///console.log(navigation.canGoBack())
                                     navigation.navigate('discover')
                                 }} style={{position:'absolute',left:10,top:10,width:100,height:70,paddingTop:30,zIndex:1,flexDirection:'row'}}>
                                     <Entypo  name="chevron-small-left" style={{color:"#FFFFFF",fontSize:30,lineHeight:35}}  />

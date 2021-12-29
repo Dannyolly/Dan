@@ -19,13 +19,15 @@ import SkeletonView from '../../components/SkeletonView'
 import DiscoverSkeletonView from '../../components/DiscoverSkeletonView'
 import ShortVideo from './ShortVideo'
 import { useNavigation } from '@react-navigation/native'
-import { imageStore } from '../../components/JustifyCenterImage/lock'
+import { imageStore } from '../../mobx/lock'
 import DiscoverHeader from '../../components/Header/Discover'
 import MaskView from '../../components/MaskView'
 import { LocalCacheManager } from '../../util/LocalCacheManager'
 import { defaultShowMessage, getUserMainInfo } from '../../util/function'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import AutoZIndexView from './AutoZIndexView'
+import AutoSizeMaskView from './AutoSizeMaskView'
+import DiscoverBottomSheet from '../../components/BottomSheet/DiscoverBottomSheet'
 /**
  * 此為處理後的 POST
  * @typedef Post
@@ -101,6 +103,11 @@ export default observer(({ navigation, onlyFlatList }) => {
 
     // 沒有任何信息狀態...
     const [nothing, setNothing] = useState(false)
+
+    const contentSizeRef = useRef({height:0})
+
+
+    const [isOpen, setIsOpen] = useState(false)
 
     const handleToggle = () => {
         if (!setting.current) {
@@ -192,12 +199,12 @@ export default observer(({ navigation, onlyFlatList }) => {
      * @return null
      */
     const getData = async () => {
-        if (!isAllCheckOut.current) {
+        if (!isAllCheckOut.current || isNewMessage.current === undefined  ) {
             return
         }
 
 
-        /* console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current ) */
+        console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current )
         if (isNewMessage.current === true) {
 
             // 有新POST
@@ -244,7 +251,7 @@ export default observer(({ navigation, onlyFlatList }) => {
                 await
                     LocalCacheManager.
                         getThePostFromLocalByCurrentPage(id ,currentPage.current)
-            console.log(posts.length, isAllCheckOut.current)
+            console.log(newMessageCount.current,posts.length, isAllCheckOut.current)
             if (posts === null && isAllCheckOut.current === true || posts.length === 0 && isAllCheckOut.current) {
                 // 沒有更多post了...
                 // undefined 表示完了...
@@ -256,6 +263,7 @@ export default observer(({ navigation, onlyFlatList }) => {
 
             let temp = dataRef.current !== undefined ? [...dataRef.current, ...posts] : [...posts]
             currentPage.current++
+            console.log(temp)
             setData(() => [...temp])
             dataRef.current = temp
         }
@@ -294,23 +302,38 @@ export default observer(({ navigation, onlyFlatList }) => {
         }
     }
 
-    /** @param {{ nativeEvent : NativeSyntheticEvent<NativeScrollEvent>}} */
-    const onScroll = async ({ nativeEvent }) => {
+    /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
+    const onScroll = async ( event ) => {
+        const { nativeEvent } =  event
         const { contentOffset, contentSize, layoutMeasurement } = nativeEvent
+        //console.log(contentSize.height)
+        imageStore.setMaskViewHeight(contentSize.height)
+        
 
-
-        //console.log(contentOffset.y , contentSize.height-screenSize.height )
-        // reach the end of scrollView 
-        if (contentSize.height - screenSize.height - contentOffset.y <= 0 && !bottomLockRef.current) {
-            // lock
-            bottomLockRef.current = true
-
-            // console.log('reach');
-            await onReach()
-            setTimeout(() => {
-                bottomLockRef.current = false
-            }, 1000)
-
+        if(Platform.OS === 'ios'){
+            if (contentSize.height - screenSize.height - contentOffset.y <= 0 && !bottomLockRef.current) {
+                // lock
+                bottomLockRef.current = true
+    
+                // console.log('reach');
+                await onReach()
+                setTimeout(() => {
+                    bottomLockRef.current = false
+                }, 1000)
+    
+            }
+        }else{
+            if (contentSize.height - screenSize.height - contentOffset.y <= 70 && !bottomLockRef.current) {
+                // lock
+                bottomLockRef.current = true
+    
+                // console.log('reach');
+                await onReach()
+                setTimeout(() => {
+                    bottomLockRef.current = false
+                }, 1000)
+    
+            }
         }
 
     }
@@ -328,7 +351,7 @@ export default observer(({ navigation, onlyFlatList }) => {
                 if(!nothing){
                     console.log('getData')
                     //console.log(await AsyncStorage.getAllKeys())
-                    //console.log(await AsyncStorage.removeItem(`2Post`))
+                    //console.log(await AsyncStorage.removeItem(`3Post`))
                     await getData()
                 }
                 
@@ -338,6 +361,7 @@ export default observer(({ navigation, onlyFlatList }) => {
             //cachePost() 
         }
     }, [JSON.stringify(userStore)])
+
 
     useEffect(() => {
 
@@ -365,6 +389,11 @@ export default observer(({ navigation, onlyFlatList }) => {
             listener.current.remove()
         }
     }, [])
+
+
+    const isOpenBottomSheet = () =>{
+        setIsOpen(()=>!isOpen)
+    }
 
 
      /** 
@@ -399,7 +428,7 @@ export default observer(({ navigation, onlyFlatList }) => {
                 {
                     isShowEndHandler === true
                     &&
-                    <View style={{ width: screenSize.width - 20, height: 200, justifyContent: 'center', alignItems: 'center' }}>
+                    <View  style={{ width: screenSize.width - 20, height: 200,paddingBottom:100, justifyContent: 'center', alignItems: 'center' }}>
 
                         <Image source={require('../../assets/home.png')} style={{ width: 100, height: 100, borderRadius: 50 }} />
                         <Text style={{ fontWeight: '500' }}>沒有更多信息了~</Text>
@@ -411,12 +440,15 @@ export default observer(({ navigation, onlyFlatList }) => {
         )
     }
 
+
+    
+
     return (
         <ScrollView
 
             
             ref={c => onScrollRef.current = c}
-            /* nestedScrollEnabled={false} */
+
             onScrollEndDrag={(event) => {
                 isSetTimeout.current = false
             }}
@@ -428,52 +460,48 @@ export default observer(({ navigation, onlyFlatList }) => {
 
                 lastY.current = event.nativeEvent.contentOffset.y
             }}
-            /* canCancelContentTouches={false} */
+
             style={{
                 width: screenSize.width, height: screenSize.height,
-                backgroundColor: "#FFFFFF", paddingBottom: 0
+                backgroundColor: "#FFFFFF", paddingBottom: 200
             }}
-            /* stickyHeaderIndices={[0]} */
+
             stickyHeaderHiddenOnScroll={true}
             onScroll={onScroll}
-
+            overScrollMode={'always'}
             scrollEventThrottle={0}
+            nestedScrollEnabled={true}
+            refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
+            showsVerticalScrollIndicator={false}
+            /* stickyHeaderIndices={[0]} */
         >
 
             <DiscoverHeader navigation={navigation} />
 
+            <ShortVideo navigation={navigation} />
 
-
+            <DiscoverBottomSheet 
+                isOpen={isOpen} 
+                setIsOpen={isOpenBottomSheet}  
+            />
+            
             {
                 data !== undefined
                 &&
                 <FlatList
-                    /* stickyHeaderIndices={[0]}
-                    stickyHeaderHiddenOnScroll */
-
-                    /* invertStickyHeaders */
-                    /* scrollEnabled={!zooming} */
                     refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
                     ListHeaderComponent={() => <>
+                        
+                        
 
-                        <ShortVideo navigation={navigation} />
-                        {/* <MaskView  
-                        visible={true} 
-                        opacity={0.7} 
-                        zIndex={10050}
-                        color='black'
-                        height={100000}
-                    /> */}
                     </>}
-                    /* ListFooterComponent={()=><BottomHandler/>} */
-                    /* onEndReached={onReach}
-                    onEndReachedThreshold={0} */
-                    /* canCancelContentTouches={false} */
-                    /* nestedScrollEnabled={false} */
+                    CellRendererComponent={AutoZIndexView}
+                    
                     data={data}
                     renderItem={
                         ({ item, index }) =>
                             <PostItem
+                                setOpenBottomSheet={isOpenBottomSheet}
                                 onZooming={onZooming}
                                 zooming={zooming}
                                 index={index}

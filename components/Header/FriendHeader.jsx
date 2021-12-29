@@ -62,14 +62,14 @@ export default observer( ({ navigation })=>{
                     {
                         userStore.friendRequestDidNotReadNumber!==0
                         &&
-                        <View style={{justifyContent:"center",alignItems:'center',position:"absolute",right:60,zIndex:1,top:0,left:30,width:15,height:15,borderRadius:7.5,backgroundColor:"#3DA3FF"}}>
+                    <View style={{paddingTop:6,justifyContent:"center",alignItems:'center',position:"absolute",right:60,zIndex:1,top:0,left:30,width:15,height:15,borderRadius:7.5,backgroundColor:"#3DA3FF"}}>
                         <Text style={{color:"#FFFFFF",fontSize:10}}>{userStore.friendRequestDidNotReadNumber}</Text>
                     </View>
                     }
                     
 
 
-                <View style={{marginLeft:15,width:35,height:35,borderRadius:20,backgroundColor:"#03A9F3",justifyContent:'center',alignItems:"center"}}>
+                <View style={{paddingTop:6,marginLeft:15,width:35,height:35,borderRadius:20,backgroundColor:"#03A9F3",justifyContent:'center',alignItems:"center"}}>
                     <AntDesign
                         onPress={()=>navigation.navigate('addUser')}
                         name='adduser'

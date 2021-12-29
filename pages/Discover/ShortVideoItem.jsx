@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { screenSize } from '../../util/screenSize'
 
@@ -27,6 +27,6 @@ const ShortVideoItem = ( { navigateToVideoPage ,item ,index , isScroll} ) => {
     )
 }
 
-export default ShortVideoItem
+export default memo( ShortVideoItem , ()=>false)
 
 const styles = StyleSheet.create({})

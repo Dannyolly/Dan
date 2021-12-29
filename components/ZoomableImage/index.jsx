@@ -5,6 +5,7 @@ import { View, Text ,PanResponder,Animated,Image,StyleSheet, Dimensions
   ViewStyle
   , ScrollView,
   MutableRefObject,
+  DeviceEventEmitter,
   
 } from 'react-native'
 
@@ -21,7 +22,7 @@ import { userStore } from '../../mobx/store';
 
 import ImageZoom,{IOnMove} from 'react-native-image-pan-zoom'
 
-import { imageStore ,observer  } from '../JustifyCenterImage/lock';
+import { imageStore ,observer  } from '../../mobx/lock';
 import { Easing } from 'react-native';
 
 /**
@@ -36,9 +37,12 @@ import { Easing } from 'react-native';
  *  onZooming : (scale :number , index:number )=>void 
  *  index : number , 
  *  autoReset? : boolean  ,
+ *  closeTabBarWhenZooming? :boolean,
+ *  usingOnDiscover? :boolean
  * }}
  */
  function index( { 
+
                             uri,  
                             style, 
                             isSwipe, 
@@ -48,7 +52,9 @@ import { Easing } from 'react-native';
                             zooming,
                             onZooming,
                             index,
-                            autoReset
+                            autoReset,
+                            closeTabBarWhenZooming,
+                            usingOnDiscover,
                                   } ) {
 
 
@@ -144,7 +150,7 @@ import { Easing } from 'react-native';
     return (
       <TapGestureHandler onActivated={doubleTapEvent}  numberOfTaps={2} >
         <Animated.View  >
-        <Animated.View style={[StyleSheet.absoluteFill,{width:style.width, height:style.height}, 
+        <Animated.View style={[/* StyleSheet.absoluteFill, */{width:style.width, height:style.height}, 
             ]}>
             <ScrollView 
               contentContainerStyle={{
@@ -174,17 +180,25 @@ import { Easing } from 'react-native';
                 }
                  
                }}
-               onResponderStart={
-                 e=>{
-                    /* console.log('start!') */
-                    
-                 }
-               }
+
+              onResponderGrant={
+                e=>{
+                  
+                  //imageStore.setIsStart(true)
+                  //console.log('start!',imageStore.isStart)
+                  //console.log('start')
+                  imageStore.setIndex(index)
+                  usingOnDiscover===true?imageStore.setIsStart(true):undefined
+                  closeTabBarWhenZooming===true?DeviceEventEmitter.emit('setOpacity',0):undefined
+                }
+              }
+
                onResponderEnd={e=>{
                  /**
                   * 這里是給discover 用的
                   */
-                 console.log('??')
+                  //console.log('close')
+                  usingOnDiscover===true?imageStore.setIsStart(false):undefined
                   if(autoReset){
   
                       ref.current.setNativeProps({
@@ -199,9 +213,9 @@ import { Easing } from 'react-native';
                           imageStore.setScale(0)
                       },2000 )
                   }
+                  closeTabBarWhenZooming===true?DeviceEventEmitter.emit('setOpacity',1):undefined
+         
                }}
-               /* onResponderTerminationRequest={e=>true} */
-               
               scrollEventThrottle={1}
              >
                 

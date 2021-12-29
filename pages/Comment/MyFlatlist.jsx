@@ -24,7 +24,7 @@ const MyFlatList = ({ data ,offset,collapseKeyBoard }) => {
             setTimeout(()=>{
                 setDelay(()=>false)
                 //console.log('set delay')
-            },2000)
+            },100)
         }
     }, [data])
 
@@ -38,8 +38,16 @@ const MyFlatList = ({ data ,offset,collapseKeyBoard }) => {
                         <FlatList
                         showsVerticalScrollIndicator={false}
                         data={data}
-                        renderItem={({item,index})=><Item collapseKeyBoard={collapseKeyBoard} offset={offset} item={item} />}
-                        keyExtractor={(item)=>item.userId}
+                        renderItem={({item,index})=>
+                                <Item 
+                                    collapseKeyBoard={collapseKeyBoard} 
+                                    offset={offset} 
+                                    item={item}
+                                />
+                        }
+                        keyExtractor={(item)=>
+                            Date.parse(item.commetDate).toString()
+                        }
                         /> 
                         :
                         <View style={{width:screenSize.width-20,height:200,justifyContent:'center',alignItems:'center'}}> 

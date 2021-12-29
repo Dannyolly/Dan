@@ -3,7 +3,7 @@ import { Text, View ,StyleSheet, Animated, Modal,TextInput ,} from 'react-native
 import { screenSize } from '../../util/screenSize'
 import { AntDesign ,SimpleLineIcons} from '../../util/Icon'
 import { FlatList, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import FriendList from '../../components/FriendList'
+import FriendList from './FriendList'
 
 import { userStore,observer } from '../../mobx/store'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -13,8 +13,9 @@ import FriendHeader from '../../components/Header/FriendHeader'
 import { ScreenWidth } from 'react-native-elements/dist/helpers'
 import { Keyboard } from 'react-native'
 import { friendStore } from '../../mobx/friend'
-import FriendItem from '../../components/FriendList/item'
+import FriendItem from './FriendList/item'
 import MyTextInput from '../Comment/textInput'
+import DownScrollLoading from '../../components/DownScrollLoading'
 export default observer(()=>{
 
     const navigation = useNavigation()
@@ -136,6 +137,8 @@ export default observer(()=>{
         selectionResponser()
         DeviceEventEmitter.emit('checkOutOnlineState')
           
+        
+
           
         }, [])
     )
@@ -189,7 +192,7 @@ export default observer(()=>{
             </Modal>
 
 
-            <ScrollView  /* stickyHeaderIndices={[0]} */ >   
+            <ScrollView  refreshControl={props=><DownScrollLoading {...props}  />}  /* stickyHeaderIndices={[0]} */ >   
                 <Animated.View style={{opacity:clicked?0:1}} >
                     <FriendHeader navigation={navigation} />
                 </Animated.View>

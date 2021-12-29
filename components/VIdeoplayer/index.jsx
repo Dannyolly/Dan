@@ -36,7 +36,7 @@ export default function App(props) {
                 currentPageRef.current =  e.nativeEvent.position
                 //setCurrentPage(()=>e.nativeEvent.position)
                 setCurrentPage(e.nativeEvent.position)
-                console.log(currentPageRef.current);
+                //console.log(currentPageRef.current);
             }}
             orientation='vertical' 
             >

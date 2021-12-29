@@ -216,7 +216,7 @@ const likeCheck = (postId, userId) => get(`/like/check?postId=${postId}&userId=$
  * @typedef UserInfo
  * @property {string} backgroundImage 
  * @property {number} cid
- * @property {string} id
+ * @property {number} id
  * @property {string} introduction
  * @property {number} online
  * @property {string} password

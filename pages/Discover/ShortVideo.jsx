@@ -8,6 +8,9 @@ import { useNavigation ,NavigationProp} from '@react-navigation/native'
 
 const ShortVideo = ( {item ,index} ) => {
 
+
+
+
     const [isScroll, setIsScroll] = useState(false) 
 
     const navigation  =  useNavigation()
@@ -22,6 +25,8 @@ const ShortVideo = ( {item ,index} ) => {
         //isScroll?console.log('stop'):console.log('scrolling');
         setIsScroll(()=>!isScroll)
     }
+
+    console.log('refresh- 1')
 
     return (
         <ScrollView onScrollBeginDrag={onScrolling} onScrollEndDrag={onScrolling} horizontal style={{zIndex:0,padding:10,height:120}} showsHorizontalScrollIndicator={false} >
@@ -39,6 +44,6 @@ const ShortVideo = ( {item ,index} ) => {
     )
 }
 
-export default memo(ShortVideo,()=>true)
+export default memo(ShortVideo,()=>false)
 
 const styles = StyleSheet.create({})

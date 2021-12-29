@@ -3,7 +3,7 @@ import { StyleSheet, Text, View , StyleProp, ViewStyle } from 'react-native'
 
 import {Image,CacheManager} from "react-native-expo-image-cache";
 
-/** @param {{ previewUri: string , uri : string , style : StyleProp<ViewStyle>  }} */
+/** @param {{ previewUri?: string , uri : string , style : StyleProp<ViewStyle>  }} */
 const index = ({ previewUri  , uri , style  } ) => {
     return (
         <Image  

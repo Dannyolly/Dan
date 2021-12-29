@@ -199,18 +199,25 @@ const getTheMessageFromLocal = async(senderId, receiverId) => {
  */
 const getTheMessageFromLocalByCurrentPage = async(senderId, receiverId, currentPage) => {
 
-        let res = await getTheMessageFromLocal(senderId, receiverId)
-        if (res === null || res === undefined) {
-            return null
-        } else {
-            return res.slice((currentPage * 14), (currentPage * 14 + 14))
-        }
-
+    let res = await getTheMessageFromLocal(senderId, receiverId)
+    if (res === null || res === undefined) {
+        return null
+    } else {
+        return res.slice((currentPage * 14), (currentPage * 14 + 14))
     }
-    /**
-     * @description 獲取最後信息...用來首頁顯示
-     * 
-     */
+
+}
+
+/**
+ * @description 獲取全部信息...
+ * @param {number} senderId 
+ * @param {number} receiverId 
+ */
+
+/**
+ * @description 獲取最後信息...用來首頁顯示
+ * 
+ */
 const getFinalMessage = async() => {
     let res = await getTheMessageFromLocal(senderId, receiverId)
 
@@ -284,8 +291,14 @@ class MessageHandler {
      */
     static getFinalMessage = getFinalMessage
 
+
     /**
-     * 
+     * @description 獲取全部信息..
+     */
+    static getTheMessageFromLocal = getTheMessageFromLocal
+
+    /**
+     * @description 保存全部信息...
      * @param {String} messageInfo 
      * @param {Number} friendId 
      * @param {Number} userId 

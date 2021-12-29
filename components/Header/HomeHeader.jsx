@@ -9,18 +9,21 @@ import { userStore,observer } from '../../mobx/store';
 import CachedImage from '../NonIdCachedImage'
 import { base_url } from '../../api/config';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
-export default observer(({ navigation })=>{
+export default observer((/* { navigation } */)=>{
 
-    //console.log(userStore.userInfo);
+
+    const navigation  = useNavigation()
+    
     return(
-        <View style={{flex:1,zIndex:0,height:0}}>  
+        <View style={{zIndex:0,height:45}}>  
             <View style={{width:screenSize.width,position:'absolute',left:20,bottom:0}}>
                 <Text style={[styles.headerTitle]}>Messages</Text>
             </View>
                 
             <View onTouchEnd={()=>navigation.navigate('individual')} 
-            style={{position:'absolute',right:20,bottom:3}}>
+            style={{position:'absolute',left:0,paddingLeft:screenSize.width-60,bottom:0}}>
                 {
                     userStore.userInfo!==undefined
                     &&
@@ -41,8 +44,9 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     picStyle:{
-        width:35,
-        height:35,
-        borderRadius:18.25
+        width:40,
+        height:40,
+        borderRadius:18.25,
+        
     }
 })

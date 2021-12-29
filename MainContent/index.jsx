@@ -19,11 +19,11 @@ import {
 }
     from '../../api/api' */
 import { LinearGradient } from 'expo-linear-gradient';
-import {NavigationContainer} from '@react-navigation/native'
+import {NavigationContainer ,useNavigationContainerRef } from '@react-navigation/native'
 /* import {createStackNavigator} from '@react-navigation/stack' */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs' 
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator} from '@react-navigation/native-stack';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -93,33 +93,11 @@ import { messageResponser, selectionResponser } from '../util/haptic';
 import { EventEmitter } from 'react-native';
 import test from './test';
 import { Easing } from 'react-native';
-import Testing from '../components/ZoomableImage1'
+
 import {  AppState } from 'react-native'
 import SplashView from '../pages/SplashView'
-/**
- * @description 根據hooks來判斷要返回那一個請求頭
- * @param {Number} whichHeader 
- * @param {Function} setWhichHeader 
- * @returns 
- */
- function whichHeader(routeName){
-
-    /* switch (routeName) {
-        case '首頁':
-            return <HomeHeaderComponent />
-        
-        case '外賣':
-            return <TakeOutHeaderComponent />
-        case '發現':
-            return <View/>
-        case '到店優惠':
-            return <DisCountHeaderComponent />
-        default:
-            return <View/>
-    } */
-
-}
-
+import { imageStore } from '../mobx/lock';
+import Collection from '../pages/Collection';
 
 const TabNumber = observer(({ iconName,color,size,index })=>{
     /* index 指的是tabBar 第幾個 下標1開始... */
@@ -188,11 +166,16 @@ const UserTabIcon = observer(()=>{
 
 const BottomTab = observer((props)=>{
 
+    
+    
+    const ref = useNavigationContainerRef()
+
+
     const Tab =createBottomTabNavigator();
 
     const navigation = useNavigation()
     
-    const [isCollapse, setIsCollapse] = useState(false)
+    const [opacity, setOpacity] = useState(1)
 
 
     const translateY = useRef(new Animated.Value(0)).current
@@ -219,12 +202,20 @@ const BottomTab = observer((props)=>{
 
     useEffect(() => {
         DeviceEventEmitter.addListener('collapseBottomTabBar',( data )=>{
-            collapseBottomTabBar()
+            //collapseBottomTabBar()
         })
 
         DeviceEventEmitter.addListener('showBottomTabBar',( data )=>{
-            showBottomTabBar()
+            //showBottomTabBar()
         })
+
+
+        DeviceEventEmitter.addListener('setOpacity',( opacity )=>{
+            //console.log(`opacity = ${opacity}`)
+            setOpacity(()=>opacity)
+        })
+
+        
 
         /* return ()=>{
             DeviceEventEmitter.removeAllListeners()
@@ -234,6 +225,7 @@ const BottomTab = observer((props)=>{
 
     
     return (
+        <View style={{flex:1,zIndex:0}}>
         <Tab.Navigator
          
          screenOptions={ ({route}) => ({
@@ -285,8 +277,10 @@ const BottomTab = observer((props)=>{
             },
             headerShadowVisible:false,
             headerTitle:'',
+            
             tabBarStyle:{
                 /* display:'none', */
+                zIndex:0,
                 position:'absolute',
                 paddingTop:5,
                 transform:[{translateY:translateY}],
@@ -296,9 +290,10 @@ const BottomTab = observer((props)=>{
                     width:0,
                     height:10
                 },
-                elevation:5,
+                //elevation:5,
                 shadowColor:"#CDCDCD",
-                height:88
+                height:88,
+                opacity:opacity,
             },
 
             tabBarItemStyle:{
@@ -307,9 +302,14 @@ const BottomTab = observer((props)=>{
             },
             tabBarInactiveTintColor:'#999',
             tabBarActiveTintColor:'#22CAFE',
-            headerShown:false,
+            //headerShown:false,
             
          })}
+            sceneContainerStyle={{
+                zIndex:0
+            }}
+            
+            
             
         >
             <Tab.Screen
@@ -322,7 +322,9 @@ const BottomTab = observer((props)=>{
                     
                 }}
                 options={{
-                
+                    /* header:({navigation })=>(
+                        <DiscoverHeader  navigation={navigation} />
+                    ), */
                     title:"發現",
                     headerShown:false
                     
@@ -338,10 +340,11 @@ const BottomTab = observer((props)=>{
                     },
                 }}
                 options={{
-                    /* headerShown:false, */
-                    //headerLeft:props=><HomeHeader {...props} navigation={navigation} />,
-                    /* headerTitle:'聊天室' */
-                    headerShown:false,
+                    lazy:Platform.OS==='ios'?false:true,
+                    headerLeft:({navigation})=>(
+                        <HomeHeader  navigation={navigation} />
+                    )
+         
                 }}
             />
             
@@ -377,7 +380,7 @@ const BottomTab = observer((props)=>{
                 name="通讯录"
                 component={ Friend}
                 options={{
-                   
+                    lazy:Platform.OS==='ios'?false:true,
                     headerShown:false,
                    
                 }}
@@ -393,7 +396,8 @@ const BottomTab = observer((props)=>{
                 }}
                 options={{
                     headerShown:false,
-                    title:"個人頁"
+                    title:"個人頁",
+                    lazy:Platform.OS==='ios'?false:true,
                     /* headerLeft:props=><HomeHeader {...props} navigation={navigation} />, */
                     /* headerTitle:'聊天室' */
                 }}
@@ -412,17 +416,9 @@ const BottomTab = observer((props)=>{
                 }}
             /> */}
 
-            
 
-            
-
-
-             
-
-        
-           
-            
         </Tab.Navigator>
+        </View>
     )
 })
 
@@ -431,14 +427,9 @@ const BottomTab = observer((props)=>{
 
 export default observer((props)=>{
 
-
-    const [value, setValue] = useState('')
-
-    const [whichHeader, setWhichHeader] = useState(-1)
     
     const Stack = createNativeStackNavigator()
 
-    /* const Stack = createStackNavigator() */
     let instance
 
     const [isClose, setIsClose] = useState(false)
@@ -782,7 +773,17 @@ export default observer((props)=>{
                             presentation:'modal'
                         }}
                         />
+                        
 
+                        <Stack.Screen 
+                        name="collection" 
+                        component={Collection}
+                        options={{
+            
+                            //headerShown:true,
+                            presentation:'modal'
+                        }}
+                        />
 
 
                     </>

@@ -1,0 +1,76 @@
+Date : 2021-12-29 12:56:00
+Directory : d:\html\react\react-native\MyWebSocket\pages
+Total : 36 files,  4202 codes, 656 comments, 1283 blanks, all 6141 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| JavaScript React |         32 |      3,987 |        501 |      1,188 |      5,676 |
+| JavaScript       |          2 |        147 |        151 |         77 |        375 |
+| TypeScript React |          2 |         68 |          4 |         18 |         90 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                       | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                          |         36 |      4,202 |        656 |      1,283 |      6,141 |
+| AddUser                                                                    |          3 |        466 |         45 |        120 |        631 |
+| CheckFriendRequest                                                         |          1 |        103 |          7 |         29 |        139 |
+| Comment                                                                    |          4 |        505 |         91 |        134 |        730 |
+| Discover                                                                   |          6 |        679 |        159 |        239 |      1,077 |
+| Friend                                                                     |          3 |        308 |          6 |         87 |        401 |
+| Friend\FriendList                                                          |          2 |        114 |          5 |         36 |        155 |
+| Home                                                                       |          3 |        468 |         92 |        163 |        723 |
+| Individual                                                                 |          2 |        484 |         21 |         99 |        604 |
+| Login                                                                      |          1 |        260 |         12 |         79 |        351 |
+| Message                                                                    |          5 |        389 |        201 |        164 |        754 |
+| Post                                                                       |          1 |        152 |         13 |         37 |        202 |
+| Register                                                                   |          5 |        335 |          8 |        108 |        451 |
+| SplashView                                                                 |          1 |         31 |          1 |         16 |         48 |
+| UserInformation                                                            |          1 |         22 |          0 |          8 |         30 |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                   | language         | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| d:\html\react\react-native\MyWebSocket\pages\AddUser\FriendDelta.jsx       | JavaScript React |        338 |         44 |        103 |        485 |
+| d:\html\react\react-native\MyWebSocket\pages\AddUser\index.jsx             | JavaScript React |         76 |          1 |         12 |         89 |
+| d:\html\react\react-native\MyWebSocket\pages\AddUser\item.jsx              | JavaScript React |         52 |          0 |          5 |         57 |
+| d:\html\react\react-native\MyWebSocket\pages\CheckFriendRequest\index.jsx  | JavaScript React |        103 |          7 |         29 |        139 |
+| d:\html\react\react-native\MyWebSocket\pages\Comment\MyFlatlist.jsx        | JavaScript React |         66 |          1 |         20 |         87 |
+| d:\html\react\react-native\MyWebSocket\pages\Comment\index.jsx             | JavaScript React |        349 |         72 |         82 |        503 |
+| d:\html\react\react-native\MyWebSocket\pages\Comment\item.jsx              | JavaScript React |         50 |          3 |         25 |         78 |
+| d:\html\react\react-native\MyWebSocket\pages\Comment\textInput.jsx         | JavaScript React |         40 |         15 |          7 |         62 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\AutoSizeMaskView.tsx | TypeScript React |         51 |          4 |         10 |         65 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\AutoZIndexView.tsx   | TypeScript React |         17 |          0 |          8 |         25 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\PostItem.jsx         | JavaScript React |        201 |         56 |         70 |        327 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\ShortVideo.jsx       | JavaScript React |         32 |          1 |         12 |         45 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\ShortVideoItem.jsx   | JavaScript React |         15 |          9 |          9 |         33 |
+| d:\html\react\react-native\MyWebSocket\pages\Discover\index.jsx            | JavaScript React |        363 |         89 |        130 |        582 |
+| d:\html\react\react-native\MyWebSocket\pages\Friend\FriendList\index.jsx   | JavaScript React |         37 |          2 |         14 |         53 |
+| d:\html\react\react-native\MyWebSocket\pages\Friend\FriendList\item.jsx    | JavaScript React |         77 |          3 |         22 |        102 |
+| d:\html\react\react-native\MyWebSocket\pages\Friend\index.jsx              | JavaScript React |        194 |          1 |         51 |        246 |
+| d:\html\react\react-native\MyWebSocket\pages\Home\homeUtils.js             | JavaScript       |         28 |          6 |          9 |         43 |
+| d:\html\react\react-native\MyWebSocket\pages\Home\index.jsx                | JavaScript React |        272 |         80 |        117 |        469 |
+| d:\html\react\react-native\MyWebSocket\pages\Home\item.jsx                 | JavaScript React |        168 |          6 |         37 |        211 |
+| d:\html\react\react-native\MyWebSocket\pages\Individual\Header.jsx         | JavaScript React |         67 |          5 |         29 |        101 |
+| d:\html\react\react-native\MyWebSocket\pages\Individual\index.jsx          | JavaScript React |        417 |         16 |         70 |        503 |
+| d:\html\react\react-native\MyWebSocket\pages\Login\index.jsx               | JavaScript React |        260 |         12 |         79 |        351 |
+| d:\html\react\react-native\MyWebSocket\pages\Message\Loading.jsx           | JavaScript React |         11 |          1 |          4 |         16 |
+| d:\html\react\react-native\MyWebSocket\pages\Message\MessageBox.jsx        | JavaScript React |         12 |          0 |          5 |         17 |
+| d:\html\react\react-native\MyWebSocket\pages\Message\MessageHandler.js     | JavaScript       |        119 |        145 |         68 |        332 |
+| d:\html\react\react-native\MyWebSocket\pages\Message\index.jsx             | JavaScript React |        235 |         55 |         83 |        373 |
+| d:\html\react\react-native\MyWebSocket\pages\Message\messages.jsx          | JavaScript React |         12 |          0 |          4 |         16 |
+| d:\html\react\react-native\MyWebSocket\pages\Post\index.jsx                | JavaScript React |        152 |         13 |         37 |        202 |
+| d:\html\react\react-native\MyWebSocket\pages\Register\Step1.jsx            | JavaScript React |         72 |          1 |         18 |         91 |
+| d:\html\react\react-native\MyWebSocket\pages\Register\Step2.jsx            | JavaScript React |         79 |          1 |         25 |        105 |
+| d:\html\react\react-native\MyWebSocket\pages\Register\Step3.jsx            | JavaScript React |         77 |          1 |         29 |        107 |
+| d:\html\react\react-native\MyWebSocket\pages\Register\index.jsx            | JavaScript React |         23 |          0 |          8 |         31 |
+| d:\html\react\react-native\MyWebSocket\pages\Register\last.jsx             | JavaScript React |         84 |          5 |         28 |        117 |
+| d:\html\react\react-native\MyWebSocket\pages\SplashView\index.jsx          | JavaScript React |         31 |          1 |         16 |         48 |
+| d:\html\react\react-native\MyWebSocket\pages\UserInformation\index.jsx     | JavaScript React |         22 |          0 |          8 |         30 |
+| Total                                                                      |                  |      4,202 |        656 |      1,283 |      6,141 |
++----------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

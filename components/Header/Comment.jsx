@@ -26,9 +26,9 @@ const Comment = ({ item , collapse }) => {
             </TouchableWithoutFeedback>
             <CachedImage uri={base_url+item.userInfo[0].icon} style={styles.picStyle} />
        
-        <View style={{height:40,paddingLeft:10,justifyContent:'center',alignItems:'center'}}>
+        <View style={{height:40,paddingLeft:5,justifyContent:'center',alignItems:'center'}}>
             <Text style={{fontSize:14,fontWeight:'bold'}} >{item.userInfo[0].username}</Text>
-            <Text style={{paddingLeft:3,fontSize:12}} >{calculateDate(item.postDate)}</Text>
+            <Text style={{paddingLeft:3,fontSize:11}} >{calculateDate(item.postDate)}</Text>
         </View>
         <Feather name="more-horizontal" style={{paddingLeft:screenSize.width/2+15,fontSize:30,lineHeight:40,color:"black"}} />
         
