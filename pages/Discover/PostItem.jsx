@@ -100,7 +100,9 @@ function PostItem({
             setLiked(()=>false)
             realItem.likeCount-=1
             cancelLike(item.id,item.userId,realItem.likeCount).then(res=>{
-                defaultShowMessage("已取消")
+                defaultShowMessage({
+                    message:"已取消"
+                })
             })
         }
     }

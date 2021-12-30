@@ -182,7 +182,7 @@ const transformToFormDataByRegisterInfo = (uris, users) => {
 
 /**
  * @description 假如只發一句話..
- * @param {{ message? : string , type? :string }} options
+ * @param {{ message? : string , type? :string }: Options } options
  */
 const defaultShowMessage = ({ message, type }) => {
 

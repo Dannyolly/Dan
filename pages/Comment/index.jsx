@@ -281,13 +281,13 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                 paddingLeft:70,
                                                 backgroundColor:"#FFFFFF",
                                                 position:'absolute',
-                                                shadowColor:"#F4F4F4",
-                                                shadowRadius:20,
+                                                shadowColor:"#CDCDCD",
+                                                shadowRadius:2,
+                                                shadowOpacity:0.7,
                                                 shadowOffset:{
                                                     width:0,
                                                     height:0
                                                 },
-                                                shadowOpacity:0.7,
                                                 top:Animated.add(85,commentContainerOffset),
                                                 zIndex:1000
                                                 }}>
@@ -386,13 +386,13 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                 paddingLeft:70,
                                                 backgroundColor:"#FFFFFF",
                                                 position:'absolute',
-                                                shadowColor:"#F4F4F4",
-                                                shadowRadius:20,
+                                                shadowColor:"#CDCDCD",
+                                                shadowRadius:2,
+                                                shadowOpacity:0.7,
                                                 shadowOffset:{
                                                     width:0,
                                                     height:0
                                                 },
-                                                shadowOpacity:0.7,
                                                 top:Animated.add(85,commentContainerOffset),
                                                 zIndex:1000
                                                 }}>

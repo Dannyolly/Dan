@@ -65,9 +65,17 @@ interface UserInfo {
 
     qrcode : string ,
 
-    username : string 
+    username : string, 
 
-
+    /**
+     * no base_url
+     */
+    backgroundImage : string ,
+    
+    /**
+     * no base_url
+     */
+    icon : string 
 }
 
 /**
@@ -84,7 +92,7 @@ interface FormattedPost {
 
     postDate : Date,
 
-    postImage : Array<String>,
+    postImage : Array<string>,
 
     userId : number ,
 
