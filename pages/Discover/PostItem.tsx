@@ -9,8 +9,8 @@ import { base_url } from '../../api/config'
 import { userStore } from '../../mobx/store'
 import PropTypes from 'prop-types';
 import MySwiper from '../../components/MySwiper'
-import { getAllCommentCount, searchUser } from '../../api/api'
-import { calculateDate, defaultShowMessage, getUserMainInfo } from '../../util/function'
+import { getAllCommentCount, getPostByPostId, searchUser } from '../../api/api'
+import { calculateDate, defaultShowMessage, getUserMainInfo, objTOParams } from '../../util/function'
 import {TapGestureHandler  } from 'react-native-gesture-handler'
 import { addLike,cancelLike,likeCheck } from '../../api/api'
 import SkeletonView from '../../components/SkeletonView'
@@ -22,35 +22,41 @@ import PostItemSkeletonView from '../../components/PostItemSkeletonView'
 import MaskView from '../../components/MaskView'
 import AutoSizeMaskView from './AutoSizeMaskView'
 import { LocalCacheManager } from '../../util/LocalCacheManager'
-/**
- * @typedef PostItemProps
- * @property {object} item
- * @property {number} index
- * @property {navigation } navigation
- * @property {boolean} isShadow 
- * @property {number}  currentTopOffset 
- * @property {boolean } zooming 
- * @property {(scale : number , index : number )=>void} onZooming 
- * @property {()=>void} setOpenBottomSheet
- * @returns 
- */
+import { FormattedPost } from '../../util/type'
 
-/**
- * 
- * @param {PostItemProps} prop 
- * @returns 
- */
+
+
+interface PostItemProps {
+
+    item : FormattedPost ,
+
+    index : number , 
+
+    navigation : any ,
+
+    isShadow : boolean ,
+
+    currentTopOffset : number ,
+
+    zooming : boolean ,
+
+    onZooming : (scale: number , index : number )=> void ,
+
+    setOpenBottomSheet : ()=>void
+
+}
+
+
 function PostItem({
     item ,
     index , 
     navigation,
-    handleToggle ,
     isShadow, 
     currentTopOffset , 
     zooming ,
     onZooming  ,
     setOpenBottomSheet
-}) {
+}:PostItemProps) {
 
     
     
@@ -64,13 +70,17 @@ function PostItem({
 
 
     const [liked, setLiked] = useState(false)
+
+    const [icon, setIcon] = useState('')
+    
+    const [likeCount, setLikeCount,] = useState(0)
     
     const [commentCount, setCommentCount] = useState(false)
 
     const [isCollection, setIsCollection] = useState(false)
 
 
-    const viewRef = useRef();
+    const viewRef = useRef<any>();
 
     // 測量圖片相對位置
     const initPosition = useRef({width:0,height:0,pageX:0,pageY:0})
@@ -93,12 +103,12 @@ function PostItem({
             setTimeout(()=>{
                 setShowLike(()=>false)
             },1000)
-            realItem.likeCount+=1
+            setLikeCount(()=>likeCount+1)
             addLike(item.id,item.userId,realItem.likeCount).then(res=>{
             })
         }else{
             setLiked(()=>false)
-            realItem.likeCount-=1
+            setLikeCount(()=>likeCount-1)
             cancelLike(item.id,item.userId,realItem.likeCount).then(res=>{
                 defaultShowMessage({
                     message:"已取消"
@@ -108,37 +118,6 @@ function PostItem({
     }
 
 
-    /**
-     * @description 修正一下屬性...
-     * @deprecated
-     */
-    const correctItem=async ()=>{
-
-        
-        if(item.postImage[0].indexOf(0)==='h'){
-            
-            //console.log(item)
-        }else{
-            for (const index in item.postImage) {
-            
-            
-                item.postImage[index]=base_url+item.postImage[index]
-            }
-            
-            item.userInfo =  (await searchUser(`id=${item.userId}`)).data
-            //console.log('111',item)
-            //console.log('item',item)
-            correctFirstTime.current=true
-            //console.log(item)
-            setTimeout(()=>{
-                setItem(()=>item)
-            },2000)
-        }
-        
-        
-    }
-
-    
 
     /**
      * @description 檢查是否已點過讚...
@@ -171,9 +150,14 @@ function PostItem({
      */
 
     useEffect(() => {
-        if(item!==undefined && correctFirstTime.current===false){
+        (async()=>{
+            if(item!==undefined && correctFirstTime.current===false){
+                correctFirstTime.current  = true
+                getNewAvatar(userStore.userInfo.userInfo.id)
+                getNewLike(item.id)
                 setItem(()=>item)
-        }
+            }
+        })()
     }, [item])
 
 
@@ -207,7 +191,27 @@ function PostItem({
 
     }
 
-  
+    /**
+     * @description 獲取新頭像 .... 發現新BUG 
+     */
+    const getNewAvatar = async ( id ) =>{
+
+        let userInfo  = await searchUser(objTOParams({id:id}))
+
+        setIcon(()=>userInfo.data[0].icon)
+    }
+
+    /**
+     * @description 獲取新like數 .... 發現新BUG  
+     */
+    const getNewLike = async ( postId ) =>{
+
+        let post = await getPostByPostId(postId)
+        
+        setLikeCount(()=>post.data.likeCount)
+    } 
+
+
 
     useEffect(() => {
         getData()
@@ -215,6 +219,10 @@ function PostItem({
         
     }, [])
 
+    /* if(realItem!==undefined){
+        console.log(base_url+realItem.userInfo[0].icon)
+    } */
+    
 
     return (
         
@@ -231,7 +239,11 @@ function PostItem({
                 <View style={[styles.itemContent,isShadow===true?{padding:10,paddingTop:0,borderRadius:20}:{},index===0?{paddingTop:10}:{}]}>          
                         <View style={{flexDirection:'row',paddingLeft:10,marginBottom:5,zIndex:0}}>
                                 
-                                <CachedImage style={styles.iconStyle}  uri={base_url+realItem.userInfo[0].icon} />
+                                {
+                                    icon!==''
+                                    &&
+                                    <CachedImage style={styles.iconStyle}  uri={base_url+icon} />
+                                }
                                 
                                 {
                                     
@@ -246,6 +258,7 @@ function PostItem({
                             }
                             <View style={{zIndex:2}}>
                                 <MySwiper 
+                                   //@ts-ignore
                                     zooming={zooming} 
                                     onZooming={onZooming} 
                                     index={index} 
@@ -262,7 +275,7 @@ function PostItem({
                         {
                         showLike===true
                         &&
-                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:10000,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
+                        <View style={{position:'absolute',width:screenSize.width,top:70,zIndex:10000000000000,height:400,backgroundColor:"transparent",justifyContent:'center',alignItems:'center'}} >
                             <LikeAnimated  />
                         </View>
                         }
@@ -278,16 +291,24 @@ function PostItem({
                             <FontAwesome name="bookmark-o" onPress={saveToCollection} style={{fontSize:26,fontWeight:'900',position:'absolute',right:-5,bottom:-3}} />
                         }
                     </View>
-                    <Text style={{padding:15,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
-                        {realItem.likeCount} 讚好
-                    </Text>
+                    {
+                        
+                        <Text style={{padding:15,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
+                            {likeCount} 讚好
+                        </Text>
+                    }
                     <Text style={{padding:15,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
                         {realItem.userInfo[0].username}: {realItem.introduction}
                     </Text>
                     <Text onPress={()=>navigation.navigate('comment',{
+
                         userId:userStore.userInfo.userInfo.id,
                         postId:realItem.id,
                         item:realItem,
+                        icon:icon,
+                        likeCount:likeCount,
+                        liked:liked
+
                     })} selectionColor="#FFFFFF" style={{padding:15,paddingTop:5,paddingBottom:5,color:"#CDCDCD",zIndex:0,fontWeight:'500'}}>
                         查看{commentCount}則留言
                     </Text>

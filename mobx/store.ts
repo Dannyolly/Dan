@@ -5,6 +5,7 @@ import { TouchableHighlightBase } from "react-native"
 import Animated from "react-native-reanimated"
 import { getAllFriend } from '../api/api'
 import { defaultShowMessage, getUserMainInfo } from "../util/function"
+import { UserInfo } from "../util/type"
 
 
 class UserInfoStore {
@@ -12,14 +13,8 @@ class UserInfoStore {
     text = ""
 
 
-    /**
-     * @type {{
-     *  userInfo: import("../api/api").UserInfo
-     *  
-     * 
-     * }}
-     */
-    userInfo = undefined
+
+    userInfo:{userInfo : UserInfo} = undefined
 
 
     /* 這里是用來看有多少個朋友請求 */

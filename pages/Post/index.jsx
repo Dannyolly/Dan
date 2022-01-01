@@ -72,11 +72,13 @@ export default class index extends Component {
                         
                         
                         this.props.navigation.navigate('discover')
-                        defaultShowMessage(" 發布成功 !")
+                        defaultShowMessage({
+                            message:" 發布成功 !"
+                        })
 
-                    },1500)
+                    },0)
                 })
-            },2000)
+            },0)
         })
         /* let obj={
             id:999,

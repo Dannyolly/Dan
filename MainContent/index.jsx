@@ -180,34 +180,10 @@ const BottomTab = observer((props)=>{
 
     const translateY = useRef(new Animated.Value(0)).current
 
-    const collapseBottomTabBar = () =>{
     
-        Animated.timing(translateY,{
-            toValue:88,
-            easing:Easing.linear,
-            duration:250,
-            useNativeDriver:true
-        }).start()
-    }
-
-    const showBottomTabBar = () =>{
-     
-        Animated.timing(translateY,{
-            toValue:0,
-            easing:Easing.linear,
-            duration:250,
-            useNativeDriver:true
-        }).start()
-    }
 
     useEffect(() => {
-        DeviceEventEmitter.addListener('collapseBottomTabBar',( data )=>{
-            //collapseBottomTabBar()
-        })
-
-        DeviceEventEmitter.addListener('showBottomTabBar',( data )=>{
-            //showBottomTabBar()
-        })
+       
 
 
         DeviceEventEmitter.addListener('setOpacity',( opacity )=>{
@@ -340,7 +316,7 @@ const BottomTab = observer((props)=>{
                     },
                 }}
                 options={{
-                    lazy:Platform.OS==='ios'?false:true,
+                    lazy:false,
                     headerLeft:({navigation})=>(
                         <HomeHeader  navigation={navigation} />
                     )

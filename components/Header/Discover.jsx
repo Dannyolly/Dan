@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text ,StyleSheet, StatusBar, StatusBarIOS, SafeAreaView,Image} from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { View, Text ,StyleSheet, StatusBar, StatusBarIOS, SafeAreaView,Image, DeviceEventEmitter, Animated, Easing} from 'react-native'
 
 import { screenSize } from '../../util/screenSize'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,8 +14,44 @@ import { imageStore } from '../../mobx/lock';
 export default observer(({ navigation })=>{
 
 
+    const translateY = useRef(new Animated.Value(0)).current
+
+    const collapseBottomTabBar = () =>{
+    
+        Animated.timing(translateY,{
+            toValue:-85,
+            easing:Easing.linear,
+            duration:200,
+            useNativeDriver:true
+        }).start()
+    }
+
+    const showBottomTabBar = () =>{
+     
+        Animated.timing(translateY,{
+            toValue:0,
+            easing:Easing.linear,
+            duration:200,
+            useNativeDriver:true
+        }).start()
+    }
+
+    useEffect(()=>{
+
+        DeviceEventEmitter.addListener('collapseBottomTabBar',( data )=>{
+            collapseBottomTabBar()
+        })
+
+        DeviceEventEmitter.addListener('showBottomTabBar',( data )=>{
+            showBottomTabBar()
+        })
+
+
+    },[])
+
+
     return(
-        <View style={{width:screenSize.width,height:85,backgroundColor:"#FFFFFF",zIndex:0,opacity:imageStore.isStart===true?0:1}}>    
+        <Animated.View style={[{transform:[{translateY}]},{width:screenSize.width,height:85,backgroundColor:"#FFFFFF",zIndex:0,opacity:imageStore.isStart===true?0:1}]}>    
             {/* <View onTouchEnd={()=>navigation.navigate('userInfo')} style={{position:'absolute',bottom:10,left:20}}>
                 {
                     userStore.userInfo!==undefined
@@ -38,7 +74,7 @@ export default observer(({ navigation })=>{
                 <FontAwesome5  name="plus" style={{fontSize:18,color:"#FFFFFF",fontWeight:'100'}} />
             </View>
 
-        </View>
+        </Animated.View>
     )
 })
 

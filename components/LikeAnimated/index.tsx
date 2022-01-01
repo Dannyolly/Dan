@@ -3,8 +3,12 @@ import { StyleSheet, Text, View ,Animated } from 'react-native'
 import { AntDesign } from '../../util/Icon'
 
 import Font from './Font'
+interface LikeAnimatedProps {
 
-const index = ({ move }  ) => {
+    move? :boolean 
+
+}
+const index = ({ move }:LikeAnimatedProps  ) => {
    
 
     const FontAnimated = Animated.createAnimatedComponent(Font);

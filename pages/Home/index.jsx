@@ -1,8 +1,8 @@
 import React, { useEffect, useState ,useCallback, useRef} from 'react'
-import { View, Text ,DeviceEventEmitter, Platform,Animated} from 'react-native'
+import { View, Text ,DeviceEventEmitter, Platform,Animated ,FlatList} from 'react-native'
 import { screenSize } from '../../util/screenSize'
 import HomeHeader from '../../components/Header/HomeHeader'
-import { FlatList, ScrollView } from 'react-native-gesture-handler'
+
 
 import {
     getAllFriend,
@@ -99,12 +99,10 @@ export default observer(()=>{
             }
             
         }
-        let b =new Date().getTime()
-            console.log(b)
         //  排序...
         messageArr  = messageArr.sort(dateCompare)
         console.log(messageArr)
-        if(messageArr.length !== 0){
+        if(messageArr.length !== 0 ){
 
             setChatList(()=>messageArr)
         
@@ -403,18 +401,17 @@ export default observer(()=>{
     
     }, [chatList])
 
-    const ListHeader = ()=>{
+    /* const ListHeader = ()=>{
         return (
             <Animated.View 
             style={{backgroundColor:"transparent",
             zIndex:0,height:50,
-            /* transform:[{translateY:Animated.multiply(-1,currentTopOffset)}] */
             }}
             >
                 <HomeHeader navigation={navigation} />
             </Animated.View>
         )
-    }
+    } */
 
 
     return (
@@ -425,7 +422,7 @@ export default observer(()=>{
             {
                 chatList!==undefined
                 && 
-                <Animated.FlatList 
+                <FlatList 
                 overScrollMode={'always'}
                 ref={c=>onScrollRef.current=c}
                 data={chatList}
@@ -437,7 +434,7 @@ export default observer(()=>{
                         nativeEvent: {contentOffset: {y: currentTopOffset}},
                     },
                     ],
-                    {useNativeDriver: true}
+                    {useNativeDriver: false}
                 
                     )
                 } 

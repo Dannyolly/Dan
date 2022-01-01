@@ -52,7 +52,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
    // console.log( 'item```', item.objectInfo.avatar)
 
 
-    if(userStore.unreadMessage[index].length == undefined ){
+    /* if(userStore.unreadMessage[index].length == undefined ){
 
         console.log(`${userStore.unreadMessage}`)
 
@@ -61,7 +61,7 @@ export default observer(( { item,navigation,index,setOnScroll,isSwipe } )=>{
                 <Text>?</Text>
             </View>
         )
-    }
+    } */
 
     
 

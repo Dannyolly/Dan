@@ -104,10 +104,10 @@ export default observer(({ navigation, onlyFlatList }) => {
     // 沒有任何信息狀態...
     const [nothing, setNothing] = useState(false)
 
-    const contentSizeRef = useRef({height:0})
-
 
     const [isOpen, setIsOpen] = useState(false)
+
+
 
     const handleToggle = () => {
         if (!setting.current) {
@@ -263,7 +263,7 @@ export default observer(({ navigation, onlyFlatList }) => {
 
             let temp = dataRef.current !== undefined ? [...dataRef.current, ...posts] : [...posts]
             currentPage.current++
-            console.log(temp)
+            //console.log(temp)
             setData(() => [...temp])
             dataRef.current = temp
         }
@@ -271,7 +271,7 @@ export default observer(({ navigation, onlyFlatList }) => {
 
     }
 
-
+    
 
     const onReach = async () => {
         setIsShowLoader(() => true)
@@ -377,10 +377,12 @@ export default observer(({ navigation, onlyFlatList }) => {
                 }
 
                 setData(() => [obj, ...dataRef.current])
+                console.log(obj)
+                await LocalCacheManager.savePostToLocal([obj],userStore.userInfo.userInfo.id)
                 dataRef.current = temp
                 setTimeout(() => {
                     uploading.current = false
-                }, 5000)
+                }, 0)
 
             }
         })
@@ -473,7 +475,7 @@ export default observer(({ navigation, onlyFlatList }) => {
             nestedScrollEnabled={true}
             refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
             showsVerticalScrollIndicator={false}
-            /* stickyHeaderIndices={[0]} */
+            stickyHeaderIndices={[0]}
         >
 
             <DiscoverHeader navigation={navigation} />

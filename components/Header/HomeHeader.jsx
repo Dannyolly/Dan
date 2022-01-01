@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     picStyle:{
         width:40,
         height:40,
-        borderRadius:18.25,
+        borderRadius:20,
         
     }
 })

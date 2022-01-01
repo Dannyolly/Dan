@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { showMessage } from 'react-native-flash-message'
-import { screenSize } from '../util/screenSize'
+import { screenSize } from './screenSize'
 
 
 
@@ -14,7 +14,7 @@ import { screenSize } from '../util/screenSize'
  * @param {ChatMsgA} obj 
  * @returns 
  */
-function objTOParams(obj) {
+function objTOParams(obj ) {
 
     let keys = Object.keys(obj)
     let values = Object.values(obj)
@@ -85,14 +85,19 @@ function uuid() {
  * @explain    暫時只返回X月X日
  * @param {Date}
  */
+
 const calculateDate = (date) => {
     if (date !== undefined) {
         let currentTime = new Date()
         let testDate = new Date(date)
         var drr = Math.abs(currentTime.getTime() - testDate.getTime());
+        // @ts-ignore
         var day = parseInt(drr / (24 * 60 * 60 * 1000));
+        // @ts-ignore
         var hours = parseInt(drr % (24 * 60 * 60 * 1000) / (60 * 60 * 1000));
+        // @ts-ignore
         var minutes = parseInt(drr % (60 * 60 * 1000) / (60 * 1000));
+        // @ts-ignore
         var seconds = parseInt(drr % (60 * 1000) / 1000);
         var res = "相差" + day + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
 
@@ -119,13 +124,14 @@ const calculateSum = (arr) => {
 
 
 
-const transformToFormDataByPost = (uris, userId, introduction) => {
+const transformToFormDataByPost = (uris:string[], userId, introduction) => {
     let param = new FormData()
     param.append('userId', userId)
     param.append('introduction', introduction)
     let arr = []
     for (const item of uris) {
         param.append("files", {
+            // @ts-ignore
             uri: item,
             type: 'multipart/form-data',
             name: ".png"
@@ -147,6 +153,7 @@ const transformToFormDataByMessage = (uris, senderId, receiverId) => {
     let arr = []
     for (const item of uris) {
         param.append("files", {
+            // @ts-ignore
             uri: item,
             type: 'multipart/form-data',
             name: ".png"
@@ -170,6 +177,7 @@ const transformToFormDataByRegisterInfo = (uris, users) => {
     for (const item of uris) {
         //console.log(item);
         param.append("files", {
+            // @ts-ignore
             uri: item,
             type: 'multipart/form-data',
             name: ".png"
@@ -180,13 +188,22 @@ const transformToFormDataByRegisterInfo = (uris, users) => {
 
 }
 
+
+interface MessageArgs{
+
+    message? : string ,
+
+    type? : string
+
+}
 /**
  * @description 假如只發一句話..
- * @param {{ message? : string , type? :string }: Options } options
  */
-const defaultShowMessage = ({ message, type }) => {
+
+const defaultShowMessage = ({ message, type }:MessageArgs) => {
 
     showMessage({
+        // @ts-ignore
         icon: type || 'info',
         message: message,
         titleStyle: { position: "relative", fontSize: 14 },

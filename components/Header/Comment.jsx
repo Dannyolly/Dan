@@ -11,7 +11,7 @@ import CachedImage from '../NonIdCachedImage'
 
 
 
-const Comment = ({ item , collapse }) => {
+const Comment = ({ icon,item , collapse }) => {
 
     const navigation =useNavigation()
 
@@ -24,7 +24,7 @@ const Comment = ({ item , collapse }) => {
             }}>
                 <Ionicons   name="ios-chevron-back-outline" style={{fontSize:30,lineHeight:40,marginRight:10}} />
             </TouchableWithoutFeedback>
-            <CachedImage uri={base_url+item.userInfo[0].icon} style={styles.picStyle} />
+            <CachedImage uri={base_url+icon} style={styles.picStyle} />
        
         <View style={{height:40,paddingLeft:5,justifyContent:'center',alignItems:'center'}}>
             <Text style={{fontSize:14,fontWeight:'bold'}} >{item.userInfo[0].username}</Text>

@@ -26,7 +26,7 @@ import MyTextInput from './textInput'
 const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
 
     
-    const { userId ,postId, item  } = route.params
+    const { userId ,postId, item , likeCount , icon , liked  } = route.params
  
 
     const [data, setData] = useState(undefined)
@@ -215,7 +215,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                             
                             <View style={{marginBottom:100}} >
                                 <View style={{position:'absolute',top:0,paddingLeft:10,paddingRight:10}}>
-                                                <CommentHeader  collapse={collapse} item={item} />
+                                                <CommentHeader icon={icon}  collapse={collapse} item={item} />
                                 </View>
                             </View>
                             
@@ -246,14 +246,14 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                  style={styles.postImage} 
                                                  />
                                             
-                                            <View style={{paddingLeft:5,paddingRight:5}} >
+                                            <View style={{paddingTop:5,paddingLeft:5,paddingRight:5}} >
                                                 <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
-                                                    <AntDesign  name="like2" style={{fontSize:20,marginRight:20}} />
+                                                    <AntDesign  name={liked?'heart':'hearto'} style={{fontSize:23,marginRight:20,color:liked?"#FF1C45":"black",fontWeight:'500'}} />
                                                     <FontAwesome name="comment-o" style={{fontSize:20}} />
                                                     
                                                 </View>
                                                 <Text style={{padding:10,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
-                                                    {item.likeCount} 讚好
+                                                    {likeCount} 讚好
                                                 </Text>
                                                 <Text style={{padding:10,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
                                                     {item.userInfo[0].username}: {item.introduction}
@@ -327,7 +327,7 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                 :
                 <Animated.View  style={[styles.container,{transform:[{translateX:touchX},{translateY:touchY}]}/* ,{borderRadius:40,overflow:'hidden'} */]} >
                             <View style={{paddingLeft:10,paddingRight:10}}>
-                                    <CommentHeader  collapse={collapse} item={item} />
+                                <CommentHeader icon={icon}  collapse={collapse} item={item} />
                              </View>
                             <Animated.ScrollView  scrollEventThrottle={16} onScroll={
                                     Animated.event(
@@ -351,14 +351,14 @@ const index = ( {route , navigation, delayLoading,collapse, moveable } ) => {
                                                         
                                                 <MySwiper /* isJustify={true} */ data={item.postImage} style={styles.postImage} />
                                             
-                                            <View style={{paddingLeft:5,paddingRight:5}} >
+                                            <View style={{paddingTop:5,paddingLeft:5,paddingRight:5}} >
                                                 <View style={{flexDirection:'row',paddingTop:5,paddingLeft:10}}>
-                                                    <AntDesign  name="like2" style={{fontSize:20,marginRight:20}} />
+                                                    <AntDesign  name={liked?'heart':'hearto'} style={{fontSize:23,marginRight:20,color:liked?"#FF1C45":"black",fontWeight:'500'}} />
                                                     <FontAwesome name="comment-o" style={{fontSize:20}} />
                                                     
                                                 </View>
                                                 <Text style={{padding:10,paddingTop:12,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
-                                                    {item.likeCount} 讚好
+                                                    {likeCount} 讚好
                                                 </Text>
                                                 <Text style={{padding:10,paddingTop:5,paddingBottom:0,zIndex:0,fontWeight:'600'}}>
                                                     {item.userInfo[0].username}: {item.introduction}

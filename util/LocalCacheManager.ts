@@ -23,12 +23,8 @@ import { FormattedPost } from "./type"
  */
 
 
-/**
- * 
- * @param {Array<FormattedPost>} post 
- * @param {number} userId
- */
-const savePostToLocal = async(post, userId) => {
+
+const savePostToLocal = async(post : Array<FormattedPost>, userId : number) => {
 
     let json = await AsyncStorage.getItem(`${userId}Post`)
 
@@ -49,10 +45,8 @@ const savePostToLocal = async(post, userId) => {
 
 /**
  * @description 獲取所有Post
- * @param {number} userId
- * @returns {Array<FormattedPost>}
  */
-const getAllPost = async(userId) => {
+const getAllPost = async(userId) :Promise<Array<FormattedPost>>  => {
 
     return await JSON.parse((await AsyncStorage.getItem(`${userId}Post`)))
 
@@ -65,7 +59,7 @@ const getAllPost = async(userId) => {
  * @param {number} [pageSize]  默認為 5
  * @returns {Array<FormattedPost>}
  */
-const getThePostFromLocalByCurrentPage = async(userId, currentPage, pageSize) => {
+const getThePostFromLocalByCurrentPage = async(userId, currentPage, pageSize):Promise<Array<FormattedPost>> => {
     /** @type {Array<FormattedPost>} */
     let res = JSON.parse((await AsyncStorage.getItem(`${userId}Post`)))
 

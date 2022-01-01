@@ -8,12 +8,6 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
-/// <reference path="./LocalCacheManager.js" />
-
-/**
- * @typedef {import('./LocalCacheManager').FormattedPost} Post
- */
-
 
 
 

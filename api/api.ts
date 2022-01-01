@@ -6,6 +6,7 @@ import {
     axios
 } from './config'
 import { AxiosResponse } from 'axios'
+import { Post } from '../util/type/index'
 import { ws } from '../webSocket'
 //const userLogin=(username,password)=>get(`/login?username=${username}&password=${password}`)
 /* login?username=danny&password=28300136 */
@@ -192,6 +193,10 @@ const getAllUserOwnPost = (userId, page, pageSize) => get(`/getUserOwnPost?userI
  */
 const getAllUserPost = (userId, page, pageSize) => get(`/getAllPost?userId=${userId}&page=${page}&pageSize=${pageSize}`)
 
+
+const getPostByPostId = (postId:number ):Promise<AxiosResponse<Post>> => get(`/searchPostByPostId?postId=${postId}`)
+
+
 const addComment = (userId, postId, commentInfo) => get(`/addComment?userId=${userId}&postId=${postId}&commentInfo=${commentInfo}`)
 
 const getAllComment = (postId, page, pageSize) => get(`/getComment?postId=${postId}&page=${page}&pageSize=${pageSize}`)
@@ -222,6 +227,7 @@ const likeCheck = (postId, userId) => get(`/like/check?postId=${postId}&userId=$
  * @property {string} password
  * @property {string} qrcode
  * @property {string} username
+ * @property {string} icon
  */
 /**
  * @typedef Post
@@ -255,8 +261,14 @@ export {
 
     uploadPost,
     sendPic,
+
+
+
     getAllUserPost,
     getAllUserOwnPost,
+    getPostByPostId,
+
+
     addComment,
     getAllComment,
     getAllCommentCount,
