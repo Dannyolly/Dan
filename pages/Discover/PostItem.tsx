@@ -104,12 +104,15 @@ function PostItem({
                 setShowLike(()=>false)
             },1000)
             setLikeCount(()=>likeCount+1)
-            addLike(item.id,item.userId,realItem.likeCount).then(res=>{
+            addLike(item.id,item.userId,realItem.likeCount+1).then(res=>{
+                defaultShowMessage({
+                    message:"successful"
+                })
             })
         }else{
             setLiked(()=>false)
             setLikeCount(()=>likeCount-1)
-            cancelLike(item.id,item.userId,realItem.likeCount).then(res=>{
+            cancelLike(item.id,item.userId,realItem.likeCount-1).then(res=>{
                 defaultShowMessage({
                     message:"已取消"
                 })

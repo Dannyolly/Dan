@@ -204,7 +204,7 @@ export default observer(({ navigation, onlyFlatList }) => {
         }
 
 
-        console.log('getData' , newMessageCount.current ,firstTimeChecking.current , isNewMessage.current )
+        console.log('getData----newMessageCount' , newMessageCount.current )
         if (isNewMessage.current === true) {
 
             // 有新POST
@@ -251,7 +251,7 @@ export default observer(({ navigation, onlyFlatList }) => {
                 await
                     LocalCacheManager.
                         getThePostFromLocalByCurrentPage(id ,currentPage.current)
-            console.log(newMessageCount.current,posts.length, isAllCheckOut.current)
+            console.log('currentPost.length',posts.length)
             if (posts === null && isAllCheckOut.current === true || posts.length === 0 && isAllCheckOut.current) {
                 // 沒有更多post了...
                 // undefined 表示完了...
@@ -358,13 +358,15 @@ export default observer(({ navigation, onlyFlatList }) => {
 
             })()
 
-            //cachePost() 
+          
         }
     }, [JSON.stringify(userStore)])
 
 
     useEffect(() => {
 
+
+        
 
         // 這個是用戶自己上傳的新post
         listener.current = DeviceEventEmitter.addListener('uploadPost', async function (obj) {
@@ -507,10 +509,8 @@ export default observer(({ navigation, onlyFlatList }) => {
                                 onZooming={onZooming}
                                 zooming={zooming}
                                 index={index}
-                                uploading={uploading}
                                 navigation={navigation}
                                 item={item}
-                                handleToggle={handleToggle}
                             />
                     }
                     keyExtractor={(item) => item.id.toString()}

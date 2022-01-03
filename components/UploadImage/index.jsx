@@ -1,4 +1,4 @@
-import React,{useState,useEffect, useRef} from 'react'
+import React,{useState,useEffect, useRef, memo} from 'react'
 import { StyleSheet, Text, View ,Image, findNodeHandle, Modal, Animated } from 'react-native'
 import * as Progress from 'react-native-progress';
 import { screenSize } from '../../util/screenSize';
@@ -9,10 +9,11 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 import MaskView from '../MaskView'
 import { userStore } from '../../mobx/store';
 import JustifyCenterImage from '../JustifyCenterImage'
+import { imageStore } from '../../mobx/lock';
 
 const index = (props ) => {
 
-    const {image ,progress, isFinish, parentRef , containerSize, RenderImage } = props
+    const {image ,progress , isFinish, parentRef , containerSize, RenderImage, UUID } = props
 
     const [uploaded, setIsUploaded] = useState(true)
 
@@ -20,13 +21,12 @@ const index = (props ) => {
 
 
     useEffect(() => {
-        //console.log(progress  ,  uploaded )
         if(progress===1 ){
-            console.log('finish')
+            //console.log('finish')
             setIsUploaded(()=>true)
         }else if(uploaded===true && progress!==0) {
             setIsUploaded(()=>false)
-            console.log('uploading')
+            //console.log('uploading')
         }
     }, [progress])
 
@@ -36,7 +36,7 @@ const index = (props ) => {
         }
     },[])
     
-    //console.log(progress)
+    //console.log('uploadImage',progress)
 
     return (
         <View ref={c=>ref.current=c} style={{position:'relative',width:220,height:220,backgroundColor:"#EBEDF5"}} >
@@ -57,7 +57,11 @@ const index = (props ) => {
     )
 }
 
-export default index
+export default memo(index,(pre,next)=>{
+
+    //console.log(pre.progress,next.progress)
+    return  true
+})
 
 const styles = StyleSheet.create({
 

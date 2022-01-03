@@ -17,7 +17,7 @@ const collectionItem = ({  item , index  }: collectionItemProps):React.ReactElem
     //console.log(base_url + item.userInfo[0].backgroundImage)
 
     return (
-        <View style={{width:screenSize.width/2-10 , height:260,marginRight:10,borderRadius:10 }}>
+        <View style={{width:screenSize.width/2-10 , height:260,marginRight:10,borderRadius:10}}>
             <CachedImage
                 uri={item.postImage[0]}
                 style={{width:screenSize.width/2-10 , height:200,borderTopLeftRadius:10, borderTopRightRadius:10 }}

@@ -14,7 +14,7 @@ import {imageStore } from '../../mobx/lock'
 
 
 /** @param {{imageUrl :String}} */
-const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl ,isMoving} ) => {
+const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl ,isMoving, progress} ) => {
 
     const ref = useRef()
 
@@ -135,8 +135,6 @@ const index = ( { parentRef , mainRef , ChildrenComponent, BaseImage , imageUrl 
         },1500)
         
     }
-
-    
 
     return (
 

@@ -129,7 +129,7 @@ const uploadPost = (files, userId, introduction) => {
  * @param {Number} userId 
  * @param {Function} setProgress
  */
-const sendPic = (files, senderId, receiverId, setProgress) => {
+const sendPic = (files : Array<String>, senderId: number, receiverId : number, setProgress : (present : number)=>void) => {
     let param = transformToFormDataByMessage(files, senderId, receiverId)
 
     return axios({
@@ -142,6 +142,7 @@ const sendPic = (files, senderId, receiverId, setProgress) => {
         },
         onUploadProgress: progressEvent => {
             let present = (progressEvent.loaded / progressEvent.total * 100 | 0) //上传进度百分比
+            //console.log(present);
             setProgress(present * 0.01)
                 //console.log(present*0.01);
                 /* setTimeout(()=>{r

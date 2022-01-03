@@ -35,7 +35,7 @@ const savePostToLocal = async(post : Array<FormattedPost>, userId : number) => {
         /** @type {Array<FormattedPost>} */
         let res = JSON.parse(json)
 
-        await AsyncStorage.setItem(`${userId}Post`, JSON.stringify([...res, ...post]))
+        await AsyncStorage.setItem(`${userId}Post`, JSON.stringify([ ...post , ...res]))
     }
 
 
@@ -59,7 +59,7 @@ const getAllPost = async(userId) :Promise<Array<FormattedPost>>  => {
  * @param {number} [pageSize]  默認為 5
  * @returns {Array<FormattedPost>}
  */
-const getThePostFromLocalByCurrentPage = async(userId, currentPage, pageSize):Promise<Array<FormattedPost>> => {
+const getThePostFromLocalByCurrentPage = async(userId:number , currentPage :number, pageSize?: number):Promise<Array<FormattedPost>> => {
     /** @type {Array<FormattedPost>} */
     let res = JSON.parse((await AsyncStorage.getItem(`${userId}Post`)))
 

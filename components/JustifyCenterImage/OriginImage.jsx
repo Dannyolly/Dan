@@ -20,7 +20,7 @@ const OriginImage = forwardRef((props , ref) => {
 
 
 
-export default memo(OriginImage,()=>true)
+export default OriginImage
 
 const styles = StyleSheet.create({
 

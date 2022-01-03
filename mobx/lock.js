@@ -17,6 +17,11 @@ class ImageStore {
     // 控制discover 頁面的maskView高度
     maskViewHeight = 0
 
+    // 進度條....
+    progress = 0
+
+    UUID = ''
+
     constructor() {
         makeObservable(this, {
             /* field */
@@ -25,11 +30,17 @@ class ImageStore {
             index: observable,
             isStart: observable,
             maskViewHeight: observable,
+            progress: observable,
+            UUID: observable,
+
             /* function  */
             setIsZooming: action,
             setScale: action,
             setIndex: action,
             setIsStart: action,
+            setProgress: action,
+            setMaskViewHeight: action,
+            setUUID: action
         })
     }
 
@@ -55,6 +66,14 @@ class ImageStore {
 
     setMaskViewHeight = (height) => {
         this.maskViewHeight = height
+    }
+
+    setProgress = (progress) => {
+        this.progress = progress
+    }
+
+    setUUID = (UUID) => {
+        this.UUID = UUID
     }
 
 }

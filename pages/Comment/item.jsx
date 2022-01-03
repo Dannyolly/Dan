@@ -3,7 +3,7 @@ import { StyleSheet, Text, View,TouchableWithoutFeedback,Image,Animated,Keyboard
 import { base_url } from '../../api/config';
 import { calculateDate } from '../../util/function';
 import { screenSize } from '../../util/screenSize';
-
+import CachedImage from '../../components/NonIdCachedImage'
 
 
 
@@ -40,8 +40,9 @@ const Item =  ( {item , offset } ) =>{
 
         <View style={{paddingLeft:45,marginBottom:15}}>
             
-            <Image  source={{uri:uri}}  style={styles.icon} />
-            
+           {/*  <Image  source={{uri:uri}}  style={styles.icon} /> */}
+            <CachedImage  uri={uri} style={styles.icon} />
+
             <View style={{width:calculateLength(),backgroundColor:"#F4F4F4",borderRadius:10,padding:10,/* paddingTop:5,paddingBottom:5, */marginBottom:5}}>
                 <Text style={{fontWeight:'600',marginRight:10,marginBottom:3,paddingLeft:1,textAlign:'left'}}>{username}</Text>
                 <Text style={{textAlign:'left'}}>

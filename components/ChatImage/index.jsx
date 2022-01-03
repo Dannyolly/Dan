@@ -11,6 +11,7 @@ import { imageStore } from '../../mobx/lock'
  * @typedef MyImageProps
  * @property {String} image
  * @property {MutableRefObject} parentRef 
+ * @property {string } UUID
  * @returns 
  */
 
@@ -23,7 +24,7 @@ import { imageStore } from '../../mobx/lock'
 const index = (props) => {
 
     
-    const { image, parentRef } = props
+    const { image, parentRef ,progress } = props
     
     // console.log('re-render')
     const [isMoving, setIsMoving] = useState(false)
@@ -45,7 +46,7 @@ const index = (props) => {
         /* console.log('zooming?',isMovingRef.current) */
     }
 
-    const RenderImage = memo(( {borderRadius} )=>{
+    const RenderImage = ( {borderRadius} )=>{
         
 
         return (
@@ -79,21 +80,21 @@ const index = (props) => {
                 autoReset={false}
             />
             )
-    },(pre,next)=>{
-        return true
-    })
+    }
 
     
-
+    //console.log('progresss',props.progress)
     return (
         <View style={{borderRadius:20}} >
             <JustifyCenterImage 
+                progress={progress}
                 parentRef={parentRef} 
                 isMoving={isMoving}
                 ChildrenComponent={
                     ()=>
                         <UploadImage {...props}
-                            RenderImage={()=><RenderImage borderRadius={10}/>}  
+                            RenderImage={()=><RenderImage borderRadius={10}/>}
+                            progress={progress}
                         />
                 }  
                 BaseImage ={({ ref })=><RenderImage ref={ref}  borderRadius={0} /> }

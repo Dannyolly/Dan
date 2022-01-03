@@ -51,7 +51,7 @@ import { messageResponser} from '../../util/haptic'
 import { showMessage } from 'react-native-flash-message'
 import Loading from './Loading'
 import BottomSheet from '../../components/BottomSheet/Message'
-
+import { imageStore  } from '../../mobx/lock'
 export default function index( { route, navigation } ) {
 
     const { item } = route.params
@@ -150,6 +150,11 @@ export default function index( { route, navigation } ) {
         let { data } = await sendPic([pic],userInfo.id,item.id, num =>{
             setTimeout(()=>{
                 setProgress(()=>num)
+
+                // 上面的有BUG ...
+                //imageStore.setProgress(num)
+
+                //console.log('setProgress',num)
             },10)
             //console.log('progress',num)
         })
@@ -335,7 +340,8 @@ export default function index( { route, navigation } ) {
                             <ChatImage  
                             parentRef={containerRef.current}  
                             {...props.currentMessage} 
-                            progress={progress}   
+                            progress={progress}  
+                            //UUID={UUID} 
                             />
                         )
                     }}

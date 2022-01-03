@@ -63,7 +63,7 @@ export default observer(()=>{
     */
     const findOutChatList = async ()=>{
         let a =new Date().getTime()
-        console.log(a)
+        //console.log(a)
 
         /** @type {{ userInfo  : import('../../api/api').UserInfo}} */
         let userInfoTemp  
@@ -101,20 +101,20 @@ export default observer(()=>{
         }
         //  排序...
         messageArr  = messageArr.sort(dateCompare)
-        console.log(messageArr)
+        //console.log(messageArr)
         if(messageArr.length !== 0 ){
 
             setChatList(()=>messageArr)
         
         }else{
             // 新用戶....
-            console.log('new User')
+            //console.log('new User')
             findOutUnReadMessage()
 
         }
         
         chatListRef.current=messageArr
-        console.log('findOutChatList')
+        //console.log('findOutChatList')
 
         
     }
@@ -376,14 +376,14 @@ export default observer(()=>{
         })
 
         refreshEmitter =DeviceEventEmitter.addListener("refresh",function (){
-            console.log(' start to refresh')
+            //console.log(' start to refresh')
             getData()
         })
 
         return()=>{
 
 
-            console.log('EMitter removed ')
+            //console.log('EMitter removed ')
 
             eventEmitter.remove()
             refreshEmitter.remove()
