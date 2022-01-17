@@ -61,9 +61,10 @@ const chatMsg = (action, senderId, receiverId, message, extraField) => {
  * @description     信息格式...
  * @param {String}  text 
  * @param {Object}  info 這個先你想轉的info
- * @param {String}  image
- * @param {Object}  user
- * @param {Number}  user.id
+ * @param {String}  [image]
+ * @param {Object}  [user]
+ * @param {Number}  [user.id]
+ * @param {Boolean} [isFinish]
  * @returns {ChatMsg}
  */
 const getMsgFormat = (text, info, image, isFinish) => {

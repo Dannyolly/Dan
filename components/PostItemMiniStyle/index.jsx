@@ -25,7 +25,7 @@ const index = ({  item , index, navigation  }) => {
 
     const initPosition = useRef({width:0,height:0,pageX:0,pageY:0 })
 
-    const [showModalBackground, setShowModalBackground] = useState(false)
+
     const route = {
         params:{
             userId:item.userId,
@@ -37,63 +37,74 @@ const index = ({  item , index, navigation  }) => {
 
     const viewZooming=()=>{
         
-        console.log(translateX,translateY)
+        //console.log(translateX,translateY)
         
-        Animated.timing(scaleX,{
-            toValue:screenSize.width,
-            useNativeDriver:false,
-            easing:Easing.linear,
-            duration:300,
-        }).start()
+        
+            Animated.parallel([
+                Animated.timing(scaleX,{
+                    toValue:screenSize.width,
+                    useNativeDriver:false,
+                    easing:Easing.linear,
+                    duration:300,
+                }),
+                Animated.timing(scaleY,{
+                    toValue:screenSize.height,
+                    useNativeDriver:false,
+                    easing:Easing.linear,
+                    duration:300,
+                    
+                }),
+                Animated.timing(translateX,{
+                    toValue:0,
+                    useNativeDriver:false,    
+                    easing:Easing.linear,
+                    duration:300,
+               
+                }),
+                Animated.timing(translateY,{
+                    toValue:0,
+                    useNativeDriver:false,  
+                    easing:Easing.linear, 
+                    duration:300,
+                })
+            ],{stopTogether:false}).start()        
 
-        Animated.timing(scaleY,{
-            toValue:screenSize.height,
-            useNativeDriver:false,
-            easing:Easing.linear,
-            duration:300,
-        }).start()
-
-        Animated.timing(translateX,{
-            toValue:0,
-            useNativeDriver:false,    
-            easing:Easing.linear,             
-            duration:300,
-        }).start()
-
-        Animated.timing(translateY,{
-            toValue:0,
-            useNativeDriver:false,
-            easing:Easing.linear,
-            duration:300,
-        }).start()
+        
     }
 
     const viewCollapseZooming=()=>{
        // setShowModalBackground(()=>false)
 
+       Animated.parallel([
         Animated.timing(scaleX,{
             toValue:initPosition.current.width,
             useNativeDriver:false,
+            easing:Easing.linear,
             duration:250,
-        }).start()
+        }),
 
         Animated.timing(scaleY,{
             toValue:initPosition.current.height,
             useNativeDriver:false,
+            easing:Easing.linear,
             duration:250,
-        }).start()
+        }),
 
         Animated.timing(translateX,{
             toValue:initPosition.current.pageX,
             useNativeDriver:false,
+            easing:Easing.linear,
             duration:250,
-        }).start()
+        }),
 
         Animated.timing(translateY,{
             toValue:initPosition.current.pageY,
             useNativeDriver:false,
+            easing:Easing.linear,
             duration:250,
-        }).start()
+        })
+       ],{stopTogether:false}).start()
+        
 
 
         setTimeout(()=>{
@@ -104,8 +115,7 @@ const index = ({  item , index, navigation  }) => {
 
     useEffect(() => {
         if(isClick){
-            console.log('zooming')
-            setShowModalBackground(()=>true)
+            //console.log('zooming'
             viewZooming()
         }
     }, [isClick])
@@ -114,11 +124,13 @@ const index = ({  item , index, navigation  }) => {
         <View >
             { 
                 <Modal   visible={isClick} 
-                style={{width:screenSize.width,
+                style={{
+                width:screenSize.width,
                 height:screenSize.height,zIndex:1,
-                justifyContent:'center',alignItems:'center',
-                borderRadius:40}} transparent={true}>
+                borderRadius:40}} 
+                transparent={true}>
                     <Animated.View 
+                    //onLayout={e=>console.log(e.nativeEvent.layout)}
                     style={{
                         borderRadius:20,
                         width:scaleX,
@@ -149,7 +161,7 @@ const index = ({  item , index, navigation  }) => {
             <TouchableHighlight style={{zIndex:0}} activeOpacity={0.7} underlayColor={"#FFFFFF"} 
             onPress={()=>{       
                 ref.current.measure((x,y,width,height,pageX,pageY)=>{
-                    console.log(x,y,width,height,pageX,pageY,screenSize.width/width,screenSize.height/height);
+                    //console.log(x,y,width,height,pageX,pageY,screenSize.width/width,screenSize.height/height);
                     initPosition.current={
                         width,
                         height,
@@ -167,7 +179,7 @@ const index = ({  item , index, navigation  }) => {
                         useNativeDriver:false
                     }).start()
 
-                    console.log(translateX,translateY)
+                    //console.log(translateX,translateY)
 
 
                     setIsClick(()=>true)

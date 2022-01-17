@@ -281,7 +281,7 @@ export default observer(({ route, navigation })=>{
                  
               )}
             showsVerticalScrollIndicator={false} 
-            style={{width:screenSize.width,height:screenSize.height}}
+            style={{width:screenSize.width,height:screenSize.height,backgroundColor:"#F4F4F4"}}
             >
                 <BottomSheet  isOpen={isChangeBackgroundImage} setIsOpen={changeBackgroundImage} setBackgroundImage={image=>setBackgroundImage(image)}  />
 
@@ -325,7 +325,7 @@ export default observer(({ route, navigation })=>{
                                 style={{width:120,height:120,borderRadius:60,marginRight:10}}
                             />
                             <Text style={{fontSize:20,fontWeight:'500',color:'#28C1FD'}}>{item.username}</Text>
-                            <Text style={{color:"#CDCDCD"}}>簡介:{item.introduction}</Text>
+                            <Text style={{color:"#F4F4F4"}}>簡介:{item.introduction}</Text>
                             
                         </View>  
                         
@@ -378,11 +378,11 @@ export default observer(({ route, navigation })=>{
                         }}  
                         />
                         <View onTouchEnd={()=>changeShowStyle()} style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                            <MaterialIcons name="article" style={{fontSize:24,color:showStyle===false?"#FFFFFF":'#CDCDCD'}}  />
+                            <MaterialIcons name="article" style={{fontSize:24,color:showStyle===false?"#FFFFFF":'#F4F4F4'}}  />
                         </View>
 
                         <View onTouchEnd={()=>changeShowStyle()} style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                            <Entypo name="grid" style={{fontSize:24,color:showStyle===true?"#FFFFFF":'#CDCDCD'}}  />
+                            <Entypo name="grid" style={{fontSize:24,color:showStyle===true?"#FFFFFF":'#F4F4F4'}}  />
                         </View>
                         
                     </View>

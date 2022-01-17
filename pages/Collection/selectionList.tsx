@@ -36,7 +36,7 @@ const selectionList = ({ setCurrentSelection  ,currentSelection  }: selectionLis
     }
 
     return (
-        <View style={{backgroundColor:"#FFFFFF",width:screenSize.width,height:50,marginBottom:10,paddingLeft:10,paddingRight:10,paddingBottom:10}} >
+        <View style={{backgroundColor:"#FFFFFF",width:screenSize.width,height:50,marginBottom:0,paddingLeft:10,paddingRight:10,paddingBottom:10}} >
                 <ScrollView scrollEnabled={false}  horizontal={true} contentContainerStyle={{borderRadius:20,padding:0,marginBottom:0}} >
                     {
                         selectionList.map((item,index)=>{

@@ -9,7 +9,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import CachedImage from '../../components/CachedImage'
+import CachedImage from '../../components/NonIdCachedImage'
 import item from '../../pages/Friend/FriendList/item'
 
 export default observer(()=>{
@@ -54,7 +54,6 @@ export default observer(()=>{
                             
                             <CachedImage
                             uri={base_url+data.icon}
-                            id={data.id}
                             style={{width:70,height:70,borderRadius:35,marginRight:20}}
                             />
                             

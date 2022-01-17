@@ -79,14 +79,8 @@ function PostItem({
 
     const [isCollection, setIsCollection] = useState(false)
 
-
     const viewRef = useRef<any>();
 
-    // 測量圖片相對位置
-    const initPosition = useRef({width:0,height:0,pageX:0,pageY:0})
-
-
-    const [initLocation, setInitLocation] = useState(undefined)
     /**
      * @description 雙擊事件...
      */

@@ -15,9 +15,9 @@ const Comment = ({ icon,item , collapse }) => {
 
     const navigation =useNavigation()
 
-    // console.log(item)
+    console.log(base_url + icon )
     return (
-        <View style={{zIndex:100,width:screenSize.width,height:80,paddingTop:45,flexDirection:'row',paddingLeft:0,marginBottom:10}}>    
+        <View style={{zIndex:100,width:'100%',height:80,paddingTop:45,flexDirection:'row',paddingLeft:0,marginBottom:10}}>    
             <TouchableWithoutFeedback onPress={()=>{
                 console.log('???');
                 return collapse?collapse():navigation.goBack()

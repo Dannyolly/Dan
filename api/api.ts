@@ -6,7 +6,7 @@ import {
     axios
 } from './config'
 import { AxiosResponse } from 'axios'
-import { Post } from '../util/type/index'
+import { Post, UserInfo } from '../util/type/index'
 import { ws } from '../webSocket'
 //const userLogin=(username,password)=>get(`/login?username=${username}&password=${password}`)
 /* login?username=danny&password=28300136 */
@@ -21,6 +21,7 @@ const uploadIcon = (url, id) => {
     console.log('id=', id);
     param.append('id', id)
     param.append('file', {
+        // @ts-ignore
         uri: url,
         type: 'multipart/form-data',
         name: ".png"
@@ -40,6 +41,7 @@ const uploadBackgroundImage = (url, id) => {
     let param = new FormData()
     param.append('id', id)
     param.append('file', {
+          // @ts-ignore
         uri: url,
         type: 'multipart/form-data',
         name: ".png"
@@ -71,7 +73,7 @@ const getAllFriend = (id) => get(`/friendList?userId=${id}`)
  * @param {object} info 
  * @returns {Promise<AxiosResponse<Array<UserInfo>>>}
  */
-const searchUser = (info) => get(`/searchUser?${info}`)
+const searchUser = (info : Object):Promise<AxiosResponse<Array<UserInfo>>> => get(`/searchUser?${info}`)
 
 const updateUserInfo = (info) => get(`/updateUserSetting?${info}`)
 

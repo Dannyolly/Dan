@@ -1,8 +1,8 @@
 import React, { Component, useEffect,useCallback, useRef, useState ,memo} from 'react'
-import { Text, View ,StyleSheet, Animated, Modal,TextInput ,} from 'react-native'
+import { Text, View ,StyleSheet, Animated, Modal,TextInput } from 'react-native'
 import { screenSize } from '../../util/screenSize'
-import { AntDesign ,SimpleLineIcons} from '../../util/Icon'
-import { FlatList, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { AntDesign ,SimpleLineIcons } from '../../util/Icon'
+import {  ScrollView, TouchableWithoutFeedback,FlatList } from 'react-native-gesture-handler'
 import FriendList from './FriendList'
 
 import { userStore,observer } from '../../mobx/store'
@@ -192,7 +192,7 @@ export default observer(()=>{
             </Modal>
 
 
-            <ScrollView  refreshControl={props=><DownScrollLoading {...props}  />}  /* stickyHeaderIndices={[0]} */ >   
+            <ScrollView  >   
                 <Animated.View style={{opacity:clicked?0:1}} >
                     <FriendHeader navigation={navigation} />
                 </Animated.View>

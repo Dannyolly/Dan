@@ -9,7 +9,7 @@ const index = ({ previewUri  , uri , style  } ) => {
         <Image  
         /* tint={'dark'} */
         {...{ uri:uri}} 
-        style={[style,{zIndex:100}]}   
+        style={[style.flex!==undefined?{flex:1}:style,{zIndex:100}]}   
         />
     )
 }

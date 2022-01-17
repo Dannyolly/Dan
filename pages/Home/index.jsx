@@ -367,8 +367,10 @@ export default observer(()=>{
 
     useEffect(() => {
 
-
-        getData()
+        if(1){
+            getData()
+        }
+        
 
         eventEmitter = DeviceEventEmitter.addListener("receiveMsg",function (msgInfo){
             //console.log(msgInfo)
@@ -426,7 +428,7 @@ export default observer(()=>{
                 overScrollMode={'always'}
                 ref={c=>onScrollRef.current=c}
                 data={chatList}
-                refreshControl={props=><DownScrollLoading  {...props} />}
+                //refreshControl={DownScrollLoading}
                 onScroll={
                     Animated.event(
                     [

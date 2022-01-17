@@ -298,9 +298,6 @@ const BottomTab = observer((props)=>{
                     
                 }}
                 options={{
-                    /* header:({navigation })=>(
-                        <DiscoverHeader  navigation={navigation} />
-                    ), */
                     title:"發現",
                     headerShown:false
                     
@@ -316,7 +313,7 @@ const BottomTab = observer((props)=>{
                     },
                 }}
                 options={{
-                    lazy:false,
+                    lazy:Platform.OS==='ios'?false:true,
                     headerLeft:({navigation})=>(
                         <HomeHeader  navigation={navigation} />
                     )
@@ -329,16 +326,13 @@ const BottomTab = observer((props)=>{
                 component={Post}
                 options={{
                     headerShown:false,
-                    
-                    /* headerLeft:props=><HomeHeader {...props} navigation={navigation} />, */
-                    /* headerTitle:'聊天室' */
                     tabBarButton:()=>{
                         return(
                             <View style={{paddingTop:5}}>
                                 <View 
                                 onTouchEnd={()=>{
-                                navigation.navigate('Post')
-                                messageResponser()
+                                    navigation.navigate('Post')
+                                    messageResponser()
                                 }} 
                                 style={{shadowColor:"#22CAFE",shadowRadius:40,shadowOffset:{width:20,height:20},marginLeft:15,marginRight:15,width:40,height:40,borderRadius:20,justifyContent:"center",alignItems:"center",backgroundColor:"#22CAFE"}}>
                 
@@ -348,7 +342,7 @@ const BottomTab = observer((props)=>{
                         )
                     },
                     
-                    /* presentation:'modal', */
+                   
                     
                 }}
             />
@@ -501,7 +495,7 @@ export default observer((props)=>{
         }
 
 
-        await AsyncStorage.setItem(`${res.userInfo.id}userInfo`,userInfo)
+        AsyncStorage.setItem(`${res.userInfo.id}userInfo`,userInfo)
        
     }
 
@@ -756,8 +750,10 @@ export default observer((props)=>{
                         component={Collection}
                         options={{
             
-                            //headerShown:true,
-                            presentation:'modal'
+                            headerShown:true,
+                            presentation:'modal',
+                            title:'收藏',
+                            headerTintColor:'#21CFFF'
                         }}
                         />
 

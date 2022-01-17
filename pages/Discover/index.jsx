@@ -109,22 +109,6 @@ export default observer(({ navigation, onlyFlatList }) => {
 
 
 
-    const handleToggle = () => {
-        if (!setting.current) {
-            //console.log(scrollRef.current)
-            setting.current = true
-            scrollRef.current = !scrollRef.current
-            //console.log(scrollRef.current)
-            onScrollRef.current.setNativeProps({
-                scrollEnabled: scrollRef.current
-            })
-            setTimeout(() => {
-                setting.current = false
-            }, 300)
-        }
-    }
-
-
     const checkOutNewPost = async () => {
 
         if (firstTimeChecking.current) {
@@ -423,16 +407,14 @@ export default observer(({ navigation, onlyFlatList }) => {
         return (
             <View>
                 {
-                    isShowLoader === true && isShowEndHandler === false
-                    &&
-                    <View style={{ width: screenSize.width, height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                    
+                    <View style={{display:isShowLoader === true && isShowEndHandler === false?'flex':'none' ,width: screenSize.width, height: 50, justifyContent: 'center', alignItems: 'center' }}>
                         <Image source={require('../../assets/giphy.gif')} style={{ width: 100, height: 50 }} />
                     </View>
                 }
                 {
-                    isShowEndHandler === true
-                    &&
-                    <View  style={{ width: screenSize.width - 20, height: 200,paddingBottom:100, justifyContent: 'center', alignItems: 'center' }}>
+                    
+                    <View  style={{display:isShowEndHandler === true?'flex':'none' ,width: screenSize.width - 20, height: 200,paddingBottom:100, justifyContent: 'center', alignItems: 'center' }}>
 
                         <Image source={require('../../assets/home.png')} style={{ width: 100, height: 100, borderRadius: 50 }} />
                         <Text style={{ fontWeight: '500' }}>沒有更多信息了~</Text>
@@ -475,7 +457,7 @@ export default observer(({ navigation, onlyFlatList }) => {
             overScrollMode={'always'}
             scrollEventThrottle={0}
             nestedScrollEnabled={true}
-            refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
+           // refreshControl={ <DownScrollLoading />}
             showsVerticalScrollIndicator={false}
             stickyHeaderIndices={[0]}
         >
@@ -493,14 +475,7 @@ export default observer(({ navigation, onlyFlatList }) => {
                 data !== undefined
                 &&
                 <FlatList
-                    refreshControl={Platform.OS === 'android' ? null : <DownScrollLoading />}
-                    ListHeaderComponent={() => <>
-                        
-                        
-
-                    </>}
                     CellRendererComponent={AutoZIndexView}
-                    
                     data={data}
                     renderItem={
                         ({ item, index }) =>

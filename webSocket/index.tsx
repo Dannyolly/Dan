@@ -20,10 +20,11 @@ import { userStore } from '../mobx/store';
 
 
 
-const ws = new WebSocket('ws://3kq8557234.zicp.vip:13044/ws');
-const webSocketPath= 'ws://3kq8557234.zicp.vip:13044/ws'
 
+//const webSocketPath= 'ws://3kq8557234.zicp.vip:13044/ws'
+const webSocketPath  = 'http://websocket.free.svipss.top/ws'
 
+const ws = new WebSocket(webSocketPath);
 
 const onopen=(e)=>{
     getUserMainInfo().then(res=>{
@@ -93,8 +94,8 @@ const receiveChatMessage = async (msg) =>{
         message:formatMsg.user.name,
         description:flag?formatMsg.text:"[ 圖片 ]",
         renderFlashMessageIcon:(icon,style,image)=>
-        <MessageIcon icon={icon} style={style} image={formatMsg.user.avatar}  
-        />,
+        // @ts-ignore
+        <MessageIcon icon={icon} style={style} image={formatMsg.user.avatar}/>,
         /* style:{
             backgroundColor:"#8C8E8F",
           height:75,

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useState, useEffect, useRef } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View ,DeviceEventEmitter } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { userStore } from '../../mobx/store'
 import { MaterialIcons } from '../../util/Icon'
@@ -11,7 +11,7 @@ import MyTextInput from '../Comment/textInput'
 import CollectionItem from './item'
 import SelectionList from './selectionList'
 
-
+import { LinearGradient } from 'expo-linear-gradient'
 interface CollectionProps {
     /* navigation:any ,
     route:{
@@ -32,6 +32,9 @@ const Collection = (props: CollectionProps) => {
 
     const [currentSelection, setCurrentSelection] = useState(0)
 
+    const lastY = useRef(0)
+
+
     const getCollection = async () => {
 
 
@@ -45,23 +48,35 @@ const Collection = (props: CollectionProps) => {
     }
 
 
+    const collapseBottomTabBar = () =>{
+
+
+    }
+
+    const showBottomTabBar = () =>{
+
+    }
+
     useEffect(() => {
         getCollection()
 
     }, [])
 
     return (
-        <ScrollView style={{ width: screenSize.width, height: screenSize.height }}>
-            <View style={{ backgroundColor: "#FFFFFF", marginBottom: 10 }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginBottom: 10, backgroundColor: '#FFFFFF', paddingTop: 20 }} >
-                    {/* <View style={[styles.fontIconContainerStyle,{position:'absolute',left:20,top:10}]}>
-                        <MaterialIcons name={'collections'}
-                            style={{ fontSize: 17, lineHeight: 30, color: "#ffffff" }} />
-                    </View> */}
-                    <Text style={{ color: "#21CFFF", fontWeight: 'bold', fontSize: 16 }} >收藏</Text>
+        <LinearGradient 
+                        locations={[0.01,0.5,1]}
+                        colors={['#FFFFFF','#F4F4F4']}
+                        style={{width:screenSize.width,height:screenSize.height,alignItems:"center"}}
+                        >
 
-                </View>
-                <View style={{padding:10}}>
+        <ScrollView 
+        
+        stickyHeaderIndices={[1]}
+        style={{ width: screenSize.width, height: screenSize.height }}>
+            
+            <View style={{ backgroundColor: "transparent", marginBottom: 0 }}>
+                
+                <View style={{padding:10,height:60}}>
                     <MyTextInput
                         // @ts-ignore
                         style={styles}
@@ -69,15 +84,16 @@ const Collection = (props: CollectionProps) => {
 
                     />
                 </View>
-                <SelectionList
+                
+            </View>
+            <SelectionList
                     setCurrentSelection={number => setCurrentSelection(() => number)}
                     currentSelection={currentSelection}
                 />
-            </View>
-
 
 
             <FlatList
+                onEndReached={()=>console.log('onReach')}
                 showsVerticalScrollIndicator={false}
                 style={{ padding: 5 }}
                 data={postList}
@@ -96,8 +112,10 @@ const Collection = (props: CollectionProps) => {
 
 
             />
+           
         </ScrollView>
-    )
+     </LinearGradient>
+     )
 }
 
 export default Collection
@@ -114,7 +132,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: screenSize.width - 20,
-        height: 40,
+        flex:1,
         backgroundColor: "#F4F4F4",
         padding: 5,
         paddingLeft:20,

@@ -1,8 +1,9 @@
 import React,{useEffect,useState,useCallback} from 'react'
-import { View, Text ,StyleSheet ,FlatList ,Image, DeviceEventEmitter} from 'react-native'
+import { View, Text ,StyleSheet ,Image, DeviceEventEmitter} from 'react-native'
 
 import { userStore,observer } from '../../../mobx/store'
 import { getAllFriend } from '../../../api/api'
+import { FlatList } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Item from './item'
 import { base_url } from '../../../api/config'

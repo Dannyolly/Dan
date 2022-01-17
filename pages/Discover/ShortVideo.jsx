@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import ShortVideoItem from './ShortVideoItem'
 import { useNavigation ,NavigationProp} from '@react-navigation/native'
 
-
+import {} from 'ahooks'
 
 const ShortVideo = ( {item ,index} ) => {
 

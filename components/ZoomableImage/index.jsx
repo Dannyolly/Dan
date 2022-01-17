@@ -149,8 +149,8 @@ import { Easing } from 'react-native';
 
     return (
       <TapGestureHandler onActivated={doubleTapEvent}  numberOfTaps={2} >
-        <Animated.View  >
-        <Animated.View style={[/* StyleSheet.absoluteFill, */{width:style.width, height:style.height}, 
+        <Animated.View style={{flex:1}} >
+        <Animated.View style={[/* StyleSheet.absoluteFill, */ style.width===undefined?{flex:1}:{width:style.width, height:style.height}, 
             ]}>
             <ScrollView 
               contentContainerStyle={{
