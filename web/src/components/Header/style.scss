@@ -1,0 +1,33 @@
+.container {
+    width:100%;
+    height:53px;
+    padding:5px;
+    display: flex;
+    background-color: #FFFFFF;
+    box-shadow: 0 2 0 5px #CDCDCD;
+    position: relative;
+    .logo{
+        display: none;
+    }
+   
+}
+
+.more-option:hover{
+    color: rgb(24,144,255);
+}
+
+@media screen and (min-width:0px) and (max-width:599px) {
+
+    .container{
+        /* background:rgba(255,255,255,0.95);
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        .logo{
+            display: flex;
+            
+        } */
+    }
+
+}
+

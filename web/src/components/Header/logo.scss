@@ -1,0 +1,110 @@
+// pc
+@media screen and (min-width:1100px) {
+    .logo-container{
+        justify-content:flex-end;
+        display:flex;
+        position:absolute;
+        top: -45px;
+        padding-left: 10px;
+        .logo-real-container{
+            width: 100%;
+            max-width: 204px;
+            display:flex;
+            padding-right: 0%;
+
+            img{
+                width:40px;
+                height: 40px;
+                /* padding-top: 5px;
+                padding-bottom: 5px; */
+                margin-right:5px
+            }
+
+            .name {
+                justify-content:center;
+                align-items:center;
+                display:flex;
+                color:rgb(6,117,232);
+                font-weight:bold;
+                font-size:20px;
+
+            }
+        }
+        
+    }
+
+}
+
+// ipad
+@media screen and (min-width:600px) and (max-width:1099px) {
+    .logo-container{
+        width:20%;
+        display: flex;
+        justify-content:flex-end;
+        padding-left:30px;
+        position:absolute;
+        top: -45px;
+        .logo-real-container{
+            justify-content:flex-start;
+            width:70%;
+            display:flex;
+            padding-left:10px;
+
+            img{
+                width:40px;
+                height: 40px;
+                /* padding-top: 5px;
+                padding-bottom: 5px; */
+                margin-right:5px
+            }
+
+            .name {
+                /* justify-content:center;
+                align-items:center;
+                display:flex;
+                color:rgb(6,117,232);
+                font-weight:bold;
+                font-size:20px; */
+                display: none;
+
+            }
+        }
+        
+    }
+
+}
+
+// mobile phone
+@media screen and (max-width:599px) {
+    .logo-container{
+        width:18%;
+        justify-content:flex-start;
+        padding-left:10px;
+        padding-right:10px;
+        display:flex;
+
+        .logo-real-container{
+            justify-content:flex-start;
+            width:70%;
+            display:flex;
+            padding-left:10px;
+
+            img{
+                width:40px;
+                height:40px;
+                margin-right:5px
+            }
+
+            .name {
+                justify-content:center;
+                align-items:center;
+                display:flex;
+                color:rgb(6,117,232);
+                font-weight:bold;
+                font-size:20px;
+
+            }
+        }
+    }
+
+}

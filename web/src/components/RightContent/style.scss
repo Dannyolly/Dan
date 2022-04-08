@@ -1,0 +1,125 @@
+
+
+
+// PC
+@media screen and (min-width:1300px) {
+    .right-content-container{
+        max-width: 340px;
+        width:25%;
+        display: flex;
+        
+        padding-left: 5%;
+        flex-direction: column;
+        position: relative;
+        
+    
+        .messager-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    
+        .advertisement-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            max-width: 100%;
+            padding: 5px;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+// PC
+@media screen and (min-width:1100px) and (max-width:1299px) {
+    
+    .right-content-container{
+        max-width: 300px;
+        width:25%;
+        display: flex;
+        
+        padding-left: 5%;
+        flex-direction: column;
+        position: relative;
+        
+    
+        .messager-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    
+        .advertisement-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            max-width: 100%;
+            padding: 5px;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    }
+}
+// ipad
+@media screen and (min-width:600px) and (max-width:1099px) {
+    .right-content-container{
+        max-width: 300px;
+        width:33%;
+        display: none;
+        
+        padding-left: 5%;
+        flex-direction: column;
+        position: relative;
+        
+    
+        .messager-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    
+        .advertisement-header{
+            font-size: 16px;
+            font-weight: 600;
+            height: 30px;
+            width: 100%;
+            max-width: 100%;
+            padding: 5px;
+            flex-direction: row;
+            display:flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+// phone
+@media screen and (min-width:0px) and (max-width:599px) {
+    
+    .right-content-container{
+        display: none;
+    }
+}
+
+
+
+
+.home-container::-webkit-scrollbar {
+    display: none;
+}

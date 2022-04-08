@@ -1,0 +1,31 @@
+.publish-container{
+    padding: 20px;
+    padding-top: 10px;
+    width: 95%;
+    height: 100%;
+    img{
+        margin-right: 7px;
+    }
+    .publish-right-container{
+        flex:1
+    }
+    .publish-bottom-container{
+        flex:1;
+        display:flex
+    }
+}
+
+
+// phone
+@media screen and (min-width:0px) and (max-width:599px) {
+    
+    .publish-container{
+        width: 100%;
+    }
+    .publish-right-container{
+        width: 80%;
+    }
+    .publish-bottom-container{
+        font-size: 13;
+    }
+}

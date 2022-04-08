@@ -1,0 +1,141 @@
+.ant-modal-footer{
+    display: none;
+}
+.ant-modal-content{
+    border-radius: 20px;
+}
+@media screen and (min-width:1300px) {
+    .left-container{
+        width: 25%;
+        height: 100%;
+        padding: 10px;
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        border-right-width: 10px;
+        
+            .mobile-logo{
+                display: none;
+            }
+            .left-real-container{
+            width: 204px;
+            max-width: 204px;
+                
+                .ipad-icon{
+                    display: none;
+                }
+                .other-icon{
+                    display:flex;
+                }
+            }
+            .left-container-border{
+                width: 0.5px;
+                position: absolute;
+                right: 0;
+                background-color: #F4F4F4;
+                height: 100%;
+            }
+        
+
+        
+        //background-color: aqua;
+    }
+}
+
+@media screen and (min-width:1100px) and (max-width:1299px) {
+    .left-container{
+        width: 25%;
+        height: 100%;
+        padding: 10px;
+        position: relative;
+        display: flex;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        justify-content: flex-end;
+        border-right-width: 10px;
+        
+            .mobile-logo{
+                display: none;
+            }
+            .left-real-container{
+            width: 204px;
+            max-width: 204px;
+                .ipad-icon{
+                    display:none;
+                }
+                .other-icon{
+                    display: flex;
+                }
+            }
+            .left-container-border{
+                width: 0.5px;
+                position: absolute;
+                right: 0;
+                background-color: #F4F4F4;
+                height: 100%;
+            }
+        
+
+        
+        //background-color: aqua;
+    }
+}
+// ipad
+@media screen and (min-width:600px) and (max-width:1099px) {
+    .left-container{
+        width: 15%;
+        height: 100%;
+        padding: 10px;
+        padding-top: 0px;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        border-right-width: 10px;
+
+            .mobile-logo{
+
+                display: none;
+            }
+        
+            .left-real-container{
+            //width: 70%;
+            position: absolute;
+            right: 0;
+            padding-top: 10px;
+                .ipad-icon{
+                    display:flex;
+                }
+                .other-icon{
+                    display: none;
+                }
+            }
+            .left-container-border{
+                width: 0.5px;
+                position: absolute;
+                right: 0;
+                background-color: #F4F4F4;
+                height: 100%;
+            }
+        
+            
+        
+        //background-color: aqua;
+    }
+}
+
+@media screen and (min-width:0px) and (max-width:599px) {
+    .left-container{
+        width: 0%;
+        position: relative;
+        .mobile-logo{
+            position:absolute;
+            top: -45px;
+        }
+        .left-real-container{
+            display: none;
+        }
+    }
+    
+}
+
