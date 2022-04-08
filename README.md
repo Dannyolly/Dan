@@ -1,6 +1,6 @@
 
 <p align="center">
-    <img width="230" src="https://raw.githubusercontent.com/Dannyolly/Dan/master/home.png">
+    <img width="220" src="https://raw.githubusercontent.com/Dannyolly/Dan/master/home.png">
 </p>
 
 <h1 align="center">
@@ -13,27 +13,27 @@
 
 
 
-##  Preview
+##  Preview ( GIF )
 
-##### web
-![image](https://github.com/Dannyolly/MyWebSocket/blob/master/web.gif?raw=true)
+##### Web
+<img width="500" src="https://github.com/Dannyolly/MyWebSocket/blob/master/web.gif?raw=true">
 
-#### ios 
+#### Ios 
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/ios.gif?raw=true)
-
-##### ios - UI
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8252.PNG?raw=true)
-
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8253.PNG?raw=true)
+<img width="300" src="https://github.com/Dannyolly/Dan/blob/master/pic/ios.gif?raw=true">
 
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8254.PNG?raw=true)
+## Ios UI
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8255.PNG?raw=true)
+<img width="220" style="margin-right:0"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8252.PNG?raw=true">
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8256.PNG?raw=true)
+<img width="220"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8253.PNG?raw=true">
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8257.PNG?raw=true)
+<img width="220"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8255.PNG?raw=true">
 
-![image](https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8260.PNG?raw=true)
+<img width="220"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8256.PNG?raw=true">
+
+<img width="220"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8257.PNG?raw=true">
+
+<img width="220"  src="https://github.com/Dannyolly/Dan/blob/master/pic/IMG_8260.PNG?raw=true">
+
