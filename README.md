@@ -4,7 +4,7 @@
 </p>
 
 <h1 align="center">
-    DanDan
+    Dan
 </h1>
 
 #### In the project directory, you can run:
