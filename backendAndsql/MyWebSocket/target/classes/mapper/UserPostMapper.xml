@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.UserPostMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.UserPost" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="post_image" property="postImage" jdbcType="VARCHAR" />
+    <result column="like_count" property="likeCount" jdbcType="INTEGER" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="post_date" property="postDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, post_image, like_count, introduction, post_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_post
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_post
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <select id="queryAllUserOwnPost" resultType="com.example.pojo.UserPost">
+    select *
+    from user_post up
+    where up.user_id = #{userId}
+    ORDER BY post_date DESC
+    limit #{page},#{pageSize}
+
+  </select>
+
+
+  <select id="queryAllUserPostByUserId" resultType="com.example.pojo.UserPost">
+        SELECT *
+        FROM user_post up
+        WHERE up.user_id IN (
+        SELECT ms.my_friends_id
+        FROM my_friends ms ,users us
+        WHERE
+          us.id=#{userId}
+          AND us.id = ms.my_user_id
+
+        ) OR up.user_id=#{userId}
+        ORDER BY post_date DESC
+        limit #{page},#{pageSize}
+  </select>
+
+
+  <insert id="insertSelective" parameterType="com.example.pojo.UserPost" keyProperty="id"  useGeneratedKeys="true">
+    insert into user_post
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="postImage != null" >
+        post_image,
+      </if>
+      <if test="likeCount != null" >
+        like_count,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+      <if test="postDate != null" >
+        post_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="postImage != null" >
+        #{postImage,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null" >
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="postDate != null" >
+        #{postDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.UserPost" >
+    update user_post
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="postImage != null" >
+        post_image = #{postImage,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null" >
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="postDate != null" >
+        post_date = #{postDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.UserPost" >
+    update user_post
+    set user_id = #{userId,jdbcType=INTEGER},
+      post_image = #{postImage,jdbcType=VARCHAR},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      post_date = #{postDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.ChatMsgMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.ChatMsg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="send_user_id" property="sendUserId" jdbcType="INTEGER" />
+    <result column="receive_user_id" property="receiveUserId" jdbcType="INTEGER" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="sign_flag" property="signFlag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, send_user_id, receive_user_id, msg, sign_flag, create_time
+  </sql>
+
+  <select id="queryAllChatMsgLimitByMul" resultType="ChatMsg">
+    select *
+    from chat_msg
+    <where>
+      <if test="chatMsg.id >0">
+        and id = #{chatMsg.id}
+      </if>
+      <if test="chatMsg.sendUserId != null" >
+        and send_user_id = #{chatMsg.sendUserId}
+      </if>
+      <if test="chatMsg.receiveUserId != null" >
+        and receive_user_id = #{chatMsg.receiveUserId}
+      </if>
+      <if test="chatMsg.msg != null" >
+        and msg = #{chatMsg.msg}
+      </if>
+      <if test="chatMsg.signFlag != null" >
+        and sign_flag = #{chatMsg.signFlag}
+      </if>
+      <if test="chatMsg.createTime != null" >
+        and create_time = #{chatMsg.createTime}
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+
+  <select id="queryAllMsgWithSenderInfo" resultType="com.example.msg.ChatFormat">
+    SELECT
+      cm.id id,
+      cm.send_user_id send_user_id,
+      cm.receive_user_id receive_user_id,
+      cm.msg  msg,
+      cm.sign_flag sign_flag,
+      cm.create_time create_time,
+      us.username username,
+      us.password PASSWORD,
+      us.icon icon,
+      us.qrcode qrcode,
+      us.cid  cid
+
+    FROM chat_msg cm ,users us
+    WHERE cm.send_user_id= us.id
+      AND cm.receive_user_id=#{userId}
+      and cm.sign_flag=0
+    limit #{page},#{pageSize}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from chat_msg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from chat_msg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.example.pojo.ChatMsg" >
+    insert into chat_msg (id, send_user_id, receive_user_id, 
+      msg, sign_flag, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{sendUserId,jdbcType=INTEGER}, #{receiveUserId,jdbcType=INTEGER}, 
+      #{msg,jdbcType=VARCHAR}, #{signFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.example.pojo.ChatMsg" keyProperty="id"  useGeneratedKeys="true" >
+    insert into chat_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sendUserId != null" >
+        send_user_id,
+      </if>
+      <if test="receiveUserId != null" >
+        receive_user_id,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="signFlag != null" >
+        sign_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sendUserId != null" >
+        #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserId != null" >
+        #{receiveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="signFlag != null" >
+        #{signFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective"  parameterType="com.example.pojo.ChatMsg" >
+    update chat_msg
+    <set >
+      <if test="sendUserId != null" >
+        send_user_id = #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserId != null" >
+        receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="signFlag != null" >
+        sign_flag = #{signFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.ChatMsg" >
+    update chat_msg
+    set send_user_id = #{sendUserId,jdbcType=INTEGER},
+      receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+      msg = #{msg,jdbcType=VARCHAR},
+      sign_flag = #{signFlag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateMulChatMsg" parameterType="java.util.List">
+    update chat_msg
+    set sign_flag = 1
+    where id in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+      #{item.id}
+    </foreach>
+  </update>
+
+
+</mapper>

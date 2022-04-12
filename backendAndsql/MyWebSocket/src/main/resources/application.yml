@@ -1,0 +1,32 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 20m
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chatroom?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    initial-size: 2
+    max-idle: 10
+    min-idle: 1
+    max-active: 20
+    connection-init-sql: SET NAMES utf8mb4
+
+
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.example.pojo

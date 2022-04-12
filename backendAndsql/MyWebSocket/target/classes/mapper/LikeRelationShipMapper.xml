@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.LikeRelationShipMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.LikeRelationShip" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="post_Id" property="postId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="like_date" property="likeDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, post_Id, user_id, like_date
+  </sql>
+
+  <select id="selectByMul"  resultType="com.example.pojo.LikeRelationShip" >
+    select
+    *
+    from like_relationship
+    <where>
+      <if test="id != null">
+       and id=#{id}
+      </if>
+      <if test="userId != null">
+       and  user_id=#{userId}
+      </if>
+      <if test="postId != null">
+       and post_id=#{postId}
+      </if>
+
+    </where>
+  </select>
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from like_relationship
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByMul">
+    delete from like_relationship
+    where post_Id=#{postId}
+    and   user_id=#{userId}
+  </delete>
+
+  <insert id="insert" parameterType="com.example.pojo.LikeRelationShip" >
+    insert into like_relationship (id, post_Id, user_id, 
+      like_date)
+    values (#{id,jdbcType=INTEGER}, #{postId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{likeDate,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.example.pojo.LikeRelationShip" >
+    insert into like_relationship
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="postId != null" >
+        post_Id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="likeDate != null" >
+        like_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="postId != null" >
+        #{postId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="likeDate != null" >
+        #{likeDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.LikeRelationShip" >
+    update like_relationship
+    <set >
+      <if test="postId != null" >
+        post_Id = #{postId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="likeDate != null" >
+        like_date = #{likeDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.LikeRelationShip" >
+    update like_relationship
+    set post_Id = #{postId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      like_date = #{likeDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

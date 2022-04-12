@@ -1,0 +1,35 @@
+server:
+  port: 8443
+  servlet:
+    session:
+      timeout: 20m
+  ssl:
+    key-store: classpath:6304533_dandanolly.top.pfx
+    key-store-password: 9BE7JFUD
+    key-store-type: PKCS12
+    enabled: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chatroom?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 28300136
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    initial-size: 2
+    max-idle: 10
+    min-idle: 1
+    max-active: 20
+
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.example.pojo

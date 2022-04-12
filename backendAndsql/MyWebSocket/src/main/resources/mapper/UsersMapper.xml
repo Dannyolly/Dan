@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UsersMapper">
+  <resultMap id="BaseResultMap" type="com.example.pojo.Users">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, icon, qrcode, cid
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryAllUsersLimitByMul" resultType="com.example.pojo.Users">
+    select *
+    from users
+    <where>
+      <if test="users.id != null">
+       and id = #{users.id}
+      </if>
+
+      <if test="users.username != null">
+        and username = #{users.username}
+      </if>
+
+      <if test="users.password != null">
+        and password = #{users.password}
+      </if>
+
+      <if test="users.icon != null">
+        and icon = #{users.icon}
+      </if>
+
+      <if test="users.qrcode != null">
+        and qrcode =  #{users.qrcode}
+      </if>
+
+      <if test="users.cid != null">
+        and cid = #{users.cid}
+      </if>
+       <if test="users.online >0 ">
+         and online = #{users.online}
+       </if>
+      <if test="users.introduction != null">
+        and introduction = #{users.introduction},
+      </if>
+      <if test="users.backgroundImage != null">
+        and background_image = #{users.backgroundImage},
+      </if>
+    </where>
+    limit #{page},10000
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from users
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+
+
+  <insert id="insertSelective" parameterType="com.example.pojo.Users" useGeneratedKeys="true"  keyProperty="id" >
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="qrcode != null">
+        qrcode,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="introduction != null">
+        introduction ,
+      </if>
+      <if test="backgroundImage != null">
+        background_image ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null">
+        #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction},
+      </if>
+      <if test="backgroundImage != null">
+        #{backgroundImage},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.Users">
+    update users
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null">
+        qrcode = #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="online != null">
+        online = #{online},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction},
+      </if>
+      <if test="backgroundImage != null">
+        background_image = #{backgroundImage},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

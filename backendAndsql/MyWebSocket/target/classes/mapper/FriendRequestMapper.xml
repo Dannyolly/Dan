@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.FriendRequestMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.FriendRequest" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="send_user_id" property="sendUserId" jdbcType="INTEGER" />
+    <result column="receive_user_id" property="receiveUserId" jdbcType="INTEGER" />
+    <result column="request_date_time" property="requestDateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, send_user_id, receive_user_id, request_date_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from friend_request
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from friend_request
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+
+
+  <select id="getAllRequester" resultType="com.example.msg.Requester" >
+    SELECT
+      fr.id requestId,
+      fr.send_user_id senderId,
+      fr.receive_user_id receiverId,
+      us1.id userId,
+      us1.username,
+      us1.password,
+      us1.icon,
+      us1.qrcode,
+      us1.cid,
+      request_date_time,
+      request_message,
+      fr.STATUS,
+      fr.read
+    FROM
+      users us1 ,
+      friend_request fr
+    WHERE fr.receive_user_id = #{userId}
+      AND
+      us1.id = fr.send_user_id
+  </select>
+
+
+  <insert id="insert" parameterType="com.example.pojo.FriendRequest" >
+    insert into friend_request (id, send_user_id, receive_user_id, 
+      request_date_time)
+    values (#{id,jdbcType=INTEGER}, #{sendUserId,jdbcType=INTEGER}, #{receiveUserId,jdbcType=INTEGER}, 
+      #{requestDateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.example.pojo.FriendRequest" >
+    insert into friend_request
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sendUserId != null" >
+        send_user_id,
+      </if>
+      <if test="receiveUserId != null" >
+        receive_user_id,
+      </if>
+      <if test="requestDateTime != null" >
+        request_date_time,
+      </if>
+      <if test="requestMessage != null">
+        request_message,
+      </if>
+      <if test="status >=0 and status != null">
+        friend_request.status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sendUserId != null" >
+        #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserId != null" >
+        #{receiveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="requestDateTime != null" >
+        #{requestDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestMessage != null">
+        #{requestMessage},
+      </if>
+      <if test="status >=0 and status != null">
+        #{status},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.FriendRequest" >
+    update friend_request fr
+    <set >
+      <if test="sendUserId != null" >
+        send_user_id = #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUserId != null" >
+        receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="requestDateTime != null" >
+        request_date_time = #{requestDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status >0 and status != null">
+        fr.status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="read >0 and read != null">
+        fr.read = #{read,jdbcType=INTEGER}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.FriendRequest" >
+    update friend_request
+    set send_user_id = #{sendUserId,jdbcType=INTEGER},
+      receive_user_id = #{receiveUserId,jdbcType=INTEGER},
+      request_date_time = #{requestDateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

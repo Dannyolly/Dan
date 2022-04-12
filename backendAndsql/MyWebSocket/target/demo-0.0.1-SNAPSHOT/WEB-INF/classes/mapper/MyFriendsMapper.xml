@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.MyFriendsMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.MyFriends" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="my_user_id" property="myUserId" jdbcType="INTEGER" />
+    <result column="my_friends_id" property="myFriendsId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, my_user_id, my_friends_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from my_friends
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from my_friends
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.pojo.MyFriends" >
+    insert into my_friends (id, my_user_id, my_friends_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{myUserId,jdbcType=INTEGER}, #{myFriendsId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.pojo.MyFriends" >
+    insert into my_friends
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="myUserId != null" >
+        my_user_id,
+      </if>
+      <if test="myFriendsId != null" >
+        my_friends_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="myUserId != null" >
+        #{myUserId,jdbcType=INTEGER},
+      </if>
+      <if test="myFriendsId != null" >
+        #{myFriendsId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.MyFriends" >
+    update my_friends
+    <set >
+      <if test="myUserId != null" >
+        my_user_id = #{myUserId,jdbcType=INTEGER},
+      </if>
+      <if test="myFriendsId != null" >
+        my_friends_id = #{myFriendsId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.MyFriends" >
+    update my_friends
+    set my_user_id = #{myUserId,jdbcType=INTEGER},
+      my_friends_id = #{myFriendsId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
