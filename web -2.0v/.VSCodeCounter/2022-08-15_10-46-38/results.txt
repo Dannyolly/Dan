@@ -1,0 +1,114 @@
+Date : 2022-08-15 10:46:38
+Directory : d:\vscode\pj\re-project\src
+Total : 70 files,  5695 codes, 242 comments, 661 blanks, all 6598 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| vue        |         39 |      5,071 |          8 |        521 |      5,600 |
+| TypeScript |         25 |        564 |        213 |        113 |        890 |
+| JavaScript |          5 |         52 |         21 |         17 |         90 |
+| Less       |          1 |          8 |          0 |         10 |         18 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                            | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                               |         70 |      5,695 |        242 |        661 |      6,598 |
+| api                                                                             |          2 |         34 |         63 |          9 |        106 |
+| components                                                                      |         21 |      2,672 |          6 |        286 |      2,964 |
+| components\Header                                                               |          2 |        215 |          0 |         14 |        229 |
+| components\Setting                                                              |          2 |         92 |          0 |          4 |         96 |
+| components\Skeleton                                                             |          1 |        142 |          0 |         11 |        153 |
+| components\TopBarSetting                                                        |          1 |         24 |          0 |          1 |         25 |
+| components\VirtualList                                                          |          5 |      1,085 |          0 |        159 |      1,244 |
+| constant                                                                        |          5 |         52 |         21 |         17 |         90 |
+| hooks                                                                           |          1 |          9 |          0 |         10 |         19 |
+| pages                                                                           |         13 |      1,917 |          1 |        193 |      2,111 |
+| pages\Home                                                                      |          2 |        326 |          1 |         36 |        363 |
+| router                                                                          |          1 |        107 |          2 |          8 |        117 |
+| service                                                                         |          1 |          8 |          0 |          3 |         11 |
+| store                                                                           |          1 |         13 |         14 |          3 |         30 |
+| types                                                                           |          7 |        134 |         90 |         30 |        254 |
+| utils                                                                           |          8 |        203 |         23 |         42 |        268 |
+| views                                                                           |          4 |        447 |          1 |         39 |        487 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                        | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\vscode\pj\re-project\src\App.vue                                             | vue        |         35 |          0 |          3 |         38 |
+| d:\vscode\pj\re-project\src\api\config.ts                                       | TypeScript |         24 |         63 |          3 |         90 |
+| d:\vscode\pj\re-project\src\api\request.ts                                      | TypeScript |         10 |          0 |          6 |         16 |
+| d:\vscode\pj\re-project\src\components\Advertisement.vue                        | vue        |         56 |          0 |         12 |         68 |
+| d:\vscode\pj\re-project\src\components\Header\MiddleTopHeader.vue               | vue        |        147 |          0 |          7 |        154 |
+| d:\vscode\pj\re-project\src\components\Header\MiniMiddleHeader.vue              | vue        |         68 |          0 |          7 |         75 |
+| d:\vscode\pj\re-project\src\components\IconButton.vue                           | vue        |         42 |          0 |          3 |         45 |
+| d:\vscode\pj\re-project\src\components\Loading.vue                              | vue        |         13 |          0 |          1 |         14 |
+| d:\vscode\pj\re-project\src\components\Logo.vue                                 | vue        |        103 |          0 |          5 |        108 |
+| d:\vscode\pj\re-project\src\components\MessageItem.vue                          | vue        |        123 |          0 |         12 |        135 |
+| d:\vscode\pj\re-project\src\components\Messager.vue                             | vue        |         66 |          0 |          5 |         71 |
+| d:\vscode\pj\re-project\src\components\NotificationContent.vue                  | vue        |         72 |          3 |          3 |         78 |
+| d:\vscode\pj\re-project\src\components\Post.vue                                 | vue        |        365 |          3 |         31 |        399 |
+| d:\vscode\pj\re-project\src\components\Publish.vue                              | vue        |        193 |          0 |         22 |        215 |
+| d:\vscode\pj\re-project\src\components\Setting\SettingDetailItem.vue            | vue        |         52 |          0 |          1 |         53 |
+| d:\vscode\pj\re-project\src\components\Setting\SettingItem.vue                  | vue        |         40 |          0 |          3 |         43 |
+| d:\vscode\pj\re-project\src\components\Skeleton\HomeSkeleton.vue                | vue        |        142 |          0 |         11 |        153 |
+| d:\vscode\pj\re-project\src\components\TabBar.vue                               | vue        |         81 |          0 |          3 |         84 |
+| d:\vscode\pj\re-project\src\components\TopBarSetting\Mark.vue                   | vue        |         24 |          0 |          1 |         25 |
+| d:\vscode\pj\re-project\src\components\VirtualList\DynamicHeightVirtualList.vue | vue        |        490 |          0 |         87 |        577 |
+| d:\vscode\pj\re-project\src\components\VirtualList\FixedHeightVirtualList.vue   | vue        |        365 |          0 |         47 |        412 |
+| d:\vscode\pj\re-project\src\components\VirtualList\ListItem.vue                 | vue        |         65 |          0 |          9 |         74 |
+| d:\vscode\pj\re-project\src\components\VirtualList\VirtualList.vue              | vue        |        123 |          0 |         12 |        135 |
+| d:\vscode\pj\re-project\src\components\VirtualList\index.vue                    | vue        |         42 |          0 |          4 |         46 |
+| d:\vscode\pj\re-project\src\constant\InputHeight.js                             | JavaScript |          6 |          1 |          2 |          9 |
+| d:\vscode\pj\re-project\src\constant\chat.js                                    | JavaScript |         12 |         15 |          6 |         33 |
+| d:\vscode\pj\re-project\src\constant\publish.js                                 | JavaScript |         16 |          3 |          5 |         24 |
+| d:\vscode\pj\re-project\src\constant\style.js                                   | JavaScript |         13 |          1 |          2 |         16 |
+| d:\vscode\pj\re-project\src\constant\table.js                                   | JavaScript |          5 |          1 |          2 |          8 |
+| d:\vscode\pj\re-project\src\hooks\useState.ts                                   | TypeScript |          9 |          0 |         10 |         19 |
+| d:\vscode\pj\re-project\src\main.ts                                             | TypeScript |         14 |          3 |          1 |         18 |
+| d:\vscode\pj\re-project\src\pages\Home\Home.vue                                 | vue        |        175 |          1 |         20 |        196 |
+| d:\vscode\pj\re-project\src\pages\Home\RightBar.vue                             | vue        |        151 |          0 |         16 |        167 |
+| d:\vscode\pj\re-project\src\pages\Login.vue                                     | vue        |        433 |          0 |         51 |        484 |
+| d:\vscode\pj\re-project\src\pages\Mark.vue                                      | vue        |        124 |          0 |         11 |        135 |
+| d:\vscode\pj\re-project\src\pages\Message.vue                                   | vue        |        200 |          0 |         24 |        224 |
+| d:\vscode\pj\re-project\src\pages\MessageContent.vue                            | vue        |        122 |          0 |         14 |        136 |
+| d:\vscode\pj\re-project\src\pages\More.vue                                      | vue        |         13 |          0 |          1 |         14 |
+| d:\vscode\pj\re-project\src\pages\Notification.vue                              | vue        |        107 |          0 |         16 |        123 |
+| d:\vscode\pj\re-project\src\pages\PersonProfile.vue                             | vue        |        148 |          0 |         18 |        166 |
+| d:\vscode\pj\re-project\src\pages\PostDetail.vue                                | vue        |        190 |          0 |         13 |        203 |
+| d:\vscode\pj\re-project\src\pages\Profile.vue                                   | vue        |        119 |          0 |          6 |        125 |
+| d:\vscode\pj\re-project\src\pages\Setting.vue                                   | vue        |         65 |          0 |          2 |         67 |
+| d:\vscode\pj\re-project\src\pages\SettingDetail.vue                             | vue        |         70 |          0 |          1 |         71 |
+| d:\vscode\pj\re-project\src\registerServiceWorker.ts                            | TypeScript |         31 |          1 |          3 |         35 |
+| d:\vscode\pj\re-project\src\router\index.ts                                     | TypeScript |        107 |          2 |          8 |        117 |
+| d:\vscode\pj\re-project\src\service\user.ts                                     | TypeScript |          8 |          0 |          3 |         11 |
+| d:\vscode\pj\re-project\src\shims-vue.d.ts                                      | TypeScript |          5 |          1 |          1 |          7 |
+| d:\vscode\pj\re-project\src\store\user.ts                                       | TypeScript |         13 |         14 |          3 |         30 |
+| d:\vscode\pj\re-project\src\types\Dynamic.ts                                    | TypeScript |         18 |         27 |          6 |         51 |
+| d:\vscode\pj\re-project\src\types\Element.ts                                    | TypeScript |          2 |          0 |          2 |          4 |
+| d:\vscode\pj\re-project\src\types\Fixed.ts                                      | TypeScript |         18 |         27 |          6 |         51 |
+| d:\vscode\pj\re-project\src\types\chat.ts                                       | TypeScript |         26 |          0 |          3 |         29 |
+| d:\vscode\pj\re-project\src\types\post.ts                                       | TypeScript |         17 |          6 |          2 |         25 |
+| d:\vscode\pj\re-project\src\types\user.ts                                       | TypeScript |         14 |          3 |          1 |         18 |
+| d:\vscode\pj\re-project\src\types\virtualList.ts                                | TypeScript |         39 |         27 |         10 |         76 |
+| d:\vscode\pj\re-project\src\utils\Date.ts                                       | TypeScript |         22 |         10 |          6 |         38 |
+| d:\vscode\pj\re-project\src\utils\Equipment.ts                                  | TypeScript |         33 |          1 |          9 |         43 |
+| d:\vscode\pj\re-project\src\utils\FakePost.ts                                   | TypeScript |         29 |          0 |          3 |         32 |
+| d:\vscode\pj\re-project\src\utils\Num.ts                                        | TypeScript |          6 |          0 |          2 |          8 |
+| d:\vscode\pj\re-project\src\utils\Style.ts                                      | TypeScript |         21 |          6 |          6 |         33 |
+| d:\vscode\pj\re-project\src\utils\localStorage.ts                               | TypeScript |         64 |          6 |         14 |         84 |
+| d:\vscode\pj\re-project\src\utils\requestTransform.ts                           | TypeScript |         16 |          0 |          2 |         18 |
+| d:\vscode\pj\re-project\src\utils\uuid.ts                                       | TypeScript |         12 |          0 |          0 |         12 |
+| d:\vscode\pj\re-project\src\var.less                                            | Less       |          8 |          0 |         10 |         18 |
+| d:\vscode\pj\re-project\src\views\BottomBar.vue                                 | vue        |        111 |          1 |          5 |        117 |
+| d:\vscode\pj\re-project\src\views\LeftBar.vue                                   | vue        |        271 |          0 |         23 |        294 |
+| d:\vscode\pj\re-project\src\views\MainContent.vue                               | vue        |         18 |          0 |          1 |         19 |
+| d:\vscode\pj\re-project\src\views\MidBar.vue                                    | vue        |         47 |          0 |         10 |         57 |
+| d:\vscode\pj\re-project\src\vuex.d.ts                                           | TypeScript |          6 |         16 |          3 |         25 |
+| Total                                                                           |            |      5,695 |        242 |        661 |      6,598 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

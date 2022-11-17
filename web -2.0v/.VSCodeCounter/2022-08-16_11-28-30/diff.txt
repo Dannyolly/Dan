@@ -1,0 +1,45 @@
+Date : 2022-08-16 11:28:30
+Directory : d:\vscode\pj\re-project\src
+Total : 13 files,  62 codes, 54 comments, 9 blanks, all 125 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| vue        |          9 |         77 |          0 |          5 |         82 |
+| TypeScript |          4 |        -15 |         54 |          4 |         43 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                            | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                               |         13 |         62 |         54 |          9 |        125 |
+| components                                                                      |          4 |         25 |          0 |          4 |         29 |
+| components\VirtualList                                                          |          3 |         32 |          0 |          4 |         36 |
+| pages                                                                           |          4 |         45 |          0 |          1 |         46 |
+| pages\Home                                                                      |          1 |          8 |          0 |          1 |          9 |
+| router                                                                          |          1 |          5 |          0 |          1 |          6 |
+| types                                                                           |          2 |          8 |         26 |          3 |         37 |
+| views                                                                           |          1 |          7 |          0 |          0 |          7 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                        | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\vscode\pj\re-project\src\components\Publish.vue                              | vue        |         -7 |          0 |          0 |         -7 |
+| d:\vscode\pj\re-project\src\components\VirtualList\DynamicHeightVirtualList.vue | vue        |         14 |          0 |          3 |         17 |
+| d:\vscode\pj\re-project\src\components\VirtualList\FixedHeightVirtualList.vue   | vue        |         19 |          0 |          0 |         19 |
+| d:\vscode\pj\re-project\src\components\VirtualList\VirtualList.vue              | vue        |         -1 |          0 |          1 |          0 |
+| d:\vscode\pj\re-project\src\pages\Home\Home.vue                                 | vue        |          8 |          0 |          1 |          9 |
+| d:\vscode\pj\re-project\src\pages\Message.vue                                   | vue        |          2 |          0 |          0 |          2 |
+| d:\vscode\pj\re-project\src\pages\PostDetail.vue                                | vue        |         29 |          0 |         -1 |         28 |
+| d:\vscode\pj\re-project\src\pages\SettingDetail.vue                             | vue        |          6 |          0 |          1 |          7 |
+| d:\vscode\pj\re-project\src\registerServiceWorker.ts                            | TypeScript |        -28 |         28 |          0 |          0 |
+| d:\vscode\pj\re-project\src\router\index.ts                                     | TypeScript |          5 |          0 |          1 |          6 |
+| d:\vscode\pj\re-project\src\types\Fixed.ts                                      | TypeScript |          0 |          0 |          1 |          1 |
+| d:\vscode\pj\re-project\src\types\virtualList.ts                                | TypeScript |          8 |         26 |          2 |         36 |
+| d:\vscode\pj\re-project\src\views\LeftBar.vue                                   | vue        |          7 |          0 |          0 |          7 |
+| Total                                                                           |            |         62 |         54 |          9 |        125 |
++---------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
