@@ -12,9 +12,11 @@
 #### Web
 ##### v2.0
 
-<video muted controls preload="auto" autoplay="autoplay" >
-    <source src="https://raw.githubusercontent.com/Dannyolly/Dan/master/web%20V2.0%20-%20pic/v-1.MP4)" type="video/mp4">
-</video>
+<img width="300" src="https://raw.githubusercontent.com/Dannyolly/Dan/master/web%20V2.0%20-%20pic/v-1-1.png">
+
+<img width="300" src="https://raw.githubusercontent.com/Dannyolly/Dan/master/web%20V2.0%20-%20pic/v-2-1.png">
+
+<img width="300" src="https://raw.githubusercontent.com/Dannyolly/Dan/master/web%20V2.0%20-%20pic/v-3-1.png">
 
 ##### v1.0
 <img width="500" src="https://github.com/Dannyolly/MyWebSocket/blob/master/web.gif?raw=true">
